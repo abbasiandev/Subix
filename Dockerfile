@@ -6,6 +6,7 @@ WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
+    MALLOC_ARENA_MAX=2 \
     PORT=8000
 
 RUN apt-get update \
@@ -19,4 +20,5 @@ COPY backend/app ./app
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]
+# Single worker, no [standard] extras (uvloop/httptools) — lower RAM on free tier
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1 --loop asyncio --http h11"]

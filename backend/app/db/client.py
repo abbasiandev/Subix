@@ -9,7 +9,6 @@ _client: libsql_client.Client | None = None
 def get_client() -> libsql_client.Client:
     global _client
     if _client is None:
-        print("TOKEN BEING USED:", settings.turso_auth_token[:30])  # add this
         _client = libsql_client.create_client(
             url=settings.turso_url,
             auth_token=settings.turso_auth_token,
