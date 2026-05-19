@@ -45,7 +45,7 @@ export default function ProfilePage() {
           <div className="w-full bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
             {/* Logo + Welcome */}
             <div className="flex items-center justify-end gap-3 mb-6">
-              <p className="text-xl font-bold text-gray-900">به وان‌ساب، خوش آمدید</p>
+              <p className="text-xl font-bold text-gray-900">به سابیکس، خوش آمدید</p>
               <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>

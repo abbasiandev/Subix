@@ -22,7 +22,7 @@ async def start(message: Message):
 
     name = user.first_name or user.username or "کاربر"
     await message.answer(
-        f"سلام {name} 👋\n\nبه <b>وان‌ساب</b> خوش آمدید!\n"
+        f"سلام {name} 👋\n\nبه <b>سابیکس</b> خوش آمدید!\n"
         "اشتراک‌های هوش مصنوعی را با بهترین قیمت تهیه کنید.",
         parse_mode="HTML",
         reply_markup=main_menu_keyboard(),
