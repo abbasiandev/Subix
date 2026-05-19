@@ -1,22 +1,16 @@
+import base64
 import hashlib
 import hmac
 import json
-from datetime import datetime, timedelta, timezone
+import time
 from urllib.parse import unquote
-
-from jose import JWTError, jwt
 
 from app.core.config import settings
 
 
-# ── Telegram initData verification ──────────────────────────────────────────
+# ── Telegram initData verification (stdlib only) ─────────────────────────────
 
 def verify_telegram_init_data(init_data: str) -> dict | None:
-    """
-    Verify Telegram WebApp initData HMAC signature.
-    Returns parsed user dict if valid, None if tampered.
-    https://core.telegram.org/bots/webapps#validating-data-received-via-the-mini-app
-    """
     parsed: dict[str, str] = {}
     for part in init_data.split("&"):
         if "=" in part:
@@ -53,24 +47,43 @@ def verify_telegram_init_data(init_data: str) -> dict | None:
     return json.loads(user_json)
 
 
-# ── JWT ──────────────────────────────────────────────────────────────────────
+# ── JWT HS256 (stdlib only — no python-jose / cryptography) ─────────────────
+
+def _b64url(data: bytes) -> str:
+    return base64.urlsafe_b64encode(data).rstrip(b"=").decode()
+
+
+def _b64url_decode(s: str) -> bytes:
+    pad = "=" * (-len(s) % 4)
+    return base64.urlsafe_b64decode(s + pad)
+
 
 def create_access_token(telegram_id: int) -> str:
-    expire = datetime.now(timezone.utc) + timedelta(
-        minutes=settings.jwt_expire_minutes
+    header = _b64url(json.dumps({"alg": "HS256", "typ": "JWT"}, separators=(",", ":")).encode())
+    exp = int(time.time() + settings.jwt_expire_minutes * 60)
+    payload = _b64url(
+        json.dumps({"sub": str(telegram_id), "exp": exp}, separators=(",", ":")).encode()
     )
-    return jwt.encode(
-        {"sub": str(telegram_id), "exp": expire},
-        settings.secret_key,
-        algorithm=settings.jwt_algorithm,
+    signing_input = f"{header}.{payload}".encode()
+    sig = _b64url(
+        hmac.new(settings.secret_key.encode(), signing_input, hashlib.sha256).digest()
     )
+    return f"{header}.{payload}.{sig}"
 
 
 def decode_access_token(token: str) -> int | None:
     try:
-        payload = jwt.decode(
-            token, settings.secret_key, algorithms=[settings.jwt_algorithm]
+        header_b64, payload_b64, sig_b64 = token.split(".")
+        signing_input = f"{header_b64}.{payload_b64}".encode()
+        expected = _b64url(
+            hmac.new(settings.secret_key.encode(), signing_input, hashlib.sha256).digest()
         )
+        if not hmac.compare_digest(expected, sig_b64):
+            return None
+
+        payload = json.loads(_b64url_decode(payload_b64))
+        if payload.get("exp", 0) < time.time():
+            return None
         return int(payload["sub"])
-    except JWTError:
+    except (ValueError, KeyError, json.JSONDecodeError):
         return None

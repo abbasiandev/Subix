@@ -20,5 +20,5 @@ COPY backend/app ./app
 
 EXPOSE 8000
 
-# Single worker, no [standard] extras (uvloop/httptools) — lower RAM on free tier
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1 --loop asyncio --http h11"]
+# Tuned for JustRunMy.App free tier (~150MB RAM)
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1 --loop asyncio --http h11 --no-access-log"]

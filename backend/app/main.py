@@ -1,42 +1,34 @@
+import logging
 from contextlib import asynccontextmanager
 
-from aiogram import Bot, Dispatcher
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.api.v1.router import api_router
-from app.bot.handlers.start import router as start_router
-from app.bot.middlewares.throttle import ThrottleMiddleware
 from app.core.config import settings
-from app.db.client import run_migrations
+from app.db.client import close_db, run_migrations
+from app.telegram.api import close_telegram, delete_webhook, set_webhook
+from app.telegram.handlers import handle_update
 
-# ── Bot setup ────────────────────────────────────────────────────────────────
+logger = logging.getLogger(__name__)
 
-bot = Bot(token=settings.bot_token)
-dp = Dispatcher()
-dp.message.middleware(ThrottleMiddleware())
-dp.include_router(start_router)
-
-
-# ── Lifespan ─────────────────────────────────────────────────────────────────
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Run DB migrations on startup
     await run_migrations()
-
-    # Set webhook
-    await bot.set_webhook(
-        url=f"{settings.webhook_url}",
-        drop_pending_updates=True,
-    )
+    try:
+        await set_webhook(settings.webhook_url)
+    except Exception as exc:
+        logger.warning("Webhook registration failed: %s", exc)
     yield
-    await bot.delete_webhook()
-    await bot.session.close()
+    try:
+        await delete_webhook()
+    except Exception:
+        pass
+    await close_telegram()
+    await close_db()
 
-
-# ── FastAPI app ───────────────────────────────────────────────────────────────
 
 app = FastAPI(
     title=settings.app_name,
@@ -57,18 +49,11 @@ app.add_middleware(
 app.include_router(api_router)
 
 
-# ── Telegram webhook route ────────────────────────────────────────────────────
-
 @app.post("/webhook")
 async def telegram_webhook(request: Request):
-    update = await request.json()
-    from aiogram.types import Update
-    tg_update = Update(**update)
-    await dp.feed_update(bot, tg_update)
+    await handle_update(await request.json())
     return JSONResponse({"ok": True})
 
-
-# ── Health check ──────────────────────────────────────────────────────────────
 
 @app.get("/health")
 async def health():

@@ -5,7 +5,7 @@
 |---|---|---|
 | Frontend | Next.js 14 (static export) | GitHub Pages |
 | CI/CD | GitHub Actions | GitHub |
-| Backend | FastAPI + aiogram v3 | PythonAnywhere |
+| Backend | FastAPI + httpx (lightweight) | JustRunMy.App |
 | Database | Turso (libSQL) | Turso Cloud |
 | SSL/DNS | Cloudflare | Cloudflare |
 | Analytics | Google Analytics + Microsoft Clarity | CDN |

@@ -1,30 +1,64 @@
-import libsql_client
+"""Turso/libSQL over HTTP — no native libsql-client (saves ~50MB+ RAM)."""
+
+from dataclasses import dataclass
+
+import httpx
 
 from app.core.config import settings
 
-# Single shared async client
-_client: libsql_client.Client | None = None
+_http: httpx.AsyncClient | None = None
 
 
-def get_client() -> libsql_client.Client:
-    global _client
-    if _client is None:
-        _client = libsql_client.create_client(
-            url=settings.turso_url,
-            auth_token=settings.turso_auth_token,
+@dataclass
+class Row:
+    values: tuple
+
+
+@dataclass
+class ResultSet:
+    rows: list[Row]
+
+
+def _db_url() -> str:
+    url = settings.turso_url.strip()
+    if url.startswith("libsql://"):
+        return f"https://{url.removeprefix('libsql://').rstrip('/')}"
+    return url.rstrip("/")
+
+
+async def _client() -> httpx.AsyncClient:
+    global _http
+    if _http is None:
+        _http = httpx.AsyncClient(
+            timeout=30.0,
+            headers={
+                "Authorization": f"Bearer {settings.turso_auth_token}",
+                "Content-Type": "application/json",
+            },
         )
-    return _client
+    return _http
 
 
-async def execute(sql: str, args: list | None = None):
-    return await get_client().execute(sql, args or [])
+async def close_db() -> None:
+    global _http
+    if _http is not None:
+        await _http.aclose()
+        _http = None
 
 
-async def executemany(stmts: list[libsql_client.Statement]):
-    return await get_client().batch(stmts)
+async def execute(sql: str, args: list | None = None) -> ResultSet:
+    client = await _client()
+    resp = await client.post(
+        _db_url(),
+        json={"statements": [{"q": sql, "params": args or []}]},
+    )
+    resp.raise_for_status()
+    body = resp.json()
+    result = body["results"][0]
+    if result.get("error"):
+        raise RuntimeError(result["error"])
+    return ResultSet(rows=[Row(values=tuple(r)) for r in result.get("rows", [])])
 
-
-# ── Migrations ───────────────────────────────────────────────────────────────
 
 MIGRATIONS = [
     """
@@ -83,6 +117,6 @@ MIGRATIONS = [
 ]
 
 
-async def run_migrations():
+async def run_migrations() -> None:
     for stmt in MIGRATIONS:
         await execute(stmt)
