@@ -1,6 +1,7 @@
-"""Turso/libSQL over HTTP — no native libsql-client (saves ~50MB+ RAM)."""
+"""Turso/libSQL over HTTP v2 pipeline — no native libsql-client."""
 
 from dataclasses import dataclass
+from typing import Any
 
 import httpx
 
@@ -19,11 +20,15 @@ class ResultSet:
     rows: list[Row]
 
 
-def _db_url() -> str:
+def _db_base() -> str:
     url = settings.turso_url.strip()
     if url.startswith("libsql://"):
         return f"https://{url.removeprefix('libsql://').rstrip('/')}"
     return url.rstrip("/")
+
+
+def _pipeline_url() -> str:
+    return f"{_db_base()}/v2/pipeline"
 
 
 async def _client() -> httpx.AsyncClient:
@@ -46,18 +51,70 @@ async def close_db() -> None:
         _http = None
 
 
+def _to_arg(value: Any) -> dict:
+    if value is None:
+        return {"type": "null"}
+    if isinstance(value, bool):
+        return {"type": "integer", "value": "1" if value else "0"}
+    if isinstance(value, int):
+        return {"type": "integer", "value": str(value)}
+    if isinstance(value, float):
+        return {"type": "float", "value": str(value)}
+    return {"type": "text", "value": str(value)}
+
+
+def _from_cell(cell: Any) -> Any:
+    if cell is None:
+        return None
+    if isinstance(cell, dict):
+        kind = cell.get("type")
+        if kind == "null":
+            return None
+        if kind == "integer":
+            return int(cell["value"])
+        if kind == "float":
+            return float(cell["value"])
+        return cell.get("value")
+    return cell
+
+
+def _parse_row(row: list) -> tuple:
+    return tuple(_from_cell(c) for c in row)
+
+
+def _parse_response(body: dict) -> ResultSet:
+    rows_out: list[Row] = []
+    for item in body.get("results", []):
+        if item.get("type") == "error":
+            raise RuntimeError(item.get("error") or item)
+        if item.get("type") != "ok":
+            continue
+        response = item.get("response") or {}
+        if response.get("type") != "execute":
+            continue
+        result = response.get("result") or {}
+        for row in result.get("rows", []):
+            rows_out.append(Row(values=_parse_row(row)))
+    return ResultSet(rows=rows_out)
+
+
 async def execute(sql: str, args: list | None = None) -> ResultSet:
     client = await _client()
+    stmt: dict = {"sql": sql}
+    if args:
+        stmt["args"] = [_to_arg(a) for a in args]
+
     resp = await client.post(
-        _db_url(),
-        json={"statements": [{"q": sql, "params": args or []}]},
+        _pipeline_url(),
+        json={
+            "requests": [
+                {"type": "execute", "stmt": stmt},
+                {"type": "close"},
+            ]
+        },
     )
     resp.raise_for_status()
-    body = resp.json()
-    result = body["results"][0]
-    if result.get("error"):
-        raise RuntimeError(result["error"])
-    return ResultSet(rows=[Row(values=tuple(r)) for r in result.get("rows", [])])
+    return _parse_response(resp.json())
 
 
 MIGRATIONS = [
