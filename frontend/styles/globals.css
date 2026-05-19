@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #2DC572;
+  --primary-dark: #24A660;
+  --primary-light: #E8F8F0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  direction: rtl;
+  font-family: 'Vazirmatn', system-ui, sans-serif;
+  background: #ffffff;
+  color: #111827;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Telegram Mini App fill viewport */
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Bottom nav safe area */
+.pb-safe {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 4rem);
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white font-semibold rounded-xl py-3 px-6
+           active:scale-95 transition-transform duration-100
+           disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl border border-gray-100 shadow-sm p-4;
+  }
+
+  .input-field {
+    @apply w-full border border-gray-200 rounded-xl px-4 py-3
+           text-right text-base outline-none
+           focus:border-primary focus:ring-2 focus:ring-primary/20
+           transition-all duration-150;
+  }
+
+  .bottom-nav-item {
+    @apply flex flex-col items-center gap-1 text-xs text-gray-400
+           py-2 px-3 transition-colors duration-150;
+  }
+
+  .bottom-nav-item.active {
+    @apply text-primary;
+  }
+
+  .badge {
+    @apply text-xs font-medium px-2 py-0.5 rounded-full;
+  }
+
+  .badge-green {
+    @apply bg-primary-light text-primary;
+  }
+}
