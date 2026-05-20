@@ -7,7 +7,7 @@ from app.services.user import UserService
 bearer = HTTPBearer()
 
 
-async def get_current_user_id(
+def get_current_user_id(
     credentials: HTTPAuthorizationCredentials = Depends(bearer),
 ) -> int:
     telegram_id = decode_access_token(credentials.credentials)
@@ -19,11 +19,10 @@ async def get_current_user_id(
     return telegram_id
 
 
-async def get_current_user(
+def get_current_user(
     telegram_id: int = Depends(get_current_user_id),
-    user_service: UserService = Depends(),
 ):
-    user = await user_service.get_by_telegram_id(telegram_id)
+    user = UserService().get_by_telegram_id(telegram_id)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

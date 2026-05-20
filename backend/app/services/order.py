@@ -17,22 +17,15 @@ class OrderService:
         self.user_svc = UserService()
         self.product_svc = ProductService()
 
-    async def create(self, telegram_id: int, product_id: int) -> OrderOut | None:
-        """Deduct wallet, create order. Returns None if insufficient balance."""
-        product = await self.product_svc.get(product_id)
+    def create(self, telegram_id: int, product_id: int) -> OrderOut | None:
+        product = self.product_svc.get(product_id)
         if not product:
             return None
-
-        deducted = await self.user_svc.deduct_wallet(telegram_id, product.price)
-        if not deducted:
+        if not self.user_svc.deduct_wallet(telegram_id, product.price):
             return None
-
-        user_rs = await execute(
-            "SELECT id FROM users WHERE telegram_id=?", [telegram_id]
-        )
+        user_rs = execute("SELECT id FROM users WHERE telegram_id=?", [telegram_id])
         user_id = user_rs.rows[0].values[0]
-
-        rs = await execute(
+        rs = execute(
             """
             INSERT INTO orders (user_id, product_id, price_paid, status)
             VALUES (?, ?, ?, 'pending')
@@ -42,8 +35,8 @@ class OrderService:
         )
         return _row_to_order(rs.rows[0])
 
-    async def list_for_user(self, telegram_id: int) -> list[OrderOut]:
-        rs = await execute(
+    def list_for_user(self, telegram_id: int) -> list[OrderOut]:
+        rs = execute(
             """
             SELECT o.* FROM orders o
             JOIN users u ON u.id = o.user_id
@@ -54,8 +47,8 @@ class OrderService:
         )
         return [_row_to_order(r) for r in rs.rows]
 
-    async def get(self, order_id: int, telegram_id: int) -> OrderOut | None:
-        rs = await execute(
+    def get(self, order_id: int, telegram_id: int) -> OrderOut | None:
+        rs = execute(
             """
             SELECT o.* FROM orders o
             JOIN users u ON u.id = o.user_id

@@ -12,15 +12,13 @@ def _row_to_user(row) -> UserOut:
 
 class UserService:
 
-    async def get_by_telegram_id(self, telegram_id: int) -> UserOut | None:
-        rs = await execute(
-            "SELECT * FROM users WHERE telegram_id = ?", [telegram_id]
-        )
+    def get_by_telegram_id(self, telegram_id: int) -> UserOut | None:
+        rs = execute("SELECT * FROM users WHERE telegram_id = ?", [telegram_id])
         if not rs.rows:
             return None
         return _row_to_user(rs.rows[0])
 
-    async def upsert_from_telegram(
+    def upsert_from_telegram(
         self,
         telegram_id: int,
         username: str | None,
@@ -28,8 +26,7 @@ class UserService:
         last_name: str | None,
         phone_number: str | None = None,
     ) -> UserOut:
-        """Create user on first login, update name on subsequent logins."""
-        await execute(
+        execute(
             """
             INSERT INTO users (telegram_id, username, first_name, last_name, phone_number)
             VALUES (?, ?, ?, ?, ?)
@@ -40,28 +37,24 @@ class UserService:
             """,
             [telegram_id, username, first_name, last_name, phone_number],
         )
-        return await self.get_by_telegram_id(telegram_id)
+        return self.get_by_telegram_id(telegram_id)
 
-    async def get_wallet(self, telegram_id: int) -> float:
-        rs = await execute(
-            "SELECT wallet FROM users WHERE telegram_id = ?", [telegram_id]
-        )
+    def get_wallet(self, telegram_id: int) -> float:
+        rs = execute("SELECT wallet FROM users WHERE telegram_id = ?", [telegram_id])
         return rs.rows[0].values[0] if rs.rows else 0.0
 
-    async def deduct_wallet(self, telegram_id: int, amount: float) -> bool:
-        rs = await execute(
-            "SELECT wallet FROM users WHERE telegram_id = ?", [telegram_id]
-        )
+    def deduct_wallet(self, telegram_id: int, amount: float) -> bool:
+        rs = execute("SELECT wallet FROM users WHERE telegram_id = ?", [telegram_id])
         if not rs.rows or rs.rows[0].values[0] < amount:
             return False
-        await execute(
+        execute(
             "UPDATE users SET wallet = wallet - ? WHERE telegram_id = ?",
             [amount, telegram_id],
         )
         return True
 
-    async def credit_wallet(self, telegram_id: int, amount: float):
-        await execute(
+    def credit_wallet(self, telegram_id: int, amount: float) -> None:
+        execute(
             "UPDATE users SET wallet = wallet + ? WHERE telegram_id = ?",
             [amount, telegram_id],
         )

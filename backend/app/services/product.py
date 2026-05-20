@@ -12,28 +12,24 @@ def _row_to_product(row) -> ProductOut:
 
 class ProductService:
 
-    async def list_active(self, category: str | None = None) -> list[ProductOut]:
+    def list_active(self, category: str | None = None) -> list[ProductOut]:
         if category:
-            rs = await execute(
+            rs = execute(
                 "SELECT * FROM products WHERE is_active=1 AND category=? ORDER BY sort_order",
                 [category],
             )
         else:
-            rs = await execute(
-                "SELECT * FROM products WHERE is_active=1 ORDER BY sort_order"
-            )
+            rs = execute("SELECT * FROM products WHERE is_active=1 ORDER BY sort_order")
         return [_row_to_product(r) for r in rs.rows]
 
-    async def get(self, product_id: int) -> ProductOut | None:
-        rs = await execute(
+    def get(self, product_id: int) -> ProductOut | None:
+        rs = execute(
             "SELECT * FROM products WHERE id=? AND is_active=1", [product_id]
         )
         if not rs.rows:
             return None
         return _row_to_product(rs.rows[0])
 
-    async def categories(self) -> list[str]:
-        rs = await execute(
-            "SELECT DISTINCT category FROM products WHERE is_active=1"
-        )
+    def categories(self) -> list[str]:
+        rs = execute("SELECT DISTINCT category FROM products WHERE is_active=1")
         return [r.values[0] for r in rs.rows]

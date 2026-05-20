@@ -8,25 +8,18 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post("/telegram", response_model=TokenOut)
-async def telegram_login(body: TelegramAuthIn):
-    """
-    Verify Telegram WebApp initData and auto-register user on first visit.
-    No OTP, no password — identity proven by Telegram HMAC.
-    """
+def telegram_login(body: TelegramAuthIn):
     tg_user = verify_telegram_init_data(body.init_data)
     if not tg_user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid Telegram initData",
         )
-
-    svc = UserService()
-    user = await svc.upsert_from_telegram(
+    user = UserService().upsert_from_telegram(
         telegram_id=tg_user["id"],
         username=tg_user.get("username"),
         first_name=tg_user.get("first_name"),
         last_name=tg_user.get("last_name"),
     )
-
     token = create_access_token(user.telegram_id)
     return TokenOut(access_token=token, user=user)

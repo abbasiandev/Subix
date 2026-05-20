@@ -1,4 +1,4 @@
-"""Turso/libSQL over HTTP v2 pipeline — no native libsql-client."""
+"""Turso/libSQL over HTTP v2 pipeline — sync (PythonAnywhere WSGI compatible)."""
 
 from dataclasses import dataclass
 from typing import Any
@@ -7,7 +7,8 @@ import httpx
 
 from app.core.config import settings
 
-_http: httpx.AsyncClient | None = None
+_http: httpx.Client | None = None
+_migrated = False
 
 
 @dataclass
@@ -31,10 +32,10 @@ def _pipeline_url() -> str:
     return f"{_db_base()}/v2/pipeline"
 
 
-async def _client() -> httpx.AsyncClient:
+def _client() -> httpx.Client:
     global _http
     if _http is None:
-        _http = httpx.AsyncClient(
+        _http = httpx.Client(
             timeout=30.0,
             headers={
                 "Authorization": f"Bearer {settings.turso_auth_token}",
@@ -42,13 +43,6 @@ async def _client() -> httpx.AsyncClient:
             },
         )
     return _http
-
-
-async def close_db() -> None:
-    global _http
-    if _http is not None:
-        await _http.aclose()
-        _http = None
 
 
 def _to_arg(value: Any) -> dict:
@@ -98,40 +92,16 @@ def _parse_response(body: dict) -> ResultSet:
     return ResultSet(rows=rows_out)
 
 
-_migrated = False
-
-
-async def _pipeline(sql: str, args: list | None = None) -> ResultSet:
-    client = await _client()
+def _pipeline(sql: str, args: list | None = None) -> ResultSet:
     stmt: dict = {"sql": sql}
     if args:
         stmt["args"] = [_to_arg(a) for a in args]
-
-    resp = await client.post(
+    resp = _client().post(
         _pipeline_url(),
-        json={
-            "requests": [
-                {"type": "execute", "stmt": stmt},
-                {"type": "close"},
-            ]
-        },
+        json={"requests": [{"type": "execute", "stmt": stmt}, {"type": "close"}]},
     )
     resp.raise_for_status()
     return _parse_response(resp.json())
-
-
-async def ensure_migrated() -> None:
-    global _migrated
-    if _migrated:
-        return
-    for stmt in MIGRATIONS:
-        await _pipeline(stmt)
-    _migrated = True
-
-
-async def execute(sql: str, args: list | None = None) -> ResultSet:
-    await ensure_migrated()
-    return await _pipeline(sql, args)
 
 
 MIGRATIONS = [
@@ -191,5 +161,19 @@ MIGRATIONS = [
 ]
 
 
-async def run_migrations() -> None:
-    await ensure_migrated()
+def ensure_migrated() -> None:
+    global _migrated
+    if _migrated:
+        return
+    for stmt in MIGRATIONS:
+        _pipeline(stmt)
+    _migrated = True
+
+
+def execute(sql: str, args: list | None = None) -> ResultSet:
+    ensure_migrated()
+    return _pipeline(sql, args)
+
+
+def run_migrations() -> None:
+    ensure_migrated()

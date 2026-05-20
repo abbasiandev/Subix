@@ -1,5 +1,3 @@
-"""Telegram webhook update handlers (replaces aiogram routers)."""
-
 import time
 
 from app.services.user import UserService
@@ -21,39 +19,30 @@ def _throttled(user_id: int | None) -> bool:
     return False
 
 
-async def handle_update(update: dict) -> None:
+def handle_update(update: dict) -> None:
     message = update.get("message")
     if not message or "text" not in message:
         return
-
     from_user = message.get("from") or {}
     user_id = from_user.get("id")
     if _throttled(user_id):
         return
-
     chat_id = message["chat"]["id"]
     text = message["text"].strip()
     kb = main_menu_keyboard()
-
     if text.startswith("/start"):
-        svc = UserService()
-        user = await svc.upsert_from_telegram(
+        user = UserService().upsert_from_telegram(
             telegram_id=user_id,
             username=from_user.get("username"),
             first_name=from_user.get("first_name"),
             last_name=from_user.get("last_name"),
         )
         name = user.first_name or user.username or "کاربر"
-        await send_message(
+        send_message(
             chat_id,
             f"سلام {name} 👋\n\nبه <b>سابیکس</b> خوش آمدید!\n"
             "اشتراک‌های هوش مصنوعی را با بهترین قیمت تهیه کنید.",
             reply_markup=kb,
         )
         return
-
-    await send_message(
-        chat_id,
-        "از دکمه زیر وارد فروشگاه شوید 👇",
-        reply_markup=kb,
-    )
+    send_message(chat_id, "از دکمه زیر وارد فروشگاه شوید 👇", reply_markup=kb)
