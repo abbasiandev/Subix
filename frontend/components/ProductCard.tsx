@@ -17,9 +17,11 @@ export default function ProductCard({ product, onBuy }: Props) {
   return (
     <div className="flex items-center gap-3 bg-white rounded-2xl border border-gray-100 p-3 shadow-sm">
       <div
-        className={`w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden ${tileClass}`}
+        className={`w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 p-1 ${tileClass}`}
       >
-        <CategoryIcon category={product.category} size="md" className="brightness-0 invert" />
+        <div className="w-full h-full bg-white rounded-lg flex items-center justify-center">
+          <CategoryIcon category={product.category} size="sm" />
+        </div>
       </div>
 
       <div className="flex-1 min-w-0">

@@ -189,11 +189,7 @@ export default function StorePage() {
                   <span className="coming-soon-banner">به زودی</span>
                 )}
                 <div className="w-9 h-9 flex items-center justify-center mt-1">
-                  <CategoryIcon
-                    category={cat.key}
-                    size="sm"
-                    className="brightness-0 invert w-7 h-7"
-                  />
+                  <CategoryIcon category={cat.key} size="sm" variant="white" />
                 </div>
                 <span className="text-[10px] font-medium text-white">
                   {cat.label}
