@@ -54,7 +54,7 @@ export default function ProductCard({ product, onBuy }: Props) {
           )}
         </div>
         <p className="text-xs text-muted mt-1 leading-5">
-          فعال‌سازی: {product.activation_minutes} دقیقه
+          اختصاصی • فعال‌سازی: {product.activation_minutes} دقیقه
         </p>
         <p className="text-xs text-muted">
           نوع فعال‌سازی: {product.activation_type === "personal_email" ? "ایمیل شخصی" : "ایمیل آماده"}

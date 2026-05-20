@@ -3,22 +3,22 @@ import { useEffect, useRef, useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import ProductCard from "@/components/ProductCard";
 import { useAuth } from "@/context/AuthContext";
-import { createOrder, getCategories, getProducts, Product } from "@/lib/api";
+import { createOrder, getProducts, Product } from "@/lib/api";
 
-const CATEGORY_ICONS: Record<string, { icon: string; label: string }> = {
-  "ChatGPT":  { icon: "🤖", label: "چت جی‌پی‌تی" },
-  "Gemini":   { icon: "✨", label: "جمینی" },
-  "Cursor":   { icon: "🖱️", label: "کرسر" },
-  "Spotify":  { icon: "🎵", label: "اسپاتیفای" },
-  "YouTube":  { icon: "▶️", label: "یوتیوب" },
-  "Discord":  { icon: "💬", label: "دیسکورد" },
-  "Telegram": { icon: "✈️", label: "تلگرام" },
-};
+const STORE_CATEGORIES = [
+  { key: "ChatGPT", icon: "🤖", label: "چت جی‌پی‌تی", comingSoon: false },
+  { key: "Gemini", icon: "✨", label: "جمینی", comingSoon: false },
+  { key: "Cursor", icon: "🖱️", label: "کرسر", comingSoon: false },
+  { key: "Spotify", icon: "🎵", label: "اسپاتیفای", comingSoon: false },
+  { key: "SoundCloud", icon: "🎧", label: "ساندکلاد", comingSoon: true },
+  { key: "YouTube", icon: "▶️", label: "یوتیوب", comingSoon: true },
+  { key: "Discord", icon: "💬", label: "دیسکورد", comingSoon: true },
+  { key: "Telegram", icon: "✈️", label: "تلگرام", comingSoon: true },
+];
 
 export default function StorePage() {
   const { user, loading } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [fetching, setFetching] = useState(true);
@@ -28,11 +28,8 @@ export default function StorePage() {
   const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    Promise.all([getCategories(), getProducts()])
-      .then(([cats, prods]) => {
-        setCategories(cats);
-        setProducts(prods);
-      })
+    getProducts()
+      .then(setProducts)
       .finally(() => setFetching(false));
   }, []);
 
@@ -116,22 +113,32 @@ export default function StorePage() {
       <div className="px-4 pt-2">
         <p className="text-sm font-semibold text-gray-800 mb-3 text-right">دسته‌بندی‌ها</p>
         <div className="grid grid-cols-4 gap-2">
-          {categories.map((cat) => {
-            const meta = CATEGORY_ICONS[cat];
-            const active = activeCategory === cat;
+          {STORE_CATEGORIES.map((cat) => {
+            const active = activeCategory === cat.key;
             return (
               <button
-                key={cat}
-                onClick={() => setActiveCategory(active ? null : cat)}
-                className={`flex flex-col items-center gap-1.5 rounded-2xl p-2 border transition-all
-                  ${active
+                key={cat.key}
+                onClick={() => {
+                  if (cat.comingSoon) return;
+                  setActiveCategory(active ? null : cat.key);
+                }}
+                disabled={cat.comingSoon}
+                className={`relative flex flex-col items-center gap-1.5 rounded-2xl p-2 border transition-all
+                  ${cat.comingSoon
+                    ? "border-gray-100 bg-gray-50 opacity-60 cursor-not-allowed"
+                    : active
                     ? "border-primary bg-primary-light"
                     : "border-gray-100 bg-gray-50"
                   }`}
               >
-                <span className="text-2xl">{meta?.icon ?? "📦"}</span>
+                {cat.comingSoon && (
+                  <span className="absolute -top-1 left-1/2 -translate-x-1/2 text-[8px] bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                    به زودی
+                  </span>
+                )}
+                <span className="text-2xl">{cat.icon}</span>
                 <span className={`text-[10px] font-medium ${active ? "text-primary" : "text-gray-600"}`}>
-                  {meta?.label ?? cat}
+                  {cat.label}
                 </span>
               </button>
             );
