@@ -1,4 +1,5 @@
 import { Product } from "@/lib/api";
+import { BRAND_COLOR } from "@/components/BrandLogo";
 import { CATEGORY_GRADIENT_CLASS, getCategoryGradientClass } from "@/lib/categoryStyles";
 
 /**
@@ -67,4 +68,28 @@ export function getProductGradient(product: Product): string {
       CATEGORY_GRADIENT_CLASS[product.category] ??
       getCategoryGradientClass(product.category)
   );
+}
+
+const LIGHT_PRODUCT_KEYS = new Set([
+  "ChatGPT:personal_email",
+  "ChatGPT:ready_email:37",
+]);
+
+const LIGHT_GRADIENT_PATTERN =
+  /to-white|#F0F9FF|#E0F2FE|#BFDBFE|#BAE6FD/i;
+
+/** Pale product tiles need brand-colored logos instead of white */
+export function getProductLogoColor(product: Product): string {
+  const fullKey = `${product.category}:${product.activation_type}:${product.duration_days}`;
+  const simpleKey = `${product.category}:${product.activation_type}`;
+
+  if (LIGHT_PRODUCT_KEYS.has(fullKey) || LIGHT_PRODUCT_KEYS.has(simpleKey)) {
+    return BRAND_COLOR[product.category] ?? "#fff";
+  }
+
+  if (LIGHT_GRADIENT_PATTERN.test(getProductGradient(product))) {
+    return BRAND_COLOR[product.category] ?? "#fff";
+  }
+
+  return "#fff";
 }

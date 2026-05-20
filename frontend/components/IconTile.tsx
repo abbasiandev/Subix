@@ -7,6 +7,7 @@ interface Props {
   gradient: string;
   size?: TileSize;
   comingSoon?: boolean;
+  logoColor?: string;
   className?: string;
 }
 
@@ -20,6 +21,7 @@ export default function IconTile({
   gradient,
   size = "md",
   comingSoon = false,
+  logoColor,
   className = "",
 }: Props) {
   const { tile, logo } = TILE_CLASS[size];
@@ -36,7 +38,7 @@ export default function IconTile({
           <span className="absolute inset-0 bg-black/20 rounded-2xl" aria-hidden />
         </>
       )}
-      <BrandLogo brand={brand} size={logo} className="relative z-[1]" />
+      <BrandLogo brand={brand} size={logo} color={logoColor} className="relative z-[1]" />
     </div>
   );
 }

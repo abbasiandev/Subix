@@ -1,6 +1,6 @@
 import { Product } from "@/lib/api";
 import IconTile from "@/components/IconTile";
-import { getProductGradient } from "@/lib/productIconStyles";
+import { getProductGradient, getProductLogoColor } from "@/lib/productIconStyles";
 
 interface Props {
   product: Product;
@@ -17,6 +17,7 @@ export default function ProductCard({ product, onBuy }: Props) {
       <IconTile
         brand={product.category}
         gradient={getProductGradient(product)}
+        logoColor={getProductLogoColor(product)}
         size="lg"
       />
 
