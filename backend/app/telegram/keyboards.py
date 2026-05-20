@@ -12,21 +12,21 @@ def main_menu_keyboard() -> dict:
         "inline_keyboard": [
             [
                 {
-                    "text": "ورود به فروشگاه و خرید 🛒",
+                    "text": "🛒 ورود به فروشگاه و خرید",
                     "web_app": {"url": _url("/")},
                 }
             ],
             [
                 {
-                    "text": "پروفایل 🙋🏻‍♂️",
+                    "text": "💁🏻‍♀️ پروفایل",
                     "web_app": {"url": _url("/profile/")},
                 },
                 {
-                    "text": "داشبورد 📟",
+                    "text": "📟 داشبورد",
                     "web_app": {"url": _url("/dashboard/")},
                 },
                 {
-                    "text": "پشتیبانی 📮",
+                    "text": "📮 پشتیبانی",
                     "url": f"https://t.me/{SUPPORT_USERNAME}",
                 },
             ],

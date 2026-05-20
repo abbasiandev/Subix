@@ -48,9 +48,28 @@ Seed products once from your PC: `cd backend && python -m scripts.seed`
 
 ### C. Telegram
 
-BotFather → Menu Button URL: `https://abbasiandev.github.io/Subix/`
+**BotFather (manual):**
+- Menu Button → URL: `https://abbasiandev.github.io/Subix/`
+- Menu Button text: `🛒 فروشگاه سابیکس`
 
-Open bot in Telegram → tap menu → Mini App works.
+**`/start` message and inline buttons** come from the backend (`backend/app/telegram/handlers.py`). They only work if the webhook is enabled.
+
+On PythonAnywhere, in `/home/subix/mybot/backend/.env`:
+
+```env
+ENABLE_WEBHOOK=true
+WEBHOOK_URL=https://subix.pythonanywhere.com/webhook
+```
+
+Reload the web app, then register the webhook once:
+
+```bash
+cd /home/subix/mybot/backend
+source ~/.virtualenvs/subix/bin/activate
+python -m scripts.setup_webhook
+```
+
+Send `/start` in Telegram — you should see the سابیکس welcome text and buttons.
 
 ---
 
