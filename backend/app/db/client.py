@@ -98,7 +98,10 @@ def _parse_response(body: dict) -> ResultSet:
     return ResultSet(rows=rows_out)
 
 
-async def execute(sql: str, args: list | None = None) -> ResultSet:
+_migrated = False
+
+
+async def _pipeline(sql: str, args: list | None = None) -> ResultSet:
     client = await _client()
     stmt: dict = {"sql": sql}
     if args:
@@ -115,6 +118,20 @@ async def execute(sql: str, args: list | None = None) -> ResultSet:
     )
     resp.raise_for_status()
     return _parse_response(resp.json())
+
+
+async def ensure_migrated() -> None:
+    global _migrated
+    if _migrated:
+        return
+    for stmt in MIGRATIONS:
+        await _pipeline(stmt)
+    _migrated = True
+
+
+async def execute(sql: str, args: list | None = None) -> ResultSet:
+    await ensure_migrated()
+    return await _pipeline(sql, args)
 
 
 MIGRATIONS = [
@@ -175,5 +192,4 @@ MIGRATIONS = [
 
 
 async def run_migrations() -> None:
-    for stmt in MIGRATIONS:
-        await execute(stmt)
+    await ensure_migrated()

@@ -1,16 +1,65 @@
 # Subix — AI Account Marketplace Telegram Mini App
 
+## Launch online — free, no credit card
+
+Use **PythonAnywhere** (you already have `subix.pythonanywhere.com`).
+
+### A. Backend (PythonAnywhere)
+
+```bash
+# On PythonAnywhere Bash:
+cd /home/subix/mybot
+git pull origin main
+source ~/.virtualenvs/subix/bin/activate
+/home/subix/.virtualenvs/subix/bin/pip install -r backend/requirements.txt
+```
+
+**Web tab** settings:
+
+| Setting | Value |
+|---------|--------|
+| Source / Working dir | `/home/subix/mybot/backend` |
+| Python | **3.10** |
+| Virtualenv | `/home/subix/.virtualenvs/subix` |
+
+**`.env`** at `/home/subix/mybot/backend/.env`:
+
+```env
+BOT_TOKEN=...
+SECRET_KEY=...
+TURSO_URL=https://subixdb-lumaticgroup.aws-eu-west-1.turso.io
+TURSO_AUTH_TOKEN=...
+FRONTEND_URL=https://abbasiandev.github.io/Subix
+ENABLE_WEBHOOK=false
+DEBUG=false
+```
+
+**WSGI** file `/var/www/subix_pythonanywhere_com_wsgi.py` — copy from `backend/deploy/pythonanywhere_wsgi.py`
+
+Click **Reload** → test: `https://subix.pythonanywhere.com/health`
+
+Seed products once from your PC: `cd backend && python -m scripts.seed`
+
+### B. Frontend (GitHub Pages)
+
+1. GitHub **Secrets** → `API_URL` = `https://subix.pythonanywhere.com`
+2. **Actions** → **Deploy Frontend → GitHub Pages** → **Run workflow**
+3. Site: `https://abbasiandev.github.io/Subix/`
+
+### C. Telegram
+
+BotFather → Menu Button URL: `https://abbasiandev.github.io/Subix/`
+
+Open bot in Telegram → tap menu → Mini App works.
+
+---
+
 ## Stack
 | Layer | Tool | Host |
 |---|---|---|
 | Frontend | Next.js 14 (static export) | GitHub Pages |
-| CI/CD | GitHub Actions | GitHub |
-| Backend | FastAPI + httpx (lightweight) | JustRunMy.App |
+| Backend | FastAPI + httpx | PythonAnywhere (free) |
 | Database | Turso (libSQL) | Turso Cloud |
-| SSL/DNS | Cloudflare | Cloudflare |
-| Analytics | Google Analytics + Microsoft Clarity | CDN |
-| Push | OneSignal | CDN |
-| Email | Yandex Mail | Yandex |
 
 ## Architecture
 ```
