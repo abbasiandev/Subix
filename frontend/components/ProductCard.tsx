@@ -1,6 +1,6 @@
 import { Product } from "@/lib/api";
-import CategoryIcon from "@/components/CategoryIcon";
-import { getCategoryTileClass } from "@/lib/categoryStyles";
+import IconTile from "@/components/IconTile";
+import { getProductGradient } from "@/lib/productIconStyles";
 
 interface Props {
   product: Product;
@@ -12,17 +12,13 @@ function formatPrice(n: number) {
 }
 
 export default function ProductCard({ product, onBuy }: Props) {
-  const tileClass = getCategoryTileClass(product.category);
-
   return (
     <div className="flex items-center gap-3 bg-white rounded-2xl border border-gray-100 p-3 shadow-sm">
-      <div
-        className={`w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 p-1 ${tileClass}`}
-      >
-        <div className="w-full h-full bg-white rounded-lg flex items-center justify-center">
-          <CategoryIcon category={product.category} size="sm" />
-        </div>
-      </div>
+      <IconTile
+        brand={product.category}
+        gradient={getProductGradient(product)}
+        size="lg"
+      />
 
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-sm text-gray-900 leading-5 mb-1">

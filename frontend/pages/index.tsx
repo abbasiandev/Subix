@@ -2,13 +2,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import BottomNav from "@/components/BottomNav";
-import CategoryIcon from "@/components/CategoryIcon";
+import IconTile from "@/components/IconTile";
 import ProductCard from "@/components/ProductCard";
 import UserAvatar from "@/components/UserAvatar";
 import { BellIcon, ChevronLeftIcon, SearchIcon, WalletIcon } from "@/components/Icons";
 import { useAuth } from "@/context/AuthContext";
 import { createOrder, getProducts, Product } from "@/lib/api";
-import { getCategoryTileClass } from "@/lib/categoryStyles";
+import { getCategoryGradientClass } from "@/lib/categoryStyles";
 
 const STORE_CATEGORIES = [
   { key: "ChatGPT", label: "چت جی‌پی‌تی", comingSoon: false },
@@ -171,7 +171,6 @@ export default function StorePage() {
         <div className="grid grid-cols-4 gap-2">
           {STORE_CATEGORIES.map((cat) => {
             const active = activeCategory === cat.key;
-            const tileClass = getCategoryTileClass(cat.key);
             return (
               <button
                 key={cat.key}
@@ -180,18 +179,17 @@ export default function StorePage() {
                   setActiveCategory(active ? null : cat.key);
                 }}
                 disabled={cat.comingSoon}
-                className={`relative flex flex-col items-center gap-1.5 rounded-2xl p-2 pt-3 transition-all overflow-hidden
-                  ${cat.comingSoon ? "opacity-70 cursor-not-allowed" : "active:scale-95"}
-                  ${active ? "ring-2 ring-primary ring-offset-1" : ""}
-                  ${tileClass}`}
+                className={`relative flex flex-col items-center gap-1.5 p-1 transition-all
+                  ${cat.comingSoon ? "cursor-not-allowed" : "active:scale-95"}
+                  ${active ? "ring-2 ring-primary ring-offset-2 rounded-2xl" : ""}`}
               >
-                {cat.comingSoon && (
-                  <span className="coming-soon-banner">به زودی</span>
-                )}
-                <div className="w-9 h-9 flex items-center justify-center mt-1">
-                  <CategoryIcon category={cat.key} size="sm" variant="white" />
-                </div>
-                <span className="text-[10px] font-medium text-white">
+                <IconTile
+                  brand={cat.key}
+                  gradient={getCategoryGradientClass(cat.key)}
+                  comingSoon={cat.comingSoon}
+                  size="md"
+                />
+                <span className="text-[10px] font-medium text-gray-600">
                   {cat.label}
                 </span>
               </button>
