@@ -1,8 +1,3 @@
-# ─────────────────────────────────────────────────────────────────────────────
-# PythonAnywhere WSGI — paste into:
-# /var/www/subix_pythonanywhere_com_wsgi.py
-# ─────────────────────────────────────────────────────────────────────────────
-
 import os
 import sys
 from pathlib import Path
@@ -15,7 +10,5 @@ from dotenv import load_dotenv
 
 load_dotenv(PROJECT / ".env")
 
-from a2wsgi import ASGIMiddleware
-from app.main import app as fastapi_app
-
-application = ASGIMiddleware(fastapi_app)
+# Flask WSGI — no a2wsgi (hangs on PythonAnywhere)
+from app.pa_flask import application
