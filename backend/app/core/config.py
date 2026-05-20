@@ -15,7 +15,8 @@ class Settings(BaseSettings):
 
     # Telegram
     bot_token: str
-    webhook_url: str
+    webhook_url: str = ""
+    enable_webhook: bool = False  # True = bot /start replies; Mini App works without it
 
     # JWT
     secret_key: str

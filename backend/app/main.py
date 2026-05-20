@@ -21,14 +21,18 @@ async def lifespan(app: FastAPI):
     except Exception as exc:
         logger.error("DB migration failed: %s", exc)
     try:
-        await set_webhook(settings.webhook_url)
+        if settings.enable_webhook and settings.webhook_url:
+            await set_webhook(settings.webhook_url)
+        else:
+            logger.info("Telegram webhook disabled (enable_webhook=false)")
     except Exception as exc:
         logger.warning("Webhook registration failed: %s", exc)
     yield
-    try:
-        await delete_webhook()
-    except Exception:
-        pass
+    if settings.enable_webhook and settings.webhook_url:
+        try:
+            await delete_webhook()
+        except Exception:
+            pass
     await close_telegram()
     await close_db()
 
@@ -52,10 +56,12 @@ app.add_middleware(
 app.include_router(api_router)
 
 
-@app.post("/webhook")
-async def telegram_webhook(request: Request):
-    await handle_update(await request.json())
-    return JSONResponse({"ok": True})
+if settings.enable_webhook:
+
+    @app.post("/webhook")
+    async def telegram_webhook(request: Request):
+        await handle_update(await request.json())
+        return JSONResponse({"ok": True})
 
 
 @app.get("/")
