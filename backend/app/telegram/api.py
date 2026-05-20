@@ -10,7 +10,8 @@ _client: httpx.Client | None = None
 def _http() -> httpx.Client:
     global _client
     if _client is None:
-        _client = httpx.Client(timeout=30.0)
+        # PythonAnywhere sets HTTP_PROXY; Telegram API must not use that proxy.
+        _client = httpx.Client(timeout=30.0, trust_env=False)
     return _client
 
 

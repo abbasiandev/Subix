@@ -69,7 +69,15 @@ source ~/.virtualenvs/subix/bin/activate
 python -m scripts.setup_webhook
 ```
 
-Send `/start` in Telegram — you should see the سابیکس welcome text and buttons.
+If you get `httpx.ProxyError` on PythonAnywhere, set the webhook **from your Mac** (replace `TOKEN`):
+
+```bash
+curl -sS "https://api.telegram.org/botTOKEN/setWebhook" \
+  -d "url=https://subix.pythonanywhere.com/webhook" \
+  -d "drop_pending_updates=true"
+```
+
+You should see `"ok":true`. Then send `/start` in Telegram.
 
 ---
 
