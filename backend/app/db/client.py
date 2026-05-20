@@ -6,6 +6,7 @@ from typing import Any
 import httpx
 
 from app.core.config import settings
+from app.http_pa import make_client
 
 _http: httpx.Client | None = None
 _migrated = False
@@ -31,7 +32,7 @@ def _db_base() -> str:
 def _client() -> httpx.Client:
     global _http
     if _http is None:
-        _http = httpx.Client(
+        _http = make_client(
             timeout=30.0,
             headers={
                 "Authorization": f"Bearer {settings.turso_auth_token}",

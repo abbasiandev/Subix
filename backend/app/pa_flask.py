@@ -35,7 +35,11 @@ def root():
 
 @app.route("/health", methods=["GET"])
 def health():
-    return jsonify({"status": "ok", "app": settings.app_name})
+    return jsonify({
+        "status": "ok",
+        "app": settings.app_name,
+        "webhook_enabled": settings.enable_webhook,
+    })
 
 
 @app.route("/api/v1/auth/telegram", methods=["POST", "OPTIONS"])
@@ -153,8 +157,15 @@ if settings.enable_webhook:
 
     @app.route("/webhook", methods=["POST"])
     def telegram_webhook():
-        handle_update(request.get_json(force=True, silent=True) or {})
+        try:
+            handle_update(request.get_json(force=True, silent=True) or {})
+        except Exception:
+            app.logger.exception("Telegram webhook handler failed")
         return jsonify({"ok": True})
+else:
+    app.logger.warning(
+        "ENABLE_WEBHOOK is false — /start will not work. Set ENABLE_WEBHOOK=true in .env and reload."
+    )
 
 
 # PythonAnywhere entry point
