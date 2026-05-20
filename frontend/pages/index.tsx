@@ -1,23 +1,44 @@
 // pages/index.tsx
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
 import BottomNav from "@/components/BottomNav";
+import CategoryIcon from "@/components/CategoryIcon";
 import ProductCard from "@/components/ProductCard";
+import UserAvatar from "@/components/UserAvatar";
 import { useAuth } from "@/context/AuthContext";
 import { createOrder, getProducts, Product } from "@/lib/api";
 
 const STORE_CATEGORIES = [
-  { key: "ChatGPT", icon: "🤖", label: "چت جی‌پی‌تی", comingSoon: false },
-  { key: "Gemini", icon: "✨", label: "جمینی", comingSoon: false },
-  { key: "Cursor", icon: "🖱️", label: "کرسر", comingSoon: false },
-  { key: "Spotify", icon: "🎵", label: "اسپاتیفای", comingSoon: false },
-  { key: "SoundCloud", icon: "🎧", label: "ساندکلاد", comingSoon: true },
-  { key: "YouTube", icon: "▶️", label: "یوتیوب", comingSoon: true },
-  { key: "Discord", icon: "💬", label: "دیسکورد", comingSoon: true },
-  { key: "Telegram", icon: "✈️", label: "تلگرام", comingSoon: true },
+  { key: "ChatGPT", label: "چت جی‌پی‌تی", comingSoon: false },
+  { key: "Gemini", label: "جمینی", comingSoon: false },
+  { key: "Cursor", label: "کرسر", comingSoon: false },
+  { key: "Spotify", label: "اسپاتیفای", comingSoon: false },
+  { key: "SoundCloud", label: "ساندکلاد", comingSoon: true },
+  { key: "YouTube", label: "یوتیوب", comingSoon: true },
+  { key: "Discord", label: "دیسکورد", comingSoon: true },
+  { key: "Telegram", label: "تلگرام", comingSoon: true },
 ];
 
+function normalizeSearch(text: string) {
+  return text
+    .trim()
+    .toLowerCase()
+    .replace(/[\u064A\u06CC]/g, "ی")
+    .replace(/[\u0643\u06A9]/g, "ک")
+    .replace(/\u200c/g, "");
+}
+
+function productSearchText(product: Product) {
+  const categoryLabel =
+    STORE_CATEGORIES.find((c) => c.key === product.category)?.label ?? "";
+  return normalizeSearch(
+    [product.name, product.category, product.description ?? "", categoryLabel].join(" ")
+  );
+}
+
 export default function StorePage() {
-  const { user, loading } = useAuth();
+  const router = useRouter();
+  const { user, photoUrl, loading } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [search, setSearch] = useState("");
@@ -33,10 +54,12 @@ export default function StorePage() {
       .finally(() => setFetching(false));
   }, []);
 
+  const normalizedSearch = normalizeSearch(search);
+
   const filtered = products.filter((p) => {
     const matchCat = activeCategory ? p.category === activeCategory : true;
-    const matchSearch = search
-      ? p.name.includes(search) || p.category.includes(search)
+    const matchSearch = normalizedSearch
+      ? productSearchText(p).includes(normalizedSearch)
       : true;
     return matchCat && matchSearch;
   });
@@ -66,32 +89,44 @@ export default function StorePage() {
     }
   }
 
+  function clearFilters() {
+    setActiveCategory(null);
+    setSearch("");
+    searchRef.current?.focus();
+  }
+
+  function goToTopup() {
+    router.push("/profile?topup=1");
+  }
+
+  const displayName = user?.first_name ?? user?.username ?? "کاربر";
+
   return (
     <div className="min-h-dvh bg-white flex flex-col">
 
-      {/* ── Header ── */}
       <div className="flex items-center justify-between px-4 pt-4 pb-2">
         <div className="text-right">
           <p className="text-xs text-muted">سلام، خوش اومدی</p>
           <p className="font-bold text-gray-900">
-            {loading ? "..." : user?.first_name ?? user?.username ?? "کاربر"}
+            {loading ? "..." : displayName}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <button
             className="bg-primary text-white text-xs font-semibold rounded-xl px-3 py-2 flex items-center gap-1"
-            onClick={() => {}}
+            onClick={goToTopup}
           >
             <span>💰</span>
             <span>شارژ کیف پول</span>
           </button>
-          <div className="w-10 h-10 rounded-full bg-primary-light flex items-center justify-center text-primary font-bold text-sm">
-            {user?.first_name?.[0] ?? "U"}
-          </div>
+          <UserAvatar
+            photoUrl={photoUrl}
+            name={displayName}
+            size="sm"
+          />
         </div>
       </div>
 
-      {/* ── Search ── */}
       <div className="px-4 py-2">
         <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
@@ -109,7 +144,6 @@ export default function StorePage() {
         </div>
       </div>
 
-      {/* ── Category grid ── */}
       <div className="px-4 pt-2">
         <p className="text-sm font-semibold text-gray-800 mb-3 text-right">دسته‌بندی‌ها</p>
         <div className="grid grid-cols-4 gap-2">
@@ -136,7 +170,7 @@ export default function StorePage() {
                     به زودی
                   </span>
                 )}
-                <span className="text-2xl">{cat.icon}</span>
+                <CategoryIcon category={cat.key} size="sm" />
                 <span className={`text-[10px] font-medium ${active ? "text-primary" : "text-gray-600"}`}>
                   {cat.label}
                 </span>
@@ -146,10 +180,14 @@ export default function StorePage() {
         </div>
       </div>
 
-      {/* ── Products ── */}
       <div className="px-4 pt-4 pb-28 flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <button className="text-xs text-primary font-medium">مشاهده همه</button>
+          <button
+            className="text-xs text-primary font-medium"
+            onClick={clearFilters}
+          >
+            مشاهده همه
+          </button>
           <p className="text-sm font-semibold text-gray-800">محصولات</p>
         </div>
 
@@ -166,7 +204,6 @@ export default function StorePage() {
         )}
       </div>
 
-      {/* ── Buy confirmation modal ── */}
       {buyModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-end">
           <div className="bg-white w-full rounded-t-3xl p-6 pb-10 animate-slide-up">
@@ -204,7 +241,6 @@ export default function StorePage() {
         </div>
       )}
 
-      {/* ── Toast ── */}
       {toast && (
         <div className={`fixed top-4 inset-x-4 z-50 rounded-xl px-4 py-3 text-white text-sm text-center font-medium shadow-lg
           ${toast.type === "success" ? "bg-primary" : "bg-red-500"}`}>

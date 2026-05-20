@@ -1,15 +1,5 @@
-// components/ProductCard.tsx
 import { Product } from "@/lib/api";
-
-const CATEGORY_ICONS: Record<string, string> = {
-  "ChatGPT": "/icons/chatgpt.svg",
-  "Gemini": "/icons/gemini.svg",
-  "Spotify": "/icons/spotify.svg",
-  "YouTube": "/icons/youtube.svg",
-  "Discord": "/icons/discord.svg",
-  "Telegram": "/icons/telegram.svg",
-  "Cursor": "/icons/cursor.svg",
-};
+import CategoryIcon from "@/components/CategoryIcon";
 
 interface Props {
   product: Product;
@@ -28,30 +18,18 @@ function durationLabel(days: number) {
 }
 
 export default function ProductCard({ product, onBuy }: Props) {
-  const icon = CATEGORY_ICONS[product.category];
-  const isComingSoon = false; // set from product.tag if needed
-
   return (
     <div className="flex items-center gap-3 bg-white rounded-2xl border border-gray-100 p-3 shadow-sm">
-      {/* Icon */}
       <div className="w-14 h-14 rounded-xl bg-gray-50 flex items-center justify-center flex-shrink-0 overflow-hidden">
-        {icon ? (
-          <img src={icon} alt={product.category} className="w-10 h-10 object-contain" />
-        ) : (
-          <span className="text-2xl">🤖</span>
-        )}
+        <CategoryIcon category={product.category} size="md" />
       </div>
 
-      {/* Info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="font-semibold text-sm text-gray-900 truncate">
             {product.name}
           </span>
           <span className="badge badge-green">{durationLabel(product.duration_days)}</span>
-          {isComingSoon && (
-            <span className="badge bg-orange-100 text-orange-600">به زودی</span>
-          )}
         </div>
         <p className="text-xs text-muted mt-1 leading-5">
           اختصاصی • فعال‌سازی: {product.activation_minutes} دقیقه
@@ -61,7 +39,6 @@ export default function ProductCard({ product, onBuy }: Props) {
         </p>
       </div>
 
-      {/* Price + Buy */}
       <div className="flex flex-col items-end gap-2 flex-shrink-0">
         <span className="text-primary font-bold text-sm">
           {formatPrice(product.price)}

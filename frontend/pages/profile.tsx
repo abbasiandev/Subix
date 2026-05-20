@@ -1,6 +1,8 @@
 // pages/profile.tsx
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
 import BottomNav from "@/components/BottomNav";
+import UserAvatar from "@/components/UserAvatar";
 import { useAuth } from "@/context/AuthContext";
 import { requestTopup } from "@/lib/api";
 
@@ -9,10 +11,18 @@ function formatPrice(n: number) {
 }
 
 export default function ProfilePage() {
-  const { user, loading } = useAuth();
+  const router = useRouter();
+  const { user, photoUrl, loading } = useAuth();
   const [topupAmount, setTopupAmount] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const topupRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (router.query.topup === "1" && topupRef.current) {
+      topupRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [router.query.topup, user]);
 
   function showToast(msg: string) {
     setToast(msg);
@@ -37,15 +47,18 @@ export default function ProfilePage() {
     }
   }
 
-  // Not logged in yet (no Telegram WebApp)
+  const displayName =
+    `${user?.first_name ?? ""} ${user?.last_name ?? ""}`.trim() ||
+    user?.username ||
+    "کاربر";
+
   if (!loading && !user) {
     return (
       <div className="min-h-dvh bg-white flex flex-col">
         <div className="flex-1 flex flex-col items-center justify-start px-6 pt-16">
           <div className="w-full bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            {/* Logo + Welcome */}
             <div className="flex items-center justify-end gap-3 mb-6">
-              <p className="text-xl font-bold text-gray-900">به سابیکس، خوش آمدید</p>
+              <p className="text-xl font-bold text-gray-900">به Subix خوش آمدید</p>
               <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
@@ -72,26 +85,26 @@ export default function ProfilePage() {
   return (
     <div className="min-h-dvh bg-surface flex flex-col">
 
-      {/* ── Header ── */}
       <div className="bg-white px-4 pt-5 pb-4 border-b border-gray-100">
         <div className="flex items-center justify-end gap-3">
           <div className="text-right">
             <p className="font-bold text-gray-900">
-              {loading ? "..." : `${user?.first_name ?? ""} ${user?.last_name ?? ""}`.trim() || user?.username || "کاربر"}
+              {loading ? "..." : displayName}
             </p>
             {user?.username && (
               <p className="text-xs text-muted">@{user.username}</p>
             )}
           </div>
-          <div className="w-12 h-12 rounded-full bg-primary-light flex items-center justify-center text-primary font-bold text-lg">
-            {user?.first_name?.[0] ?? "U"}
-          </div>
+          <UserAvatar
+            photoUrl={photoUrl}
+            name={displayName}
+            size="md"
+          />
         </div>
       </div>
 
       <div className="flex-1 px-4 py-4 pb-28 space-y-4">
 
-        {/* ── Wallet card ── */}
         <div className="bg-primary rounded-2xl p-5 text-white">
           <p className="text-sm opacity-80 text-right mb-1">موجودی کیف پول</p>
           <p className="text-2xl font-bold text-right">
@@ -99,8 +112,7 @@ export default function ProfilePage() {
           </p>
         </div>
 
-        {/* ── Topup ── */}
-        <div className="card">
+        <div className="card" id="topup" ref={topupRef}>
           <p className="text-right font-semibold text-gray-800 mb-4">شارژ کیف پول</p>
           <input
             className="input-field mb-3"
@@ -119,7 +131,6 @@ export default function ProfilePage() {
           </button>
         </div>
 
-        {/* ── Info rows ── */}
         <div className="card space-y-3">
           <InfoRow label="شناسه تلگرام" value={String(user?.telegram_id ?? "-")} />
           {user?.username && (
@@ -138,7 +149,6 @@ export default function ProfilePage() {
 
       </div>
 
-      {/* ── Toast ── */}
       {toast && (
         <div className="fixed top-4 inset-x-4 z-50 bg-gray-800 rounded-xl px-4 py-3 text-white text-sm text-center shadow-lg">
           {toast}
