@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import BottomNav from "@/components/BottomNav";
 import UserAvatar from "@/components/UserAvatar";
+import { SubixLogoIcon } from "@/components/Icons";
 import { useAuth } from "@/context/AuthContext";
 import { requestTopup } from "@/lib/api";
 
@@ -10,9 +11,14 @@ function formatPrice(n: number) {
   return n.toLocaleString("fa-IR") + " تومان";
 }
 
+function isValidPhone(phone: string) {
+  return /^09\d{9}$/.test(phone);
+}
+
 export default function ProfilePage() {
   const router = useRouter();
   const { user, photoUrl, loading } = useAuth();
+  const [phone, setPhone] = useState("09");
   const [topupAmount, setTopupAmount] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -27,6 +33,19 @@ export default function ProfilePage() {
   function showToast(msg: string) {
     setToast(msg);
     setTimeout(() => setToast(null), 3000);
+  }
+
+  function handlePhoneChange(value: string) {
+    const digits = value.replace(/\D/g, "");
+    if (digits.length <= 11) {
+      setPhone(digits.length === 0 ? "09" : digits);
+    }
+  }
+
+  function handleSendCode() {
+    const initData = window.Telegram?.WebApp?.initData;
+    if (initData) return;
+    showToast("لطفاً اپلیکیشن را از طریق ربات تلگرام باز کنید");
   }
 
   async function handleTopup() {
@@ -52,31 +71,56 @@ export default function ProfilePage() {
     user?.username ||
     "کاربر";
 
+  const phoneValid = isValidPhone(phone);
+
   if (!loading && !user) {
     return (
-      <div className="min-h-dvh bg-white flex flex-col">
-        <div className="flex-1 flex flex-col items-center justify-start px-6 pt-16">
-          <div className="w-full bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+      <div className="min-h-dvh bg-surface flex flex-col">
+        <div className="flex-1 px-4 pt-12">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
             <div className="flex items-center justify-end gap-3 mb-6">
-              <p className="text-xl font-bold text-gray-900">به Subix خوش آمدید</p>
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
-                </svg>
+              <p className="text-lg font-bold text-gray-900">به سابیکس، خوش آمدید</p>
+              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
+                <SubixLogoIcon />
               </div>
             </div>
 
             <p className="text-right text-sm text-muted mb-3">
-              برای ورود، اپ تلگرام را باز کنید و از طریق ربات وارد شوید
+              شماره موبایل خود را وارد کنید
             </p>
 
-            <p className="text-right text-xs text-gray-400">
+            <input
+              className="input-field mb-4 text-left"
+              type="tel"
+              inputMode="numeric"
+              value={phone}
+              onChange={(e) => handlePhoneChange(e.target.value)}
+              dir="ltr"
+            />
+
+            <p className="text-right text-xs text-gray-400 mb-5">
               با ادامه، شما با{" "}
-              <span className="text-primary">قوانین و مقررات</span>{" "}
+              <span className="text-primary cursor-pointer">قوانین و مقررات</span>{" "}
               موافقت می‌کنید
             </p>
+
+            <button
+              className={`w-full rounded-xl py-3.5 text-white font-semibold transition-colors
+                ${phoneValid ? "bg-primary active:scale-[0.98]" : "bg-gray-300 cursor-not-allowed"}`}
+              disabled={!phoneValid}
+              onClick={handleSendCode}
+            >
+              ارسال کد تایید
+            </button>
           </div>
         </div>
+
+        {toast && (
+          <div className="fixed top-4 inset-x-4 z-50 bg-gray-800 rounded-xl px-4 py-3 text-white text-sm text-center shadow-lg">
+            {toast}
+          </div>
+        )}
+
         <BottomNav />
       </div>
     );
@@ -84,7 +128,6 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-dvh bg-surface flex flex-col">
-
       <div className="bg-white px-4 pt-5 pb-4 border-b border-gray-100">
         <div className="flex items-center justify-end gap-3">
           <div className="text-right">
@@ -99,12 +142,12 @@ export default function ProfilePage() {
             photoUrl={photoUrl}
             name={displayName}
             size="md"
+            shape="square"
           />
         </div>
       </div>
 
       <div className="flex-1 px-4 py-4 pb-28 space-y-4">
-
         <div className="bg-primary rounded-2xl p-5 text-white">
           <p className="text-sm opacity-80 text-right mb-1">موجودی کیف پول</p>
           <p className="text-2xl font-bold text-right">
@@ -141,12 +184,13 @@ export default function ProfilePage() {
           )}
           <InfoRow
             label="تاریخ عضویت"
-            value={user?.created_at
-              ? new Date(user.created_at).toLocaleDateString("fa-IR")
-              : "-"}
+            value={
+              user?.created_at
+                ? new Date(user.created_at).toLocaleDateString("fa-IR")
+                : "-"
+            }
           />
         </div>
-
       </div>
 
       {toast && (

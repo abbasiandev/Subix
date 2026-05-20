@@ -1,5 +1,12 @@
 // lib/api.ts
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "";
+const APP_BASE = "/Subix";
+
+function resolveUrl(path: string): string {
+  if (BASE) return `${BASE}${path}`;
+  // Local dev: proxy through Next API route (avoids CORS)
+  return `${APP_BASE}/api${path.replace(/^\/api/, "")}`;
+}
 
 // In-memory token — never localStorage (Telegram Mini App restriction)
 let _token: string | null = null;
@@ -17,7 +24,7 @@ async function request<T>(
   };
   if (_token) headers["Authorization"] = `Bearer ${_token}`;
 
-  const res = await fetch(`${BASE}${path}`, { ...options, headers });
+  const res = await fetch(resolveUrl(path), { ...options, headers });
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: res.statusText }));

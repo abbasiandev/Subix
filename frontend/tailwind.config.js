@@ -7,15 +7,23 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#2DC572",       // subix green
-        "primary-dark": "#24A660",
-        "primary-light": "#E8F8F0",
-        muted: "#6B7280",
-        surface: "#F9FAFB",
+        primary: "#00B894",
+        "primary-dark": "#009E7E",
+        "primary-light": "#E8F5F1",
+        muted: "#636E72",
+        surface: "#F8F9FA",
       },
       fontFamily: {
-        // Vazirmatn — best Persian font
         sans: ["Vazirmatn", "system-ui", "sans-serif"],
+      },
+      keyframes: {
+        slideUp: {
+          from: { transform: "translateY(100%)" },
+          to: { transform: "translateY(0)" },
+        },
+      },
+      animation: {
+        "slide-up": "slideUp 0.25s ease-out",
       },
     },
   },
