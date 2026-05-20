@@ -1,4 +1,4 @@
-"""Turso/libSQL over HTTP v2 pipeline — sync (PythonAnywhere WSGI compatible)."""
+"""Turso/libSQL over HTTP — sync (PythonAnywhere WSGI compatible)."""
 
 from dataclasses import dataclass
 from typing import Any
@@ -28,10 +28,6 @@ def _db_base() -> str:
     return url.rstrip("/")
 
 
-def _pipeline_url() -> str:
-    return f"{_db_base()}/v2/pipeline"
-
-
 def _client() -> httpx.Client:
     global _http
     if _http is None:
@@ -43,6 +39,46 @@ def _client() -> httpx.Client:
             },
         )
     return _http
+
+
+def _cell(value: Any) -> Any:
+    if isinstance(value, dict):
+        kind = value.get("type")
+        if kind == "null":
+            return None
+        if kind == "integer":
+            return int(value["value"])
+        if kind == "float":
+            return float(value["value"])
+        return value.get("value")
+    return value
+
+
+def _parse_rows(result: dict) -> list[Row]:
+    rows_out: list[Row] = []
+    raw_rows = result.get("rows") or []
+    for row in raw_rows:
+        if row and isinstance(row[0], dict):
+            rows_out.append(Row(values=tuple(_cell(c) for c in row)))
+        else:
+            rows_out.append(Row(values=tuple(row)))
+    return rows_out
+
+
+def _first_result(body: Any) -> dict:
+    if isinstance(body, list):
+        item = body[0]
+        if isinstance(item, dict) and "results" in item:
+            return item["results"]
+        return item
+    if isinstance(body, dict):
+        results = body.get("results")
+        if isinstance(results, list) and results:
+            first = results[0]
+            if isinstance(first, dict) and "response" in first:
+                return first["response"].get("result") or {}
+            return first
+    raise RuntimeError(f"Unexpected Turso response: {body!r}")
 
 
 def _to_arg(value: Any) -> dict:
@@ -57,51 +93,37 @@ def _to_arg(value: Any) -> dict:
     return {"type": "text", "value": str(value)}
 
 
-def _from_cell(cell: Any) -> Any:
-    if cell is None:
-        return None
-    if isinstance(cell, dict):
-        kind = cell.get("type")
-        if kind == "null":
-            return None
-        if kind == "integer":
-            return int(cell["value"])
-        if kind == "float":
-            return float(cell["value"])
-        return cell.get("value")
-    return cell
+def _query(sql: str, args: list | None = None) -> ResultSet:
+    client = _client()
+    args = args or []
 
-
-def _parse_row(row: list) -> tuple:
-    return tuple(_from_cell(c) for c in row)
-
-
-def _parse_response(body: dict) -> ResultSet:
-    rows_out: list[Row] = []
-    for item in body.get("results", []):
-        if item.get("type") == "error":
-            raise RuntimeError(item.get("error") or item)
-        if item.get("type") != "ok":
-            continue
-        response = item.get("response") or {}
-        if response.get("type") != "execute":
-            continue
-        result = response.get("result") or {}
-        for row in result.get("rows", []):
-            rows_out.append(Row(values=_parse_row(row)))
-    return ResultSet(rows=rows_out)
-
-
-def _pipeline(sql: str, args: list | None = None) -> ResultSet:
-    stmt: dict = {"sql": sql}
+    v2_stmt: dict = {"sql": sql}
     if args:
-        stmt["args"] = [_to_arg(a) for a in args]
-    resp = _client().post(
-        _pipeline_url(),
-        json={"requests": [{"type": "execute", "stmt": stmt}, {"type": "close"}]},
-    )
-    resp.raise_for_status()
-    return _parse_response(resp.json())
+        v2_stmt["args"] = [_to_arg(a) for a in args]
+
+    try:
+        resp = client.post(
+            f"{_db_base()}/v2/pipeline",
+            json={"requests": [{"type": "execute", "stmt": v2_stmt}, {"type": "close"}]},
+        )
+        resp.raise_for_status()
+        result = _first_result(resp.json())
+        if isinstance(result, dict) and result.get("error"):
+            raise RuntimeError(result["error"])
+        return ResultSet(rows=_parse_rows(result))
+    except Exception as v2_err:
+        try:
+            resp = client.post(
+                _db_base(),
+                json={"statements": [{"q": sql, "params": args}]},
+            )
+            resp.raise_for_status()
+            result = _first_result(resp.json())
+            if isinstance(result, dict) and result.get("error"):
+                raise RuntimeError(result["error"])
+            return ResultSet(rows=_parse_rows(result))
+        except Exception as v1_err:
+            raise RuntimeError(f"Turso v2: {v2_err}; Turso v1: {v1_err}") from v1_err
 
 
 MIGRATIONS = [
@@ -166,13 +188,13 @@ def ensure_migrated() -> None:
     if _migrated:
         return
     for stmt in MIGRATIONS:
-        _pipeline(stmt)
+        _query(stmt)
     _migrated = True
 
 
 def execute(sql: str, args: list | None = None) -> ResultSet:
     ensure_migrated()
-    return _pipeline(sql, args)
+    return _query(sql, args)
 
 
 def run_migrations() -> None:

@@ -58,9 +58,12 @@ def telegram_login():
 
 @app.route("/api/v1/products", methods=["GET"])
 def list_products():
-    category = request.args.get("category")
-    products = ProductService().list_active(category=category or None)
-    return jsonify([p.model_dump() for p in products])
+    try:
+        category = request.args.get("category")
+        products = ProductService().list_active(category=category or None)
+        return jsonify([p.model_dump(mode="json") for p in products])
+    except Exception as exc:
+        return jsonify({"detail": str(exc)}), 500
 
 
 @app.route("/api/v1/products/categories", methods=["GET"])
