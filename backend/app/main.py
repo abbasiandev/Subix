@@ -16,7 +16,10 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await run_migrations()
+    try:
+        await run_migrations()
+    except Exception as exc:
+        logger.error("DB migration failed: %s", exc)
     try:
         await set_webhook(settings.webhook_url)
     except Exception as exc:
@@ -53,6 +56,16 @@ app.include_router(api_router)
 async def telegram_webhook(request: Request):
     await handle_update(await request.json())
     return JSONResponse({"ok": True})
+
+
+@app.get("/")
+async def root():
+    return {
+        "status": "ok",
+        "app": settings.app_name,
+        "health": "/health",
+        "api": "/api/v1",
+    }
 
 
 @app.get("/health")

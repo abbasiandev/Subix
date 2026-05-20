@@ -1,8 +1,17 @@
+from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# backend/ — absolute path so .env loads on PythonAnywhere (cwd may be /var/www)
+_BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
+_ENV_FILE = _BACKEND_DIR / ".env"
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(
+        env_file=str(_ENV_FILE),
+        env_file_encoding="utf-8",
+    )
 
     # Telegram
     bot_token: str
