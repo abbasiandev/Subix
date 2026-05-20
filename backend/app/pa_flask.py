@@ -19,8 +19,8 @@ app = Flask(__name__)
 def cors(resp):
     origin = request.headers.get("Origin")
     if origin:
-        base = settings.frontend_url.rstrip("/")
-        if origin.rstrip("/") == base or origin == "https://web.telegram.org":
+        allowed = {o.rstrip("/") for o in settings.cors_origins}
+        if origin.rstrip("/") in allowed:
             resp.headers["Access-Control-Allow-Origin"] = origin
     resp.headers["Access-Control-Allow-Credentials"] = "true"
     resp.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"

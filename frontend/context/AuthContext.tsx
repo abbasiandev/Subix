@@ -13,24 +13,38 @@ interface AuthCtx {
   photoUrl: string | null;
   loading: boolean;
   error: string | null;
+  isTelegram: boolean;
 }
 
-const Ctx = createContext<AuthCtx>({ user: null, photoUrl: null, loading: true, error: null });
+const Ctx = createContext<AuthCtx>({
+  user: null,
+  photoUrl: null,
+  loading: true,
+  error: null,
+  isTelegram: false,
+});
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isTelegram, setIsTelegram] = useState(false);
 
   useEffect(() => {
-    const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      setIsTelegram(true);
+      tg.ready();
+      tg.expand();
+    }
+
+    const tgUser = tg?.initDataUnsafe?.user;
     if (tgUser?.photo_url) {
       setPhotoUrl(tgUser.photo_url);
     }
 
-    const initData = window.Telegram?.WebApp?.initData;
-
+    const initData = tg?.initData;
     if (!initData) {
       setLoading(false);
       return;
@@ -46,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <Ctx.Provider value={{ user, photoUrl, loading, error }}>
+    <Ctx.Provider value={{ user, photoUrl, loading, error, isTelegram }}>
       {children}
     </Ctx.Provider>
   );

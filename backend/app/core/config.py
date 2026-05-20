@@ -1,4 +1,5 @@
 from pathlib import Path
+from urllib.parse import urlparse
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -31,6 +32,17 @@ class Settings(BaseSettings):
     app_name: str = "Subix"
     frontend_url: str
     debug: bool = False
+
+    @property
+    def cors_origins(self) -> list[str]:
+        """Browser Origin has no path — include scheme+host from frontend_url."""
+        parsed = urlparse(self.frontend_url)
+        site_origin = f"{parsed.scheme}://{parsed.netloc}"
+        return list({
+            site_origin,
+            self.frontend_url.rstrip("/"),
+            "https://web.telegram.org",
+        })
 
 
 settings = Settings()

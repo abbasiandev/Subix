@@ -1,11 +1,24 @@
 // lib/api.ts
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "";
+const DEFAULT_API = "https://subix.pythonanywhere.com";
 const APP_BASE = "/Subix";
+
+function isLocalDev(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    (window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1")
+  );
+}
 
 function resolveUrl(path: string): string {
   if (BASE) return `${BASE}${path}`;
-  // Local dev: proxy through Next API route (avoids CORS)
-  return `${APP_BASE}/api${path.replace(/^\/api/, "")}`;
+  // Local dev only — proxy via Next API route (pages/api/[...path].ts)
+  if (process.env.NODE_ENV === "development" && isLocalDev()) {
+    return `${APP_BASE}/api${path.replace(/^\/api/, "")}`;
+  }
+  // Production / Telegram Mini App — always call backend directly
+  return `${DEFAULT_API}${path}`;
 }
 
 // In-memory token — never localStorage (Telegram Mini App restriction)

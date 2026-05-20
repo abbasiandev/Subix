@@ -48,12 +48,16 @@ export default function StorePage() {
   const [buyModal, setBuyModal] = useState<Product | null>(null);
   const [buying, setBuying] = useState(false);
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     getProducts()
       .then(setProducts)
-      .catch(() => setProducts([]))
+      .catch((e) => {
+        setProducts([]);
+        setFetchError(e.message ?? "خطا در بارگذاری محصولات");
+      })
       .finally(() => setFetching(false));
   }, []);
 
@@ -217,7 +221,9 @@ export default function StorePage() {
             <div key={i} className="h-24 bg-gray-100 rounded-2xl animate-pulse" />
           ))
         ) : filtered.length === 0 ? (
-          <div className="text-center py-16 text-muted text-sm">محصولی یافت نشد</div>
+          <div className="text-center py-16 text-muted text-sm">
+            {fetchError ?? "محصولی یافت نشد"}
+          </div>
         ) : (
           filtered.map((p) => (
             <ProductCard key={p.id} product={p} onBuy={handleBuy} />

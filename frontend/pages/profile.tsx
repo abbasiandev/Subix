@@ -11,14 +11,9 @@ function formatPrice(n: number) {
   return n.toLocaleString("fa-IR") + " تومان";
 }
 
-function isValidPhone(phone: string) {
-  return /^09\d{9}$/.test(phone);
-}
-
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, photoUrl, loading } = useAuth();
-  const [phone, setPhone] = useState("09");
+  const { user, photoUrl, loading, error, isTelegram } = useAuth();
   const [topupAmount, setTopupAmount] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -33,19 +28,6 @@ export default function ProfilePage() {
   function showToast(msg: string) {
     setToast(msg);
     setTimeout(() => setToast(null), 3000);
-  }
-
-  function handlePhoneChange(value: string) {
-    const digits = value.replace(/\D/g, "");
-    if (digits.length <= 11) {
-      setPhone(digits.length === 0 ? "09" : digits);
-    }
-  }
-
-  function handleSendCode() {
-    const initData = window.Telegram?.WebApp?.initData;
-    if (initData) return;
-    showToast("لطفاً اپلیکیشن را از طریق ربات تلگرام باز کنید");
   }
 
   async function handleTopup() {
@@ -71,9 +53,7 @@ export default function ProfilePage() {
     user?.username ||
     "کاربر";
 
-  const phoneValid = isValidPhone(phone);
-
-  if (!loading && !user) {
+  if (!user) {
     return (
       <div className="min-h-dvh bg-surface flex flex-col">
         <div className="flex-1 px-4 pt-12">
@@ -85,33 +65,28 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <p className="text-right text-sm text-muted mb-3">
-              شماره موبایل خود را وارد کنید
-            </p>
+            {loading ? (
+              <p className="text-right text-sm text-muted">
+                در حال ورود با حساب تلگرام...
+              </p>
+            ) : error ? (
+              <p className="text-right text-sm text-red-500">{error}</p>
+            ) : isTelegram ? (
+              <p className="text-right text-sm text-muted">
+                ورود خودکار از طریق تلگرام فعال است. لطفاً چند لحظه صبر کنید یا
+                اپ را ببندید و دوباره از ربات باز کنید.
+              </p>
+            ) : (
+              <p className="text-right text-sm text-muted">
+                برای ورود، اپلیکیشن را از طریق ربات تلگرام باز کنید.
+              </p>
+            )}
 
-            <input
-              className="input-field mb-4 text-left"
-              type="tel"
-              inputMode="numeric"
-              value={phone}
-              onChange={(e) => handlePhoneChange(e.target.value)}
-              dir="ltr"
-            />
-
-            <p className="text-right text-xs text-gray-400 mb-5">
+            <p className="text-right text-xs text-gray-400 mt-5">
               با ادامه، شما با{" "}
               <span className="text-primary cursor-pointer">قوانین و مقررات</span>{" "}
               موافقت می‌کنید
             </p>
-
-            <button
-              className={`w-full rounded-xl py-3.5 text-white font-semibold transition-colors
-                ${phoneValid ? "bg-primary active:scale-[0.98]" : "bg-gray-300 cursor-not-allowed"}`}
-              disabled={!phoneValid}
-              onClick={handleSendCode}
-            >
-              ارسال کد تایید
-            </button>
           </div>
         </div>
 
