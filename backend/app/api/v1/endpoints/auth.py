@@ -50,15 +50,14 @@ def telegram_widget_login(body: TelegramWidgetAuthIn, response: Response):
     # Create JWT token
     token = create_access_token(user.telegram_id)
     
-    # Set session cookie (HttpOnly, Secure in production)
-    # Note: Session cookie management will be enhanced in Task 2
+    # Set session cookie (HttpOnly, Secure for HTTPS, SameSite=None for cross-site)
     response.set_cookie(
         key="subix_session",
         value=token,
         max_age=7 * 24 * 60 * 60,  # 7 days
         httponly=True,
-        secure=False,  # Set to True in production with HTTPS
-        samesite="lax",
+        secure=True,  # Required for SameSite=None (HTTPS only)
+        samesite="none",  # Allow cross-site cookies (GitHub Pages → PythonAnywhere)
     )
     
     return TokenOut(access_token=token, user=user)
