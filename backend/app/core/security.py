@@ -47,6 +47,50 @@ def verify_telegram_init_data(init_data: str) -> dict | None:
     return json.loads(user_json)
 
 
+def verify_telegram_widget_auth(data: dict) -> dict | None:
+    received_hash = data.get("hash")
+    if not received_hash:
+        return None
+    
+    # Validate auth_date is not stale (within 5 minutes)
+    auth_date = data.get("auth_date")
+    if not auth_date:
+        return None
+    
+    current_time = int(time.time())
+    if current_time - auth_date > 300:  # 5 minutes
+        return None
+    
+    # Build data-check-string from all fields except hash
+    check_data = {k: v for k, v in data.items() if k != "hash" and v is not None}
+    data_check_string = "\n".join(
+        f"{k}={v}" for k, v in sorted(check_data.items())
+    )
+    
+    # Compute expected hash
+    # For Login Widget, hash is computed differently than Mini App initData
+    # Use bot_token directly as the secret key
+    secret_key = hashlib.sha256(settings.bot_token.encode()).digest()
+    
+    expected_hash = hmac.new(
+        key=secret_key,
+        msg=data_check_string.encode(),
+        digestmod=hashlib.sha256,
+    ).hexdigest()
+    
+    if not hmac.compare_digest(expected_hash, received_hash):
+        return None
+    
+    # Return user data
+    return {
+        "id": data.get("id"),
+        "first_name": data.get("first_name"),
+        "last_name": data.get("last_name"),
+        "username": data.get("username"),
+        "photo_url": data.get("photo_url"),
+    }
+
+
 # ── JWT HS256 (stdlib only — no python-jose / cryptography) ─────────────────
 
 def _b64url(data: bytes) -> str:
