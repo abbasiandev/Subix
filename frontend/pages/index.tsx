@@ -59,7 +59,7 @@ export default function LandingPage() {
             سابیکس
           </h1>
           <p className="text-xl md:text-2xl text-white/90 font-medium">
-            خرید اشتراک‌های دیجیتال با کیفیت بالا
+            خرید اشتراک‌های هوش مصنوعی
           </p>
         </header>
 
@@ -113,7 +113,7 @@ export default function LandingPage() {
               آماده شروع هستید؟
             </h2>
             <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-              با ورود به فروشگاه سابیکس، از بهترین اشتراک‌های دیجیتال با قیمت مناسب بهره‌مند شوید
+              با ورود به فروشگاه سابیکس، از بهترین اشتراک‌های هوش مصنوعی با قیمت مناسب بهره‌مند شوید
             </p>
 
             {/* CTA Button */}
@@ -148,9 +148,9 @@ export default function LandingPage() {
 
           {/* Services Preview */}
           <div className="mt-16 text-center">
-            <h3 className="text-2xl font-bold text-white mb-8">سرویس‌های موجود</h3>
+            <h3 className="text-2xl font-bold text-white mb-8">سرویس‌های هوش مصنوعی موجود</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {["Netflix", "Spotify", "YouTube Premium", "Amazon Prime", "Disney+", "Apple Music", "HBO Max", "Crunchyroll"].map((service) => (
+              {["ChatGPT", "Claude", "Gemini", "Cursor", "Copilot", "Midjourney", "Perplexity", "JetBrains AI"].map((service) => (
                 <div
                   key={service}
                   className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 text-white font-semibold hover:bg-white/20 transition-all"

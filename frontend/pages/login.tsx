@@ -103,7 +103,7 @@ export default function LoginPage() {
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">سابیکس</h1>
           <p className="text-sm text-muted">
-            خرید اشتراک‌های دیجیتال با کیفیت بالا
+            خرید اشتراک‌های هوش مصنوعی
           </p>
         </div>
 

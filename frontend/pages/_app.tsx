@@ -16,12 +16,12 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         
-        <title>سابیکس - خرید اشتراک‌های دیجیتال</title>
-        <meta name="description" content="خرید اشتراک ChatGPT، Gemini، Cursor، Spotify و سایر سرویس‌های دیجیتال با کیفیت بالا" />
+        <title>سابیکس - خرید اشتراک‌های هوش مصنوعی</title>
+        <meta name="description" content="خرید اشتراک ChatGPT، Gemini، Cursor، Claude و سایر ابزارهای هوش مصنوعی" />
         
         {/* Open Graph tags */}
-        <meta property="og:title" content="سابیکس - خرید اشتراک‌های دیجیتال" />
-        <meta property="og:description" content="خرید اشتراک ChatGPT، Gemini، Cursor، Spotify و سایر سرویس‌های دیجیتال" />
+        <meta property="og:title" content="سابیکس - خرید اشتراک‌های هوش مصنوعی" />
+        <meta property="og:description" content="خرید اشتراک ChatGPT، Gemini، Cursor، Claude و سایر ابزارهای هوش مصنوعی" />
         <meta property="og:type" content="website" />
         
         {/* Favicon - using existing logo */}
