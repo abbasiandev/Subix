@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { useRouter } from "next/router";
 import { useLayout } from "@/context/LayoutContext";
 import BottomNav from "@/components/BottomNav";
 import SidebarNav from "./SidebarNav";
@@ -10,6 +11,11 @@ interface AppLayoutProps {
 
 export default function AppLayout({ children }: AppLayoutProps) {
   const { isTelegram, isBrowser, isLoading } = useLayout();
+  const router = useRouter();
+
+  // Pages that should not have navigation (landing, login, public pages)
+  const noLayoutPages = ["/", "/login", "/terms"];
+  const isNoLayoutPage = noLayoutPages.includes(router.pathname);
 
   // Show loading state
   if (isLoading) {
@@ -21,6 +27,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
         </div>
       </div>
     );
+  }
+
+  // Landing and public pages - no layout
+  if (isNoLayoutPage) {
+    return <>{children}</>;
   }
 
   // Telegram Mini App layout (existing)

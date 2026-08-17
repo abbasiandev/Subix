@@ -12,18 +12,18 @@ def main_menu_keyboard() -> dict:
         "inline_keyboard": [
             [
                 {
-                    "text": "🛒 ورود به فروشگاه و خرید",
-                    "web_app": {"url": _url("/")},
+                    "text": "🛒 فروشگاه",
+                    "web_app": {"url": _url("/dashboard")},
                 }
             ],
             [
                 {
                     "text": "💁🏻‍♀️ پروفایل",
-                    "web_app": {"url": _url("/profile/")},
+                    "web_app": {"url": _url("/profile")},
                 },
                 {
                     "text": "📟 داشبورد",
-                    "web_app": {"url": _url("/dashboard/")},
+                    "web_app": {"url": _url("/dashboard")},
                 },
                 {
                     "text": "📮 پشتیبانی",
