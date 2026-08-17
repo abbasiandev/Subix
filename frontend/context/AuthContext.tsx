@@ -36,6 +36,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
+    if (typeof window === 'undefined') {
+      setLoading(false);
+      return;
+    }
+
     const tg = window.Telegram?.WebApp;
     const hasTelegramContext = !!(tg?.initData && tg.initData.length > 0);
     setIsTelegram(hasTelegramContext);
@@ -90,7 +95,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setToken("");
       router.push("/login");
     } catch (e) {
-      console.error("Logout error:", e);
+      // Silent error - logout locally anyway
+      setUser(null);
+      setToken("");
+      router.push("/login");
     }
   };
 
