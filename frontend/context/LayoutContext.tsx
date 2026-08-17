@@ -18,10 +18,20 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Check if running in Telegram Mini App context
+    // The key is checking if we have actual initData, not just the SDK loaded
     const tg = window.Telegram?.WebApp;
-    const hasTelegramContext = !!tg;
+    const hasInitData = !!(tg?.initData && tg.initData.length > 0);
     
-    setIsTelegram(hasTelegramContext);
+    // Debug logging
+    console.log('🔍 Layout Detection:', {
+      'window.Telegram': !!window.Telegram,
+      'window.Telegram.WebApp': !!tg,
+      'initData exists': hasInitData,
+      'initData length': tg?.initData?.length || 0,
+      'Detected as Telegram': hasInitData
+    });
+    
+    setIsTelegram(hasInitData);
     setIsLoading(false);
   }, []);
 

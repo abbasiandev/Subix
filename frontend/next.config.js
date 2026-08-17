@@ -8,7 +8,8 @@ const nextConfig = {
   ...(isProdBuild ? { output: "export" } : {}),
   trailingSlash: true,
   images: { unoptimized: true },
-  basePath: "/Subix",
+  // Only use basePath in production (GitHub Pages)
+  ...(isProdBuild ? { basePath: "/Subix" } : {}),
 };
 
 module.exports = nextConfig;
