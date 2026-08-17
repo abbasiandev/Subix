@@ -36,7 +36,7 @@ body {
 
 @layer components {
   .btn-primary {
-    @apply bg-primary text-white font-semibold rounded-xl py-3 px-6
+    @apply bg-primary text-gray-900 font-semibold rounded-xl py-3 px-6
            active:scale-95 transition-transform duration-100
            disabled:opacity-50 disabled:pointer-events-none;
   }

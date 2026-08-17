@@ -48,7 +48,14 @@ async function request<T>(
     };
     if (_token) headers["Authorization"] = `Bearer ${_token}`;
 
-    const res = await fetch(resolveUrl(path), {...options, headers});
+    // Ensure credentials are included for session cookie support
+    const fetchOptions: RequestInit = {
+        ...options,
+        headers,
+        credentials: options.credentials || "include",
+    };
+
+    const res = await fetch(resolveUrl(path), fetchOptions);
 
     if (!res.ok) {
         const err = await res.json().catch(() => ({detail: res.statusText}));
@@ -76,6 +83,32 @@ export async function loginWithTelegram(initData: string) {
         "/api/v1/auth/telegram",
         {method: "POST", body: JSON.stringify({init_data: initData})}
     );
+}
+
+export async function loginWithTelegramWidget(telegramUser: {
+    id: number;
+    first_name?: string;
+    last_name?: string;
+    username?: string;
+    photo_url?: string;
+    auth_date: number;
+    hash: string;
+}) {
+    return request<{ access_token: string; user: User }>(
+        "/api/v1/auth/telegram-widget",
+        {
+            method: "POST",
+            body: JSON.stringify(telegramUser),
+            credentials: "include", // Important: send/receive cookies
+        }
+    );
+}
+
+export async function logout() {
+    return request("/api/v1/auth/logout", {
+        method: "POST",
+        credentials: "include",
+    });
 }
 
 export async function getProducts(category?: string) {

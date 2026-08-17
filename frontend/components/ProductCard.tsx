@@ -37,7 +37,7 @@ export default function ProductCard({ product, onBuy }: Props) {
       <div className="flex flex-col items-end gap-2 flex-shrink-0">
         <span className="price-pill">{formatPrice(product.price)}</span>
         <button
-          className="bg-primary text-white text-xs font-semibold rounded-xl py-2 px-3 active:scale-95 transition-transform"
+          className="bg-primary text-gray-900 text-xs font-semibold rounded-xl py-2 px-3 active:scale-95 transition-transform"
           onClick={() => onBuy(product)}
         >
           خرید محصول

@@ -1,7 +1,6 @@
 // pages/index.tsx
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import BottomNav from "@/components/BottomNav";
 import IconTile from "@/components/IconTile";
 import ProductCard from "@/components/ProductCard";
 import UserAvatar from "@/components/UserAvatar";
@@ -9,6 +8,8 @@ import { BellIcon, ChevronLeftIcon, SearchIcon, WalletIcon } from "@/components/
 import { useAuth } from "@/context/AuthContext";
 import { createOrder, getProducts, Product } from "@/lib/api";
 import { getCategoryGradientClass } from "@/lib/categoryStyles";
+import LoadingScreen from "@/components/LoadingScreen";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 const STORE_CATEGORIES = [
   { key: "ChatGPT", label: "چت جی‌پی‌تی", comingSoon: false },
@@ -40,7 +41,8 @@ function productSearchText(product: Product) {
 
 export default function StorePage() {
   const router = useRouter();
-  const { user, photoUrl, loading } = useAuth();
+  const { user, loading } = useRequireAuth();
+  const { photoUrl } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [search, setSearch] = useState("");
@@ -50,6 +52,10 @@ export default function StorePage() {
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+
+  // Show loading screen while authenticating
+  if (loading) return <LoadingScreen />;
+  if (!user) return null;
 
   useEffect(() => {
     getProducts()
@@ -137,7 +143,7 @@ export default function StorePage() {
             <BellIcon />
           </button>
           <button
-            className="bg-primary text-white text-xs font-semibold rounded-xl px-3 py-2.5 flex items-center gap-1.5"
+            className="bg-primary text-gray-900 text-xs font-semibold rounded-xl px-3 py-2.5 flex items-center gap-1.5"
             onClick={goToTopup}
           >
             <WalletIcon />
@@ -270,8 +276,6 @@ export default function StorePage() {
           {toast.msg}
         </div>
       )}
-
-      <BottomNav />
     </div>
   );
 }

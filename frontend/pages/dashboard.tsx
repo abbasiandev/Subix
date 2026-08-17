@@ -1,7 +1,8 @@
 // pages/dashboard.tsx
 import { useEffect, useState } from "react";
-import BottomNav from "@/components/BottomNav";
 import { useAuth } from "@/context/AuthContext";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import LoadingScreen from "@/components/LoadingScreen";
 import { getOrders, Order } from "@/lib/api";
 
 const STATUS_MAP: Record<string, { label: string; color: string }> = {
@@ -22,10 +23,14 @@ function formatDate(s: string) {
 }
 
 export default function DashboardPage() {
-  const { user, loading: authLoading } = useAuth();
+  const { user } = useAuth();
+  const { loading: authCheckLoading } = useRequireAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [fetching, setFetching] = useState(true);
   const [activeTab, setActiveTab] = useState<"all" | "completed" | "pending">("all");
+
+  if (authCheckLoading) return <LoadingScreen />;
+  if (!user) return null;
 
   useEffect(() => {
     if (!user) return;
@@ -89,16 +94,14 @@ export default function DashboardPage() {
         </div>
 
         {/* ── Orders list ── */}
-        {authLoading || fetching ? (
+        {fetching ? (
           Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="h-20 bg-gray-100 rounded-2xl animate-pulse" />
           ))
-        ) : !user ? (
-          <div className="text-center py-16 text-muted text-sm">
-            برای مشاهده سفارشات وارد شوید
-          </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-16 text-muted text-sm">سفارشی یافت نشد</div>
+          <div className="text-center py-16 text-muted text-sm">
+            {activeTab === "all" ? "هنوز سفارشی ثبت نکرده‌اید" : "سفارشی یافت نشد"}
+          </div>
         ) : (
           <div className="space-y-3">
             {filtered.map((order) => (
@@ -108,8 +111,6 @@ export default function DashboardPage() {
         )}
 
       </div>
-
-      <BottomNav />
     </div>
   );
 }

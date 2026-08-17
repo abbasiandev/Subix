@@ -1,13 +1,17 @@
 // pages/contact.tsx
 import { useRouter } from "next/router";
 import { useAuth } from "@/context/AuthContext";
-import BottomNav from "@/components/BottomNav";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import LoadingScreen from "@/components/LoadingScreen";
 import { TelegramIcon } from "@/components/Icons";
 import { SUPPORT_URL } from "@/lib/constants";
 
 export default function ContactPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, loading } = useRequireAuth();
+
+  if (loading) return <LoadingScreen />;
+  if (!user) return null;
 
   function openSupport() {
     window.Telegram?.WebApp?.HapticFeedback?.impactOccurred("light");
@@ -23,7 +27,7 @@ export default function ContactPage() {
           </span>
         ) : (
           <button
-            className="bg-primary text-white text-sm font-semibold rounded-xl px-4 py-2"
+            className="bg-primary text-gray-900 text-sm font-semibold rounded-xl px-4 py-2"
             onClick={() => router.push("/profile")}
           >
             ورود
@@ -31,12 +35,12 @@ export default function ContactPage() {
         )}
       </div>
 
-      <div className="flex-1 px-4 pt-2 pb-28">
+      <div className="flex-1 px-4 pt-2 pb-8">
         <p className="text-right text-sm text-muted mb-4">چت آنلاین با پشتیبانی</p>
 
         <button
           onClick={openSupport}
-          className="w-full bg-primary text-white rounded-2xl py-4 flex items-center justify-center gap-3 mb-4 active:scale-95 transition-transform"
+          className="w-full bg-primary text-gray-900 rounded-2xl py-4 flex items-center justify-center gap-3 mb-4 active:scale-95 transition-transform font-semibold"
         >
           <TelegramIcon />
           <span className="font-semibold text-base">چت با پشتیبانی در تلگرام</span>
@@ -56,8 +60,6 @@ export default function ContactPage() {
           </div>
         </div>
       </div>
-
-      <BottomNav />
     </div>
   );
 }

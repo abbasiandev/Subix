@@ -22,9 +22,14 @@ module.exports = {
           from: { transform: "translateY(100%)" },
           to: { transform: "translateY(0)" },
         },
+        fadeIn: {
+          from: { opacity: "0", transform: "translateY(8px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         "slide-up": "slideUp 0.25s ease-out",
+        "fade-in": "fadeIn 200ms ease-out",
       },
     },
   },

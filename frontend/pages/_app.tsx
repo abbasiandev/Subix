@@ -3,6 +3,8 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import Script from "next/script";
 import { AuthProvider } from "@/context/AuthContext";
+import { LayoutProvider } from "@/context/LayoutContext";
+import AppLayout from "@/components/layouts/AppLayout";
 import "@/styles/globals.css";
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -13,17 +15,32 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <title>سابیکس</title>
+        
+        <title>سابیکس - خرید اشتراک‌های دیجیتال</title>
+        <meta name="description" content="خرید اشتراک ChatGPT، Gemini، Cursor، Spotify و سایر سرویس‌های دیجیتال با کیفیت بالا" />
+        
+        {/* Open Graph tags */}
+        <meta property="og:title" content="سابیکس - خرید اشتراک‌های دیجیتال" />
+        <meta property="og:description" content="خرید اشتراک ChatGPT، Gemini، Cursor، Spotify و سایر سرویس‌های دیجیتال" />
+        <meta property="og:type" content="website" />
+        
+        {/* Favicon - using existing logo */}
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </Head>
 
-      {/* Telegram WebApp SDK */}
+      {/* Telegram WebApp SDK - only load in Telegram context */}
       <Script
         src="https://telegram.org/js/telegram-web-app.js"
         strategy="beforeInteractive"
+        id="telegram-sdk"
       />
 
       <AuthProvider>
-        <Component {...pageProps} />
+        <LayoutProvider>
+          <AppLayout>
+            <Component {...pageProps} />
+          </AppLayout>
+        </LayoutProvider>
       </AuthProvider>
     </>
   );
