@@ -82,7 +82,9 @@ export default function LoginPage() {
         <div className="w-full max-w-md bg-white rounded-2xl shadow-sm p-8 text-center">
           {/* Logo */}
           <div className="mb-6">
-            <SubixLogoIcon className="w-20 h-20 mx-auto mb-4" />
+            <div className="mx-auto mb-4 w-20 h-20 flex items-center justify-center">
+              <SubixLogoIcon size={80} />
+            </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">سابیکس</h1>
             <p className="text-sm text-muted">
               خرید اشتراک‌های دیجیتال با کیفیت بالا

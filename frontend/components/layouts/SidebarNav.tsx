@@ -28,7 +28,7 @@ export default function SidebarNav() {
       {/* Logo section */}
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-center gap-3">
-          <SubixLogoIcon className="w-10 h-10" />
+          <SubixLogoIcon size={40} />
           <span className="text-xl font-bold text-gray-900">سابیکس</span>
         </div>
       </div>
