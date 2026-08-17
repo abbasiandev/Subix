@@ -67,19 +67,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Desktop browser flow (new)
       // Session cookie is sent automatically with fetch (credentials: "include")
       // Try to fetch current user
-      console.log('🔐 Checking for existing session...');
       getMe()
         .then((userData) => {
-          console.log('✅ User authenticated:', userData);
           setUser(userData);
         })
-        .catch((err) => {
-          console.log('❌ Not authenticated, redirect needed:', err.message);
+        .catch(() => {
           // Not authenticated - will be handled by route protection
           // Only redirect if not on login or public pages
           const publicPages = ["/login", "/terms"];
           if (!publicPages.includes(router.pathname)) {
-            console.log('↪️ Redirecting to /login');
             router.push("/login");
           }
         })

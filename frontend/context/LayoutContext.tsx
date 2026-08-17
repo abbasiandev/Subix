@@ -22,15 +22,6 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
     const tg = window.Telegram?.WebApp;
     const hasInitData = !!(tg?.initData && tg.initData.length > 0);
     
-    // Debug logging
-    console.log('🔍 Layout Detection:', {
-      'window.Telegram': !!window.Telegram,
-      'window.Telegram.WebApp': !!tg,
-      'initData exists': hasInitData,
-      'initData length': tg?.initData?.length || 0,
-      'Detected as Telegram': hasInitData
-    });
-    
     setIsTelegram(hasInitData);
     setIsLoading(false);
   }, []);
