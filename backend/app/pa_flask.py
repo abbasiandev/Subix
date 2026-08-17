@@ -1,7 +1,5 @@
-"""
-Pure Flask WSGI app for PythonAnywhere (no a2wsgi — that hangs on PA).
-Local / Docker / JustRunMy keep using app.main (FastAPI).
-"""
+import secrets
+
 from flask import Flask, jsonify, request
 
 from app.core.config import settings
@@ -23,8 +21,8 @@ def cors(resp):
         if origin.rstrip("/") in allowed:
             resp.headers["Access-Control-Allow-Origin"] = origin
     resp.headers["Access-Control-Allow-Credentials"] = "true"
-    resp.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-    resp.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    resp.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Admin-Key"
+    resp.headers["Access-Control-Allow-Methods"] = "GET, POST, PATCH, OPTIONS"
     return resp
 
 
@@ -151,6 +149,55 @@ def request_topup():
     row = rs.rows[0]
     cols = ["id", "amount", "method", "status", "created_at"]
     return jsonify(dict(zip(cols, row.values))), 201
+
+
+def verify_admin_key_flask():
+    admin_key = request.headers.get("X-Admin-Key")
+    if not settings.admin_secret:
+        return jsonify({"detail": "Admin API is disabled"}), 503
+    if not admin_key or not secrets.compare_digest(admin_key, settings.admin_secret):
+        return jsonify({"detail": "Invalid admin key"}), 401
+    return None
+
+
+@app.route("/api/v1/admin/products", methods=["GET", "OPTIONS"])
+def admin_list_products():
+    if request.method == "OPTIONS":
+        return "", 204
+    
+    # Verify admin key
+    auth_err = verify_admin_key_flask()
+    if auth_err:
+        return auth_err
+    
+    # List all products (including inactive)
+    products = ProductService().list_all()
+    return jsonify([p.model_dump(mode="json") for p in products])
+
+
+@app.route("/api/v1/admin/products/<int:product_id>", methods=["PATCH", "OPTIONS"])
+def admin_update_price(product_id: int):
+    if request.method == "OPTIONS":
+        return "", 204
+    
+    # Verify admin key
+    auth_err = verify_admin_key_flask()
+    if auth_err:
+        return auth_err
+    
+    # Get and validate price
+    body = request.get_json(force=True, silent=True) or {}
+    price = body.get("price")
+    
+    if not price or not isinstance(price, (int, float)) or price <= 0:
+        return jsonify({"detail": "Price must be a positive number"}), 400
+    
+    # Update product price
+    product = ProductService().update_price(product_id, float(price))
+    if not product:
+        return jsonify({"detail": "Product not found"}), 404
+    
+    return jsonify(product.model_dump(mode="json"))
 
 
 if settings.enable_webhook:

@@ -1,6 +1,9 @@
-from fastapi import Depends, HTTPException, status
+import secrets
+
+from fastapi import Depends, Header, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
+from app.core.config import settings
 from app.core.security import decode_access_token
 from app.services.user import UserService
 
@@ -29,3 +32,16 @@ def get_current_user(
             detail="User not found",
         )
     return user
+
+
+def verify_admin_key(x_admin_key: str = Header(..., alias="X-Admin-Key")) -> None:
+    if not settings.admin_secret:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Admin API is disabled",
+        )
+    if not secrets.compare_digest(x_admin_key, settings.admin_secret):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid admin key",
+        )

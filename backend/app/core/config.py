@@ -3,7 +3,6 @@ from urllib.parse import urlparse
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-# backend/ — absolute path so .env loads on PythonAnywhere (cwd may be /var/www)
 _BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
 _ENV_FILE = _BACKEND_DIR / ".env"
 
@@ -32,6 +31,7 @@ class Settings(BaseSettings):
     app_name: str = "Subix"
     frontend_url: str
     debug: bool = False
+    admin_secret: str = ""
 
     @property
     def cors_origins(self) -> list[str]:

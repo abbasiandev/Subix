@@ -51,3 +51,27 @@ class ProductService:
     def categories(self) -> list[str]:
         rs = execute("SELECT DISTINCT category FROM products WHERE is_active=1")
         return [r.values[0] for r in rs.rows]
+
+    def list_all(self) -> list[ProductOut]:
+        rs = execute(
+            """
+            SELECT id, name, description, category, price, duration_days,
+                   activation_minutes, activation_type, is_active
+            FROM products ORDER BY sort_order
+            """
+        )
+        return [_row_to_product(r) for r in rs.rows]
+
+    def update_price(self, product_id: int, price: float) -> ProductOut | None:
+        rs = execute(
+            """
+            UPDATE products SET price=?
+            WHERE id=?
+            RETURNING id, name, description, category, price, duration_days,
+                      activation_minutes, activation_type, is_active
+            """,
+            [price, product_id],
+        )
+        if not rs.rows:
+            return None
+        return _row_to_product(rs.rows[0])

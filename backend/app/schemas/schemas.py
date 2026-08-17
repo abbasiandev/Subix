@@ -1,10 +1,7 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict
-
-
-# ── User ─────────────────────────────────────────────────────────────────────
+from pydantic import BaseModel, ConfigDict, Field
 
 class UserOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -19,9 +16,6 @@ class UserOut(BaseModel):
     is_active: bool
     created_at: str
 
-
-# ── Auth ─────────────────────────────────────────────────────────────────────
-
 class TelegramAuthIn(BaseModel):
     init_data: str  # raw Telegram.WebApp.initData string
 
@@ -30,9 +24,6 @@ class TokenOut(BaseModel):
     access_token: str
     token_type: str = "bearer"
     user: UserOut
-
-
-# ── Product ──────────────────────────────────────────────────────────────────
 
 class ProductOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -48,7 +39,9 @@ class ProductOut(BaseModel):
     is_active: bool
 
 
-# ── Order ────────────────────────────────────────────────────────────────────
+class ProductPriceUpdate(BaseModel):
+    price: float = Field(gt=0)
+
 
 class OrderCreate(BaseModel):
     product_id: int
@@ -66,8 +59,6 @@ class OrderOut(BaseModel):
     created_at: str
     activated_at: str | None
 
-
-# ── Wallet ───────────────────────────────────────────────────────────────────
 
 class TopupCreate(BaseModel):
     amount: float
