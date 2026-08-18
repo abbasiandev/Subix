@@ -14,7 +14,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const router = useRouter();
 
   // Pages that should not have navigation (landing, login, public pages)
-  const noLayoutPages = ["/", "/login", "/terms", "/contact"];
+  const noLayoutPages = ["/", "/login", "/terms"];
   const isNoLayoutPage = noLayoutPages.includes(router.pathname);
 
   // Show loading state

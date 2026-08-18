@@ -11,7 +11,7 @@ import UserAvatar from "@/components/UserAvatar";
 import { useAuth } from "@/context/AuthContext";
 
 const NAV_ITEMS = [
-  { href: "/", label: "فروشگاه", Icon: ShoppingBagIcon },
+  { href: "/products", label: "فروشگاه", Icon: ShoppingBagIcon },
   { href: "/dashboard", label: "داشبورد", Icon: DashboardIcon },
   { href: "/contact", label: "تماس با ما", Icon: HeadsetIcon },
   { href: "/profile", label: "پروفایل", Icon: ProfileIcon },

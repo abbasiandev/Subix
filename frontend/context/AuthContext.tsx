@@ -79,7 +79,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .catch(() => {
           // Not authenticated - will be handled by route protection
           // Don't redirect if on public pages (landing, login, terms)
-          const publicPages = ["/", "/login", "/terms", "/contact"];
+          const publicPages = ["/", "/login", "/terms"];
           if (!publicPages.includes(router.pathname)) {
             router.push("/login");
           }
