@@ -1,10 +1,10 @@
 import secrets
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response
 
 from app.core.config import settings
 from app.core.pa_auth import get_current_user_id_from_token, get_token_from_header
-from app.core.security import create_access_token, verify_telegram_init_data
+from app.core.security import create_access_token, verify_telegram_init_data, verify_telegram_widget_auth
 from app.db.client import execute
 from app.services.order import OrderService
 from app.services.product import ProductService
@@ -56,6 +56,64 @@ def telegram_login():
     )
     token = create_access_token(user.telegram_id)
     return jsonify({"access_token": token, "user": user.model_dump()})
+
+
+
+
+@app.route("/api/v1/auth/telegram-widget", methods=["POST", "OPTIONS"])
+def telegram_widget_login():
+    """Authenticate via Telegram Login Widget (desktop browser)"""
+    if request.method == "OPTIONS":
+        return "", 204
+    
+    body = request.get_json(force=True, silent=True) or {}
+    
+    # Verify Telegram widget authentication
+    tg_user = verify_telegram_widget_auth(body)
+    if not tg_user:
+        return jsonify({"detail": "Invalid Telegram widget authentication"}), 401
+    
+    # Upsert user in database
+    user = UserService().upsert_from_telegram(
+        telegram_id=tg_user["id"],
+        username=tg_user.get("username"),
+        first_name=tg_user.get("first_name"),
+        last_name=tg_user.get("last_name"),
+    )
+    
+    # Create JWT token
+    token = create_access_token(user.telegram_id)
+    
+    # Create response with session cookie
+    response = make_response(jsonify({"access_token": token, "user": user.model_dump()}))
+    response.set_cookie(
+        key="subix_session",
+        value=token,
+        max_age=7 * 24 * 60 * 60,  # 7 days
+        httponly=True,
+        secure=True,  # Required for SameSite=None (HTTPS only)
+        samesite="none",  # Allow cross-site cookies (GitHub Pages → PythonAnywhere)
+    )
+    
+    return response
+
+
+@app.route("/api/v1/auth/logout", methods=["POST", "OPTIONS"])
+def logout():
+    """Logout and clear session cookie"""
+    if request.method == "OPTIONS":
+        return "", 204
+    
+    response = make_response("", 204)
+    response.set_cookie(
+        key="subix_session",
+        value="",
+        max_age=0,
+        httponly=True,
+        secure=True,
+        samesite="none",
+    )
+    return response
 
 
 @app.route("/api/v1/products", methods=["GET"])
