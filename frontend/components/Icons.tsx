@@ -169,3 +169,24 @@ export function ProfileIcon({ active = false, size = 24 }: { active?: boolean; s
     </svg>
   );
 }
+
+export function BlogIcon({ active = false, size = 24 }: { active?: boolean; size?: number }) {
+  const color = active ? ACTIVE : INACTIVE;
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <path
+        d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2z"
+        stroke={color}
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M7 7h10M7 12h10M7 17h6"
+        stroke={color}
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}

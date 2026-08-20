@@ -1,4 +1,3 @@
-// pages/_app.tsx
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import Script from "next/script";
@@ -18,12 +17,17 @@ export default function App({ Component, pageProps }: AppProps) {
         
         <title>سابیکس - خرید اشتراک‌های هوش مصنوعی</title>
         <meta name="description" content="خرید اشتراک ChatGPT، Gemini، Cursor، Claude و سایر ابزارهای هوش مصنوعی با فعال‌سازی سریع و پشتیبانی 24/7" />
+        <meta name="keywords" content="خرید اشتراک ChatGPT, خرید اشتراک Claude, خرید اشتراک Gemini, خرید اشتراک Cursor, خرید اشتراک Spotify, هوش مصنوعی, AI subscription" />
+        <meta name="author" content="سابیکس" />
+        <link rel="canonical" href="https://abbasiandev.github.io/Subix/" />
         
         {/* Open Graph tags */}
         <meta property="og:title" content="سابیکس - خرید اشتراک‌های هوش مصنوعی" />
         <meta property="og:description" content="خرید اشتراک ChatGPT، Gemini، Cursor، Claude و سایر ابزارهای هوش مصنوعی با فعال‌سازی سریع و پشتیبانی 24/7" />
         <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://abbasiandev.github.io/Subix/" />
         <meta property="og:locale" content="fa_IR" />
+        <meta property="og:site_name" content="سابیکس" />
         
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />

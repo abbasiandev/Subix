@@ -5,6 +5,7 @@ import {
   HeadsetIcon,
   ProfileIcon,
   ShoppingBagIcon,
+  BlogIcon,
 } from "@/components/Icons";
 import { SubixLogoIcon } from "@/components/Icons";
 import UserAvatar from "@/components/UserAvatar";
@@ -13,6 +14,7 @@ import { useAuth } from "@/context/AuthContext";
 const NAV_ITEMS = [
   { href: "/products", label: "فروشگاه", Icon: ShoppingBagIcon },
   { href: "/dashboard", label: "داشبورد", Icon: DashboardIcon },
+  { href: "/blog", label: "بلاگ", Icon: BlogIcon },
   { href: "/contact", label: "تماس با ما", Icon: HeadsetIcon },
   { href: "/profile", label: "پروفایل", Icon: ProfileIcon },
 ];

@@ -7,6 +7,8 @@ import { getProducts, Product } from "@/lib/api";
 import ProductCard from "@/components/ProductCard";
 import ProductCardSkeleton from "@/components/ProductCardSkeleton";
 import GlassContainer from "@/components/GlassContainer";
+import Link from "next/link";
+import { blogPosts } from "@/data/blog-posts";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -225,6 +227,66 @@ export default function LandingPage() {
               </div>
             </>
           )}
+        </div>
+
+        {/* ═══════════════════════════════════════════ */}
+        {/* Blog Section */}
+        {/* ═══════════════════════════════════════════ */}
+        <div className="max-w-6xl mx-auto mb-20">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-4 animate-fade-up">
+              📝 بلاگ سابیکس
+            </h2>
+            <p className="text-xl text-white/80 animate-fade-up stagger-1">
+              آخرین مقالات و راهنماهای کاربردی
+            </p>
+          </div>
+
+          {/* Featured Blog Posts */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {blogPosts.slice(0, 3).map((post, index) => (
+              <Link key={post.slug} href={`/blog/${post.slug}`}>
+                <GlassContainer
+                  elevation="light"
+                  hover
+                  className="rounded-2xl overflow-hidden cursor-pointer h-full flex flex-col animate-fade-up"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="h-40 bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center">
+                    <div className="text-5xl">
+                      {post.category === 'guides' ? '📚' : 
+                       post.category === 'news' ? '📰' : 
+                       post.category === 'comparison' ? '⚖️' : '💡'}
+                    </div>
+                  </div>
+                  <div className="p-6 flex-1 flex flex-col">
+                    <h3 className="text-lg font-bold text-white mb-2 line-clamp-2">
+                      {post.title}
+                    </h3>
+                    <p className="text-gray-300 text-sm mb-4 line-clamp-2 flex-1">
+                      {post.excerpt}
+                    </p>
+                    <div className="flex items-center justify-between text-xs text-gray-400 pt-4 border-t border-white/5">
+                      <span>{post.readTime} دقیقه</span>
+                      <span className="text-teal-400">ادامه مطلب ←</span>
+                    </div>
+                  </div>
+                </GlassContainer>
+              </Link>
+            ))}
+          </div>
+
+          {/* View All Blog Button */}
+          <div className="text-center">
+            <Link href="/blog">
+              <button className="glass-light glass-hover rounded-2xl px-8 py-4 text-white font-bold text-lg border border-white/30 transition-all duration-300 hover:border-white/50">
+                مشاهده تمام مقالات
+                <svg className="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+            </Link>
+          </div>
         </div>
 
         {/* ═══════════════════════════════════════════ */}

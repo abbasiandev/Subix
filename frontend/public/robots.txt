@@ -1,0 +1,14 @@
+# robots.txt for Subix
+User-agent: *
+Allow: /
+Allow: /products
+Allow: /blog
+Allow: /contact
+Allow: /login
+
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /admin
+Disallow: /api/
+
+Sitemap: https://abbasiandev.github.io/Subix/sitemap.xml
