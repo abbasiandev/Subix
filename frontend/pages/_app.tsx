@@ -17,12 +17,21 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         
         <title>سابیکس - خرید اشتراک‌های هوش مصنوعی</title>
-        <meta name="description" content="خرید اشتراک ChatGPT، Gemini، Cursor، Claude و سایر ابزارهای هوش مصنوعی" />
+        <meta name="description" content="خرید اشتراک ChatGPT، Gemini، Cursor، Claude و سایر ابزارهای هوش مصنوعی با فعال‌سازی سریع و پشتیبانی 24/7" />
         
         {/* Open Graph tags */}
         <meta property="og:title" content="سابیکس - خرید اشتراک‌های هوش مصنوعی" />
-        <meta property="og:description" content="خرید اشتراک ChatGPT، Gemini، Cursor، Claude و سایر ابزارهای هوش مصنوعی" />
+        <meta property="og:description" content="خرید اشتراک ChatGPT، Gemini، Cursor، Claude و سایر ابزارهای هوش مصنوعی با فعال‌سازی سریع و پشتیبانی 24/7" />
         <meta property="og:type" content="website" />
+        <meta property="og:locale" content="fa_IR" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="سابیکس - خرید اشتراک‌های هوش مصنوعی" />
+        <meta name="twitter:description" content="خرید اشتراک ChatGPT، Gemini، Cursor و سایر ابزارهای هوش مصنوعی" />
+        
+        {/* Theme Color for mobile browsers */}
+        <meta name="theme-color" content="#14b8a6" />
         
         {/* Favicon - using existing logo */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

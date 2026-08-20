@@ -1,0 +1,305 @@
+:root {
+  /* Glass Material Levels */
+  --glass-blur-sm: 12px;
+  --glass-blur-md: 24px;
+  --glass-blur-lg: 40px;
+  --glass-blur-xl: 64px;
+
+  /* Glass Opacity Levels */
+  --glass-opacity-subtle: 0.05;
+  --glass-opacity-light: 0.1;
+  --glass-opacity-medium: 0.15;
+  --glass-opacity-strong: 0.2;
+
+  /* Depth & Shadows */
+  --glass-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08), 
+                     0 1px 4px rgba(0, 0, 0, 0.04),
+                     inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  
+  --glass-shadow-md: 0 8px 32px rgba(0, 0, 0, 0.12), 
+                     0 2px 8px rgba(0, 0, 0, 0.08),
+                     inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  
+  --glass-shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.16), 
+                     0 4px 16px rgba(0, 0, 0, 0.12),
+                     inset 0 2px 0 rgba(255, 255, 255, 0.2);
+
+  /* Glow Effects */
+  --glass-glow-primary: 0 0 24px rgba(20, 184, 166, 0.3),
+                        0 0 48px rgba(20, 184, 166, 0.15);
+  
+  --glass-glow-white: 0 0 32px rgba(255, 255, 255, 0.2),
+                      0 0 64px rgba(255, 255, 255, 0.1);
+
+  /* Spring Animation Timings (Apple-style easing) */
+  --spring-duration-fast: 0.3s;
+  --spring-duration-medium: 0.5s;
+  --spring-duration-slow: 0.7s;
+  
+  /* Apple's signature spring easing */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-apple: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glass Material Classes */
+.glass-subtle {
+  background: rgba(255, 255, 255, var(--glass-opacity-subtle));
+  backdrop-filter: blur(var(--glass-blur-sm));
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: var(--glass-shadow-sm);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, var(--glass-opacity-light));
+  backdrop-filter: blur(var(--glass-blur-md));
+  -webkit-backdrop-filter: blur(var(--glass-blur-md));
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: var(--glass-shadow-md);
+}
+
+.glass-medium {
+  background: rgba(255, 255, 255, var(--glass-opacity-medium));
+  backdrop-filter: blur(var(--glass-blur-lg));
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg));
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--glass-shadow-lg);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, var(--glass-opacity-strong));
+  backdrop-filter: blur(var(--glass-blur-xl));
+  -webkit-backdrop-filter: blur(var(--glass-blur-xl));
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: var(--glass-shadow-lg);
+}
+
+/* Dark Glass Variants */
+.glass-dark-subtle {
+  background: rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(var(--glass-blur-sm));
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm));
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: var(--glass-shadow-sm);
+}
+
+.glass-dark-medium {
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(var(--glass-blur-md));
+  -webkit-backdrop-filter: blur(var(--glass-blur-md));
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: var(--glass-shadow-md);
+}
+
+/* 3D Transform Utilities */
+.transform-3d {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.depth-1 {
+  transform: translateZ(10px);
+}
+
+.depth-2 {
+  transform: translateZ(20px);
+}
+
+.depth-3 {
+  transform: translateZ(40px);
+}
+
+/* Hover States with Spring Animation */
+.glass-hover {
+  transition: all var(--spring-duration-medium) var(--ease-spring);
+  will-change: transform, box-shadow, background;
+}
+
+.glass-hover:hover {
+  transform: translateY(-4px) translateZ(8px) scale(1.02);
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.2), 
+              0 8px 24px rgba(0, 0, 0, 0.15),
+              inset 0 2px 0 rgba(255, 255, 255, 0.25);
+}
+
+.glass-hover:active {
+  transform: translateY(-1px) translateZ(4px) scale(0.99);
+  transition: all var(--spring-duration-fast) var(--ease-spring);
+}
+
+/* Magnetic Button Effect */
+.glass-magnetic {
+  position: relative;
+  transition: all var(--spring-duration-medium) var(--ease-spring-bounce);
+}
+
+.glass-magnetic:hover {
+  transform: scale(1.05);
+  box-shadow: var(--glass-glow-primary), var(--glass-shadow-lg);
+}
+
+.glass-magnetic:active {
+  transform: scale(0.98);
+}
+
+/* Floating Animation */
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0px) translateZ(0);
+  }
+  50% {
+    transform: translateY(-8px) translateZ(4px);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(1deg);
+  }
+}
+
+.animate-float {
+  animation: float-gentle 4s var(--ease-spring) infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 6s var(--ease-spring) infinite;
+}
+
+/* Scroll Reveal Animations */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up var(--spring-duration-slow) var(--ease-spring) forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in var(--spring-duration-medium) var(--ease-spring) forwards;
+}
+
+/* Stagger Delays for Sequential Animations */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+.stagger-6 { animation-delay: 0.6s; }
+.stagger-7 { animation-delay: 0.7s; }
+.stagger-8 { animation-delay: 0.8s; }
+
+/* Gradient Text Effect (Apple-style) */
+.text-gradient-primary {
+  background: linear-gradient(135deg, #14b8a6 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-white {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gradient Mesh Background */
+.gradient-mesh {
+  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 25%, #0891b2 50%, #06b6d4 75%, #14b8a6 100%);
+  background-size: 200% 200%;
+  animation: gradient-shift 15s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Border Gradient Animation */
+.border-gradient {
+  position: relative;
+  border: 1px solid transparent;
+}
+
+.border-gradient::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.3) 0%, 
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.3) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Performance Optimizations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .animate-float,
+  .animate-float-slow,
+  .gradient-mesh {
+    animation: none !important;
+  }
+}
+
+/* Browser Fallbacks */
+@supports not (backdrop-filter: blur(10px)) {
+  .glass-subtle,
+  .glass-light,
+  .glass-medium,
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.85);
+  }
+  
+  .glass-dark-subtle,
+  .glass-dark-medium {
+    background: rgba(0, 0, 0, 0.25);
+  }
+}
