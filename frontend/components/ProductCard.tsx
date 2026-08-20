@@ -1,5 +1,6 @@
 import { Product } from '@/lib/api';
 import GlassContainer from './GlassContainer';
+import Link from 'next/link';
 
 interface ProductCardProps {
   product: Product;
@@ -73,18 +74,11 @@ export default function ProductCard({ product, onClick, delay = 0 }: ProductCard
 
   const categoryGradient = getCategoryColor(product.category);
 
-  return (
+  const CardContent = (
     <GlassContainer
       elevation="light"
       hover
       animated
-      onClick={onClick}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onClick?.();
-        }
-      }}
       tabIndex={0}
       role="button"
       aria-label={`${product.name} - ${formatPrice(product.price)}`}
@@ -163,5 +157,29 @@ export default function ProductCard({ product, onClick, delay = 0 }: ProductCard
       {/* Glow Effect on Hover */}
       <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/0 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
     </GlassContainer>
+  );
+
+  // If onClick is provided, use it directly (for custom behavior)
+  // Otherwise, wrap with Link to product detail page
+  if (onClick) {
+    return (
+      <div 
+        onClick={onClick}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClick();
+          }
+        }}
+      >
+        {CardContent}
+      </div>
+    );
+  }
+
+  return (
+    <Link href={`/products/${product.id}`}>
+      {CardContent}
+    </Link>
   );
 }

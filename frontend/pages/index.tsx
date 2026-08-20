@@ -50,10 +50,6 @@ export default function LandingPage() {
     router.push("/login");
   };
 
-  const handleProductClick = (productId: number) => {
-    router.push("/login");
-  };
-
   // Show loading while detecting context
   if (layoutLoading || isTelegram) {
     return (
@@ -209,7 +205,6 @@ export default function LandingPage() {
                   <ProductCard
                     key={product.id}
                     product={product}
-                    onClick={() => handleProductClick(product.id)}
                     delay={index + 1}
                   />
                 ))}
