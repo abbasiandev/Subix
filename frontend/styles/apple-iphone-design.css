@@ -1,0 +1,453 @@
+/* ============================================
+   Apple iPhone 17 Pro Inspired Design System
+   Cosmic Theme, Bold Typography, Premium Feel
+   ============================================ */
+
+:root {
+  /* Cosmic Color Palette */
+  --cosmic-orange: #FF6B35;
+  --deep-blue: #0A1628;
+  --space-blue: #1A2942;
+  --silver: #E8E8ED;
+  --cosmic-purple: #6B4FE8;
+  --aurora-green: #00E5A0;
+  --cosmic-gradient: linear-gradient(135deg, #0A1628 0%, #1A2942 50%, #2A3B5C 100%);
+  
+  /* Apple-style Grays */
+  --gray-100: #F5F5F7;
+  --gray-200: #E8E8ED;
+  --gray-300: #D2D2D7;
+  --gray-400: #86868B;
+  --gray-500: #6E6E73;
+  --gray-600: #515154;
+  --gray-900: #1D1D1F;
+  
+  /* Semantic Colors */
+  --accent-primary: var(--cosmic-orange);
+  --accent-secondary: var(--cosmic-purple);
+  --background-dark: var(--deep-blue);
+  --background-space: var(--space-blue);
+  --text-primary: #FFFFFF;
+  --text-secondary: var(--gray-200);
+  --text-muted: var(--gray-400);
+  
+  /* Spacing System (Apple's 8px grid) */
+  --space-xs: 0.5rem;   /* 8px */
+  --space-sm: 1rem;     /* 16px */
+  --space-md: 1.5rem;   /* 24px */
+  --space-lg: 2rem;     /* 32px */
+  --space-xl: 3rem;     /* 48px */
+  --space-2xl: 4rem;    /* 64px */
+  --space-3xl: 6rem;    /* 96px */
+  --space-4xl: 8rem;    /* 128px */
+  
+  /* Typography Scale */
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-display: "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif;
+  
+  /* Apple's Refined Timing Functions */
+  --ease-apple: cubic-bezier(0.28, 0.11, 0.32, 1);
+  --ease-apple-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-apple-out: cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* ============================================
+   Typography System - Ultra Bold & Refined
+   ============================================ */
+
+.hero-display {
+  font-size: clamp(3.5rem, 12vw, 9rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--silver) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 8vw, 6rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.section-title {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+
+.headline {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+}
+
+.body-large {
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: var(--text-secondary);
+}
+
+.body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.caption {
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+/* Numbers - Large Display */
+.display-number {
+  font-size: clamp(4rem, 15vw, 12rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  background: linear-gradient(135deg, var(--cosmic-orange) 0%, var(--cosmic-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   Cosmic Background System
+   ============================================ */
+
+.cosmic-bg {
+  background: var(--cosmic-gradient);
+  position: relative;
+  overflow: hidden;
+}
+
+.cosmic-bg::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 50%, rgba(255, 107, 53, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 70% 80%, rgba(107, 79, 232, 0.15) 0%, transparent 50%);
+  animation: cosmicPulse 15s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes cosmicPulse {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+  50% { transform: translate(-5%, -5%) scale(1.1); opacity: 0.8; }
+}
+
+/* Starfield Effect */
+.starfield {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(2px 2px at 20% 30%, white, transparent),
+    radial-gradient(2px 2px at 60% 70%, white, transparent),
+    radial-gradient(1px 1px at 50% 50%, white, transparent),
+    radial-gradient(1px 1px at 80% 10%, white, transparent),
+    radial-gradient(2px 2px at 90% 60%, white, transparent),
+    radial-gradient(1px 1px at 33% 80%, white, transparent);
+  background-size: 200% 200%, 300% 300%, 250% 250%, 280% 280%, 220% 220%, 290% 290%;
+  background-position: 0% 0%;
+  animation: starfieldMove 120s linear infinite;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+@keyframes starfieldMove {
+  0% { background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%; }
+  100% { background-position: 100% 100%, -100% 100%, 50% -50%, -50% 50%, 100% -100%, -100% -100%; }
+}
+
+/* ============================================
+   Premium Glass Effects (Refined)
+   ============================================ */
+
+.glass-premium {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-card {
+  background: rgba(26, 41, 66, 0.6);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.5s var(--ease-apple);
+}
+
+.glass-card:hover {
+  background: rgba(26, 41, 66, 0.8);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================
+   Buttons - Apple Style
+   ============================================ */
+
+.btn-primary {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
+  background: var(--cosmic-orange);
+  border: none;
+  border-radius: 980px;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-apple);
+  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.3);
+}
+
+.btn-primary:hover {
+  background: #FF8456;
+  transform: scale(1.02);
+  box-shadow: 0 6px 24px rgba(255, 107, 53, 0.5);
+}
+
+.btn-secondary {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--cosmic-orange);
+  background: transparent;
+  border: 2px solid var(--cosmic-orange);
+  border-radius: 980px;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-apple);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 107, 53, 0.1);
+  transform: scale(1.02);
+}
+
+.btn-link {
+  color: var(--cosmic-orange);
+  font-weight: 500;
+  text-decoration: none;
+  position: relative;
+  transition: color 0.2s var(--ease-apple);
+}
+
+.btn-link::after {
+  content: '→';
+  margin-left: 0.5rem;
+  transition: transform 0.2s var(--ease-apple);
+  display: inline-block;
+}
+
+.btn-link:hover::after {
+  transform: translateX(4px);
+}
+
+/* ============================================
+   Smooth Scroll Animations
+   ============================================ */
+
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(60px);
+  animation: fadeInUp 1s var(--ease-apple) forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 1s var(--ease-apple) forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* Stagger delays */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+
+/* ============================================
+   Parallax & Depth
+   ============================================ */
+
+.parallax-slow {
+  transition: transform 0.5s var(--ease-apple);
+}
+
+.has-depth {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+/* ============================================
+   Product Showcase Cards
+   ============================================ */
+
+.product-showcase {
+  position: relative;
+  padding: var(--space-3xl) var(--space-lg);
+  border-radius: 2rem;
+  overflow: hidden;
+}
+
+.product-showcase::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(107, 79, 232, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-apple);
+}
+
+.product-showcase:hover::before {
+  opacity: 1;
+}
+
+/* ============================================
+   Specs Display (Technical Style)
+   ============================================ */
+
+.spec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-lg);
+}
+
+.spec-item {
+  padding: var(--space-lg);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  transition: all 0.3s var(--ease-apple);
+}
+
+.spec-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.spec-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--cosmic-orange);
+  margin-bottom: 0.5rem;
+}
+
+.spec-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* ============================================
+   Comparison Tables
+   ============================================ */
+
+.comparison-table {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.comparison-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s var(--ease-apple);
+}
+
+.comparison-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+
+.container-apple {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+.section-spacing {
+  padding: var(--space-4xl) 0;
+}
+
+.text-center { text-align: center; }
+.text-gradient {
+  background: linear-gradient(135deg, var(--cosmic-orange) 0%, var(--cosmic-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glow-orange {
+  box-shadow: 0 0 40px rgba(255, 107, 53, 0.3);
+}
+
+.glow-purple {
+  box-shadow: 0 0 40px rgba(107, 79, 232, 0.3);
+}
+
+/* ============================================
+   Responsive Adjustments
+   ============================================ */
+
+@media (max-width: 768px) {
+  :root {
+    --space-3xl: 3rem;
+    --space-4xl: 4rem;
+  }
+  
+  .section-spacing {
+    padding: var(--space-2xl) 0;
+  }
+  
+  .comparison-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+}
+
+/* GPU Acceleration */
+.gpu-accelerate {
+  transform: translateZ(0);
+  will-change: transform;
+}
