@@ -4,6 +4,7 @@ import { useLayout } from "@/context/LayoutContext";
 import { useEffect, useState } from "react";
 import { getProducts, Product } from "@/lib/api";
 import Link from "next/link";
+import { Product3DIcon } from "@/components/ProductIcon";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -257,7 +258,7 @@ export default function LandingPage() {
   );
 }
 
-// Apple-style Product Card Component
+// Apple-style Product Card Component with Real 3D Icons
 function AppleProductCard({ product, delay }: { product: Product; delay: number }) {
   return (
     <Link href={`/products/${product.id}`}>
@@ -265,9 +266,9 @@ function AppleProductCard({ product, delay }: { product: Product; delay: number 
         className="glass-card rounded-3xl p-8 cursor-pointer fade-in-up gpu-accelerate group"
         style={{ animationDelay: `${delay * 0.1}s` }}
       >
-        {/* Product Icon */}
-        <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-cosmic-orange/20 to-cosmic-purple/20 flex items-center justify-center text-4xl group-hover:scale-110 transition-transform duration-500">
-          {getProductIcon(product.category)}
+        {/* Real 3D Product Icon */}
+        <div className="flex justify-center mb-6">
+          <Product3DIcon product={product.category} className="group" />
         </div>
         
         {/* Product Name */}
@@ -307,15 +308,4 @@ function AppleProductCard({ product, delay }: { product: Product; delay: number 
       </div>
     </Link>
   );
-}
-
-function getProductIcon(category: string): string {
-  const icons: Record<string, string> = {
-    'ChatGPT': '🤖',
-    'Claude': '🧠',
-    'Gemini': '✨',
-    'Cursor': '⚡',
-    'Spotify': '🎵',
-  };
-  return icons[category] || '🔷';
 }
