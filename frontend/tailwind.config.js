@@ -13,6 +13,12 @@ module.exports = {
         "primary-light": "#ccfbf1",
         muted: "#636E72",
         surface: "#F8F9FA",
+        // Apple iPhone 17 Pro Cosmic Theme
+        "cosmic-orange": "#FF6B35",
+        "deep-blue": "#0A1628",
+        "space-blue": "#1A2942",
+        "cosmic-purple": "#6B4FE8",
+        "aurora-green": "#00E5A0",
       },
       fontFamily: {
         sans: ["Vazirmatn", "system-ui", "sans-serif"],

@@ -6,6 +6,9 @@
 /* Apple-inspired Glass Design System */
 @import './apple-glass.css';
 
+/* Apple iPhone 17 Pro Design System */
+@import './apple-iphone-design.css';
+
 :root {
   --primary: #14b8a6;
   --primary-dark: #0d9488;
