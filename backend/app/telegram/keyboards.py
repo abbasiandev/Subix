@@ -8,25 +8,35 @@ def _url(path: str) -> str:
 
 
 def main_menu_keyboard() -> dict:
+    """
+    Updated keyboard layout matching the new Apple-inspired glass design.
+    Now includes: Products (Shop), Dashboard, Contact, Profile
+    """
     return {
         "inline_keyboard": [
             [
                 {
-                    "text": "🛒 فروشگاه",
-                    "web_app": {"url": _url("/dashboard")},
+                    "text": "🛍️ فروشگاه",
+                    "web_app": {"url": _url("/products")},
                 }
             ],
             [
                 {
-                    "text": "💁🏻‍♀️ پروفایل",
-                    "web_app": {"url": _url("/profile")},
-                },
-                {
-                    "text": "📟 داشبورد",
+                    "text": "📊 داشبورد",
                     "web_app": {"url": _url("/dashboard")},
                 },
                 {
-                    "text": "📮 پشتیبانی",
+                    "text": "👤 پروفایل",
+                    "web_app": {"url": _url("/profile")},
+                },
+            ],
+            [
+                {
+                    "text": "💬 تماس با ما",
+                    "web_app": {"url": _url("/contact")},
+                },
+                {
+                    "text": "🆘 پشتیبانی",
                     "url": f"https://t.me/{SUPPORT_USERNAME}",
                 },
             ],

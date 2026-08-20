@@ -24,60 +24,68 @@ export default function SidebarNav() {
   const displayName = user?.first_name ?? user?.username ?? "کاربر";
 
   return (
-    <div className="w-60 h-screen bg-white border-l border-gray-100 flex flex-col sticky top-0">
-      {/* Logo section */}
-      <div className="p-6 border-b border-gray-100">
-        <div className="flex items-center gap-3">
-          <SubixLogoIcon size={40} />
-          <span className="text-xl font-bold text-gray-900">سابیکس</span>
+    <div className="w-72 h-screen flex flex-col sticky top-0 p-4">
+      {/* Glass Sidebar Container */}
+      <div className="glass-medium border border-white/20 rounded-3xl h-full flex flex-col overflow-hidden">
+        
+        {/* Logo section */}
+        <div className="p-6 border-b border-white/20">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="transform group-hover:scale-110 transition-transform">
+              <SubixLogoIcon size={48} />
+            </div>
+            <span className="text-2xl font-black text-white">سابیکس</span>
+          </Link>
         </div>
-      </div>
 
-      {/* Navigation items */}
-      <nav className="flex-1 p-4">
-        <ul className="space-y-2">
-          {NAV_ITEMS.map(({ href, label, Icon }) => {
-            const active = pathname === href;
-            return (
-              <li key={href}>
-                <Link
-                  href={href}
-                  className={`
-                    flex items-center gap-3 px-4 py-3 rounded-xl
-                    transition-all duration-150 cursor-pointer
-                    ${
-                      active
-                        ? "bg-primary-light text-primary font-semibold"
-                        : "text-gray-600 hover:bg-gray-50"
-                    }
-                  `}
-                >
-                  <Icon active={active} />
-                  <span className="text-sm">{label}</span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
+        {/* Navigation items */}
+        <nav className="flex-1 p-4 overflow-y-auto">
+          <ul className="space-y-2">
+            {NAV_ITEMS.map(({ href, label, Icon }) => {
+              const active = pathname === href || pathname.startsWith(href + '/');
+              return (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    className={`
+                      flex items-center gap-4 px-5 py-4 rounded-2xl
+                      transition-all duration-300 cursor-pointer group
+                      ${
+                        active
+                          ? "bg-white/20 text-white shadow-lg"
+                          : "text-white/70 hover:text-white hover:bg-white/10"
+                      }
+                    `}
+                  >
+                    <div className={`transform transition-transform ${active ? 'scale-110' : 'group-hover:scale-110'}`}>
+                      <Icon active={active} />
+                    </div>
+                    <span className="text-sm font-bold">{label}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
 
-      {/* User section */}
-      <div className="p-4 border-t border-gray-100">
-        <div className="flex items-center gap-3 px-4 py-3">
-          <UserAvatar
-            photoUrl={photoUrl}
-            name={displayName}
-            size="sm"
-            shape="circle"
-          />
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-gray-900 truncate">
-              {displayName}
-            </p>
-            <p className="text-xs text-muted truncate">
-              {user?.username ? `@${user.username}` : "کاربر سابیکس"}
-            </p>
-          </div>
+        {/* User section */}
+        <div className="p-4 border-t border-white/20">
+          <Link href="/profile" className="flex items-center gap-3 px-4 py-4 rounded-2xl hover:bg-white/10 transition-all">
+            <UserAvatar
+              photoUrl={photoUrl}
+              name={displayName}
+              size="sm"
+              shape="circle"
+            />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-white truncate">
+                {displayName}
+              </p>
+              <p className="text-xs text-white/70 truncate">
+                {user?.username ? `@${user.username}` : "کاربر سابیکس"}
+              </p>
+            </div>
+          </Link>
         </div>
       </div>
     </div>

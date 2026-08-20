@@ -1,4 +1,4 @@
-import { ReactNode, HTMLAttributes, useState } from 'react';
+import { ReactNode, HTMLAttributes, useState, forwardRef } from 'react';
 
 interface GlassContainerProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
@@ -9,7 +9,7 @@ interface GlassContainerProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-export default function GlassContainer({
+const GlassContainer = forwardRef<HTMLDivElement, GlassContainerProps>(({
   children,
   elevation = 'light',
   hover = false,
@@ -17,7 +17,7 @@ export default function GlassContainer({
   magnetic = false,
   className = '',
   ...props
-}: GlassContainerProps) {
+}, ref) => {
   const [magneticStyle, setMagneticStyle] = useState({});
 
   const elevationClass = {
@@ -56,6 +56,7 @@ export default function GlassContainer({
 
   return (
     <div
+      ref={ref}
       className={`
         ${elevationClass}
         ${hoverClass}
@@ -72,4 +73,8 @@ export default function GlassContainer({
       {children}
     </div>
   );
-}
+});
+
+GlassContainer.displayName = 'GlassContainer';
+
+export default GlassContainer;

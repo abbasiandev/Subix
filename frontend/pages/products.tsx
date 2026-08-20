@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import LoadingScreen from "@/components/LoadingScreen";
 import { getProducts, getCategories, Product } from "@/lib/api";
-import Link from "next/link";
+import ProductCard from "@/components/ProductCard";
+import ProductCardSkeleton from "@/components/ProductCardSkeleton";
+import GlassContainer from "@/components/GlassContainer";
 
 export default function ProductsPage() {
   const { loading: authCheckLoading } = useRequireAuth();
@@ -30,7 +32,7 @@ export default function ProductsPage() {
       .finally(() => setLoading(false));
   };
 
-  if (authCheckLoading || loading) {
+  if (authCheckLoading) {
     return <LoadingScreen />;
   }
 
@@ -39,86 +41,70 @@ export default function ProductsPage() {
     : products;
 
   return (
-    <div className="min-h-screen bg-surface p-6" dir="rtl">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen" dir="rtl">
+      <div className="relative container mx-auto px-4 py-8 pb-32 max-w-6xl">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">فروشگاه</h1>
-          <p className="text-muted">اشتراک‌های هوش مصنوعی را انتخاب کنید</p>
-        </div>
+        <header className="mb-8 text-center animate-fade-up">
+          <h1 className="text-5xl font-black text-white mb-3">فروشگاه</h1>
+          <p className="text-white/80 text-xl">اشتراک‌های هوش مصنوعی را انتخاب کنید</p>
+        </header>
 
-        {/* Category filter */}
-        <div className="mb-6 flex gap-2 flex-wrap">
-          <button
-            onClick={() => handleCategoryChange(null)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-              !selectedCategory
-                ? "bg-primary text-white"
-                : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
-            }`}
-          >
-            همه
-          </button>
-          {categories.map((cat) => (
+        {/* Category Filter */}
+        <GlassContainer elevation="subtle" className="rounded-2xl p-2 mb-10 animate-fade-up stagger-1">
+          <div className="flex gap-2 flex-wrap">
             <button
-              key={cat}
-              onClick={() => handleCategoryChange(cat)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                selectedCategory === cat
-                  ? "bg-primary text-white"
-                  : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
-              }`}
+              onClick={() => handleCategoryChange(null)}
+              className={`
+                px-5 py-3 rounded-xl text-sm font-bold transition-all duration-300
+                ${!selectedCategory
+                  ? "glass-medium text-white shadow-lg"
+                  : "text-white/70 hover:text-white hover:bg-white/5"
+                }
+              `}
             >
-              {cat}
+              همه محصولات
             </button>
-          ))}
-        </div>
-
-        {/* Products grid */}
-        {filteredProducts.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted">محصولی یافت نشد</p>
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => handleCategoryChange(cat)}
+                className={`
+                  px-5 py-3 rounded-xl text-sm font-bold transition-all duration-300
+                  ${selectedCategory === cat
+                    ? "glass-medium text-white shadow-lg"
+                    : "text-white/70 hover:text-white hover:bg-white/5"
+                  }
+                `}
+              >
+                {cat}
+              </button>
+            ))}
           </div>
+        </GlassContainer>
+
+        {/* Products Grid */}
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <ProductCardSkeleton key={i} delay={i + 1} />
+            ))}
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <GlassContainer elevation="light" className="rounded-3xl p-12 text-center animate-fade-up">
+            <svg className="w-24 h-24 text-white/40 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+            </svg>
+            <p className="text-white/80 text-xl font-bold mb-2">محصولی یافت نشد</p>
+            <p className="text-white/60">لطفا دسته‌بندی دیگری را انتخاب کنید</p>
+          </GlassContainer>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProducts.map((product) => (
-              <Link
+            {filteredProducts.map((product, index) => (
+              <ProductCard
                 key={product.id}
-                href={`/products/${product.id}`}
-                className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all border border-gray-100 group"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-primary transition-colors">
-                      {product.name}
-                    </h3>
-                    <span className="inline-block mt-1 px-3 py-1 bg-primary-light text-primary text-xs font-medium rounded-lg">
-                      {product.category}
-                    </span>
-                  </div>
-                </div>
-
-                {product.description && (
-                  <p className="text-sm text-muted mb-4 line-clamp-2">
-                    {product.description}
-                  </p>
-                )}
-
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                  <div>
-                    <p className="text-xs text-muted mb-1">قیمت</p>
-                    <p className="text-xl font-bold text-primary">
-                      {product.price.toLocaleString("fa-IR")} تومان
-                    </p>
-                  </div>
-                  <div className="text-left">
-                    <p className="text-xs text-muted mb-1">مدت زمان</p>
-                    <p className="text-sm font-semibold text-gray-900">
-                      {product.duration_days} روز
-                    </p>
-                  </div>
-                </div>
-              </Link>
+                product={product}
+                delay={index + 1}
+              />
             ))}
           </div>
         )}
