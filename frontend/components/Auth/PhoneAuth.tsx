@@ -402,7 +402,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
           border-radius: ${designSystem.borderRadius.xl};
           cursor: pointer;
           transition: all ${designSystem.animation.duration.fast} ${designSystem.animation.easing.default};
-          min-height: ${designSystem.accessibility.touchTargetSize};
+          min-height: ${designSystem.accessibility.touchTarget.mobile}pt;
         }
 
         .submit-button:hover:not(:disabled) {
