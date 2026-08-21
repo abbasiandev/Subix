@@ -296,7 +296,7 @@ const HomePage: React.FC = () => {
           background: linear-gradient(
             135deg,
             ${designSystem.colors.primary.DEFAULT},
-            ${designSystem.colors.primary.dark}
+            ${designSystem.colors.primary.active}
           );
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
@@ -370,7 +370,7 @@ const HomePage: React.FC = () => {
         }
 
         .cta-button.primary:hover {
-          background: ${designSystem.colors.primary.dark};
+          background: ${designSystem.colors.primary.active};
           transform: translateY(-4px);
           box-shadow: ${designSystem.shadows.xl};
         }

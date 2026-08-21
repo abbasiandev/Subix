@@ -433,7 +433,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
         }
 
         .pay-button:hover {
-          background: ${designSystem.colors.primary.dark};
+          background: ${designSystem.colors.primary.active};
           transform: translateY(-2px);
           box-shadow: ${designSystem.shadows.lg};
         }
@@ -531,7 +531,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
         }
 
         .primary-action:hover {
-          background: ${designSystem.colors.primary.dark};
+          background: ${designSystem.colors.primary.active};
         }
 
         .secondary-action {

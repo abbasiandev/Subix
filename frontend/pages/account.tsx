@@ -441,7 +441,7 @@ const AccountPage: React.FC = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, ${designSystem.colors.primary.DEFAULT}, ${designSystem.colors.primary.dark});
+          background: linear-gradient(135deg, ${designSystem.colors.primary.DEFAULT}, ${designSystem.colors.primary.active});
           color: white;
           border-radius: ${designSystem.borderRadius.full};
         }
@@ -680,7 +680,7 @@ const AccountPage: React.FC = () => {
         }
 
         .access-link:hover {
-          background: ${designSystem.colors.primary.dark};
+          background: ${designSystem.colors.primary.active};
         }
 
         .renew-button {
@@ -699,7 +699,7 @@ const AccountPage: React.FC = () => {
         }
 
         .renew-button:hover {
-          background: ${designSystem.colors.primary.dark};
+          background: ${designSystem.colors.primary.active};
           transform: translateY(-2px);
         }
 
@@ -737,7 +737,7 @@ const AccountPage: React.FC = () => {
         }
 
         .new-ticket-button:hover {
-          background: ${designSystem.colors.primary.dark};
+          background: ${designSystem.colors.primary.active};
           transform: translateY(-2px);
           box-shadow: ${designSystem.shadows.lg};
         }
@@ -893,7 +893,7 @@ const AccountPage: React.FC = () => {
         }
 
         .browse-link:hover {
-          background: ${designSystem.colors.primary.dark};
+          background: ${designSystem.colors.primary.active};
           transform: translateY(-2px);
           box-shadow: ${designSystem.shadows.lg};
         }

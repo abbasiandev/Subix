@@ -87,7 +87,7 @@ export const NavigationBar: React.FC = () => {
                   gradientUnits="userSpaceOnUse"
                 >
                   <stop stopColor={designSystem.colors.primary.DEFAULT} />
-                  <stop offset="1" stopColor={designSystem.colors.primary.dark} />
+                  <stop offset="1" stopColor={designSystem.colors.primary.active} />
                 </linearGradient>
               </defs>
             </svg>
@@ -287,7 +287,7 @@ export const NavigationBar: React.FC = () => {
         }
 
         .account-link:hover {
-          background: ${designSystem.colors.primary.dark};
+          background: ${designSystem.colors.primary.active};
           box-shadow: ${designSystem.shadows.md};
           transform: translateY(-2px);
         }

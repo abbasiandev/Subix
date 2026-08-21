@@ -457,7 +457,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
         }
 
         .purchase-button:hover {
-          background: ${designSystem.colors.primary.dark};
+          background: ${designSystem.colors.primary.active};
           transform: translateY(-4px);
           box-shadow: ${designSystem.shadows.xl};
         }
@@ -588,7 +588,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, ${designSystem.colors.primary.DEFAULT}, ${designSystem.colors.primary.dark});
+          background: linear-gradient(135deg, ${designSystem.colors.primary.DEFAULT}, ${designSystem.colors.primary.active});
           color: white;
           font-family: ${designSystem.typography.fontFamily.english};
           font-size: ${designSystem.typography.fontSize['2xl']};
