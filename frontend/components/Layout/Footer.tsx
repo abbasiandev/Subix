@@ -146,24 +146,24 @@ export const Footer: React.FC = () => {
             ${designSystem.colors.neutral[100]} 100%
           );
           border-top: 1px solid ${designSystem.colors.neutral[200]};
-          padding: ${designSystem.spacing['16']} 0 ${designSystem.spacing['8']};
-          margin-top: ${designSystem.spacing['20']};
+          padding: ${designSystem.spacing.scale['16']} 0 ${designSystem.spacing.scale['8']};
+          margin-top: ${designSystem.spacing.scale['20']};
         }
 
         .footer-container {
           max-width: 1440px;
           margin: 0 auto;
-          padding: 0 ${designSystem.spacing['6']};
+          padding: 0 ${designSystem.spacing.scale['6']};
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: ${designSystem.spacing['12']};
-          margin-bottom: ${designSystem.spacing['12']};
+          gap: ${designSystem.spacing.scale['12']};
+          margin-bottom: ${designSystem.spacing.scale['12']};
         }
 
         .footer-column {
           display: flex;
           flex-direction: column;
-          gap: ${designSystem.spacing['4']};
+          gap: ${designSystem.spacing.scale['4']};
         }
 
         .footer-title {
@@ -171,7 +171,7 @@ export const Footer: React.FC = () => {
           font-size: ${designSystem.typography.fontSize.lg};
           font-weight: ${designSystem.typography.fontWeight.bold};
           color: ${designSystem.colors.text.primary};
-          margin: 0 0 ${designSystem.spacing['4']};
+          margin: 0 0 ${designSystem.spacing.scale['4']};
         }
 
         .footer-description {
@@ -184,8 +184,8 @@ export const Footer: React.FC = () => {
 
         .social-links {
           display: flex;
-          gap: ${designSystem.spacing['3']};
-          margin-top: ${designSystem.spacing['4']};
+          gap: ${designSystem.spacing.scale['3']};
+          margin-top: ${designSystem.spacing.scale['4']};
         }
 
         .social-links a {
@@ -212,7 +212,7 @@ export const Footer: React.FC = () => {
           margin: 0;
           display: flex;
           flex-direction: column;
-          gap: ${designSystem.spacing['3']};
+          gap: ${designSystem.spacing.scale['3']};
         }
 
         .footer-links a {
@@ -233,13 +233,13 @@ export const Footer: React.FC = () => {
           margin: 0;
           display: flex;
           flex-direction: column;
-          gap: ${designSystem.spacing['3']};
+          gap: ${designSystem.spacing.scale['3']};
         }
 
         .footer-contact li {
           display: flex;
           align-items: center;
-          gap: ${designSystem.spacing['3']};
+          gap: ${designSystem.spacing.scale['3']};
           font-family: ${designSystem.typography.fontFamily.persian};
           font-size: ${designSystem.typography.fontSize.sm};
           color: ${designSystem.colors.text.secondary};
@@ -253,12 +253,12 @@ export const Footer: React.FC = () => {
         .footer-bottom {
           max-width: 1440px;
           margin: 0 auto;
-          padding: ${designSystem.spacing['8']} ${designSystem.spacing['6']};
+          padding: ${designSystem.spacing.scale['8']} ${designSystem.spacing.scale['6']};
           border-top: 1px solid ${designSystem.colors.neutral[200]};
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: ${designSystem.spacing['8']};
+          gap: ${designSystem.spacing.scale['8']};
         }
 
         .trust-badge-container {
@@ -279,7 +279,7 @@ export const Footer: React.FC = () => {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: ${designSystem.spacing['3']};
+          gap: ${designSystem.spacing.scale['3']};
         }
 
         .payment-label {
@@ -291,7 +291,7 @@ export const Footer: React.FC = () => {
 
         .payment-icons {
           display: flex;
-          gap: ${designSystem.spacing['4']};
+          gap: ${designSystem.spacing.scale['4']};
           align-items: center;
         }
 
@@ -312,7 +312,7 @@ export const Footer: React.FC = () => {
         .footer-copyright {
           max-width: 1440px;
           margin: 0 auto;
-          padding: ${designSystem.spacing['6']} ${designSystem.spacing['6']} 0;
+          padding: ${designSystem.spacing.scale['6']} ${designSystem.spacing.scale['6']} 0;
           text-align: center;
           border-top: 1px solid ${designSystem.colors.neutral[200]};
         }
@@ -321,7 +321,7 @@ export const Footer: React.FC = () => {
           font-family: ${designSystem.typography.fontFamily.persian};
           font-size: ${designSystem.typography.fontSize.sm};
           color: ${designSystem.colors.text.tertiary};
-          margin: ${designSystem.spacing['2']} 0;
+          margin: ${designSystem.spacing.scale['2']} 0;
         }
 
         .footer-note {
@@ -332,7 +332,7 @@ export const Footer: React.FC = () => {
         @media (max-width: 1024px) {
           .footer-container {
             grid-template-columns: repeat(2, 1fr);
-            gap: ${designSystem.spacing['8']};
+            gap: ${designSystem.spacing.scale['8']};
           }
 
           .footer-column:last-child {
@@ -361,13 +361,13 @@ export const Footer: React.FC = () => {
         /* Mobile */
         @media (max-width: 768px) {
           .footer {
-            padding: ${designSystem.spacing['12']} 0 ${designSystem.spacing['6']};
+            padding: ${designSystem.spacing.scale['12']} 0 ${designSystem.spacing.scale['6']};
           }
 
           .footer-container {
             grid-template-columns: 1fr;
-            gap: ${designSystem.spacing['8']};
-            padding: 0 ${designSystem.spacing['4']};
+            gap: ${designSystem.spacing.scale['8']};
+            padding: 0 ${designSystem.spacing.scale['4']};
           }
 
           .footer-column:last-child {
@@ -376,7 +376,7 @@ export const Footer: React.FC = () => {
 
           .footer-bottom {
             flex-direction: column;
-            padding: ${designSystem.spacing['6']} ${designSystem.spacing['4']};
+            padding: ${designSystem.spacing.scale['6']} ${designSystem.spacing.scale['4']};
           }
 
           .trust-badge-container :global(.trust-badge) {
@@ -390,7 +390,7 @@ export const Footer: React.FC = () => {
           }
 
           .footer-copyright {
-            padding: ${designSystem.spacing['4']} ${designSystem.spacing['4']} 0;
+            padding: ${designSystem.spacing.scale['4']} ${designSystem.spacing.scale['4']} 0;
           }
         }
       `}</style>

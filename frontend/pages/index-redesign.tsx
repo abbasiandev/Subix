@@ -279,7 +279,7 @@ const HomePage: React.FC = () => {
           z-index: 10;
           max-width: 1200px;
           margin: 0 auto;
-          padding: 0 ${designSystem.spacing['6']};
+          padding: 0 ${designSystem.spacing.scale['6']};
           text-align: center;
         }
 
@@ -289,7 +289,7 @@ const HomePage: React.FC = () => {
           font-weight: ${designSystem.typography.fontWeight.black};
           color: ${designSystem.colors.text.primary};
           line-height: ${designSystem.typography.lineHeight.tight};
-          margin: 0 0 ${designSystem.spacing['6']};
+          margin: 0 0 ${designSystem.spacing.scale['6']};
         }
 
         .hero-title-gradient {
@@ -308,7 +308,7 @@ const HomePage: React.FC = () => {
           font-size: clamp(1rem, 2vw, 1.25rem);
           color: ${designSystem.colors.text.secondary};
           line-height: ${designSystem.typography.lineHeight.relaxed};
-          margin: 0 0 ${designSystem.spacing['10']};
+          margin: 0 0 ${designSystem.spacing.scale['10']};
           max-width: 800px;
           margin-left: auto;
           margin-right: auto;
@@ -317,8 +317,8 @@ const HomePage: React.FC = () => {
         .hero-stats {
           display: flex;
           justify-content: center;
-          gap: ${designSystem.spacing['12']};
-          margin-bottom: ${designSystem.spacing['10']};
+          gap: ${designSystem.spacing.scale['12']};
+          margin-bottom: ${designSystem.spacing.scale['10']};
           flex-wrap: wrap;
         }
 
@@ -326,7 +326,7 @@ const HomePage: React.FC = () => {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
         }
 
         .stat-number {
@@ -344,7 +344,7 @@ const HomePage: React.FC = () => {
 
         .hero-cta {
           display: flex;
-          gap: ${designSystem.spacing['4']};
+          gap: ${designSystem.spacing.scale['4']};
           justify-content: center;
           flex-wrap: wrap;
         }
@@ -352,7 +352,7 @@ const HomePage: React.FC = () => {
         .cta-button {
           display: inline-flex;
           align-items: center;
-          gap: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
           padding: 16px 32px;
           font-family: ${designSystem.typography.fontFamily.persian};
           font-size: ${designSystem.typography.fontSize.base};
@@ -441,7 +441,7 @@ const HomePage: React.FC = () => {
         .products-section,
         .articles-section,
         .features-section {
-          padding: ${designSystem.spacing['20']} 0;
+          padding: ${designSystem.spacing.scale['20']} 0;
           position: relative;
         }
 
@@ -465,12 +465,12 @@ const HomePage: React.FC = () => {
         .section-container {
           max-width: 1440px;
           margin: 0 auto;
-          padding: 0 ${designSystem.spacing['6']};
+          padding: 0 ${designSystem.spacing.scale['6']};
         }
 
         .section-header {
           text-align: center;
-          margin-bottom: ${designSystem.spacing['12']};
+          margin-bottom: ${designSystem.spacing.scale['12']};
         }
 
         .section-title {
@@ -478,7 +478,7 @@ const HomePage: React.FC = () => {
           font-size: clamp(2rem, 4vw, 3rem);
           font-weight: ${designSystem.typography.fontWeight.bold};
           color: ${designSystem.colors.text.primary};
-          margin: 0 0 ${designSystem.spacing['4']};
+          margin: 0 0 ${designSystem.spacing.scale['4']};
         }
 
         .section-description {
@@ -492,12 +492,12 @@ const HomePage: React.FC = () => {
         .features-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: ${designSystem.spacing['8']};
+          gap: ${designSystem.spacing.scale['8']};
         }
 
         .feature-card {
           background: white;
-          padding: ${designSystem.spacing['8']};
+          padding: ${designSystem.spacing.scale['8']};
           border-radius: ${designSystem.borderRadius['2xl']};
           text-align: center;
           box-shadow: ${designSystem.shadows.md};
@@ -512,7 +512,7 @@ const HomePage: React.FC = () => {
         .feature-icon {
           width: 64px;
           height: 64px;
-          margin: 0 auto ${designSystem.spacing['4']};
+          margin: 0 auto ${designSystem.spacing.scale['4']};
           display: flex;
           align-items: center;
           justify-content: center;
@@ -526,7 +526,7 @@ const HomePage: React.FC = () => {
           font-size: ${designSystem.typography.fontSize.xl};
           font-weight: ${designSystem.typography.fontWeight.bold};
           color: ${designSystem.colors.text.primary};
-          margin: 0 0 ${designSystem.spacing['3']};
+          margin: 0 0 ${designSystem.spacing.scale['3']};
         }
 
         .feature-description {
@@ -545,21 +545,21 @@ const HomePage: React.FC = () => {
           }
 
           .hero-content {
-            padding: 0 ${designSystem.spacing['4']};
+            padding: 0 ${designSystem.spacing.scale['4']};
           }
 
           .hero-stats {
-            gap: ${designSystem.spacing['6']};
+            gap: ${designSystem.spacing.scale['6']};
           }
 
           .products-section,
           .articles-section,
           .features-section {
-            padding: ${designSystem.spacing['12']} 0;
+            padding: ${designSystem.spacing.scale['12']} 0;
           }
 
           .section-container {
-            padding: 0 ${designSystem.spacing['4']};
+            padding: 0 ${designSystem.spacing.scale['4']};
           }
 
           .features-grid {

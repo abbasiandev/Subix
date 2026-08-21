@@ -414,7 +414,7 @@ const AccountPage: React.FC = () => {
         .account-container {
           max-width: 1200px;
           margin: 0 auto;
-          padding: ${designSystem.spacing['12']} ${designSystem.spacing['6']};
+          padding: ${designSystem.spacing.scale['12']} ${designSystem.spacing.scale['6']};
         }
 
         /* Header */
@@ -422,8 +422,8 @@ const AccountPage: React.FC = () => {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: ${designSystem.spacing['10']};
-          padding: ${designSystem.spacing['8']};
+          margin-bottom: ${designSystem.spacing.scale['10']};
+          padding: ${designSystem.spacing.scale['8']};
           background: white;
           border-radius: ${designSystem.borderRadius['2xl']};
           box-shadow: ${designSystem.shadows.md};
@@ -432,7 +432,7 @@ const AccountPage: React.FC = () => {
         .user-info {
           display: flex;
           align-items: center;
-          gap: ${designSystem.spacing['4']};
+          gap: ${designSystem.spacing.scale['4']};
         }
 
         .user-avatar {
@@ -451,7 +451,7 @@ const AccountPage: React.FC = () => {
           font-size: ${designSystem.typography.fontSize['2xl']};
           font-weight: ${designSystem.typography.fontWeight.bold};
           color: ${designSystem.colors.text.primary};
-          margin: 0 0 ${designSystem.spacing['1']};
+          margin: 0 0 ${designSystem.spacing.scale['1']};
         }
 
         .user-phone {
@@ -466,7 +466,7 @@ const AccountPage: React.FC = () => {
         .home-link {
           display: inline-flex;
           align-items: center;
-          gap: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
           padding: 10px 20px;
           background: ${designSystem.colors.neutral[100]};
           border-radius: ${designSystem.borderRadius.xl};
@@ -485,9 +485,9 @@ const AccountPage: React.FC = () => {
         /* Tabs */
         .tabs {
           display: flex;
-          gap: ${designSystem.spacing['4']};
-          margin-bottom: ${designSystem.spacing['8']};
-          padding: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['4']};
+          margin-bottom: ${designSystem.spacing.scale['8']};
+          padding: ${designSystem.spacing.scale['2']};
           background: white;
           border-radius: ${designSystem.borderRadius.xl};
           box-shadow: ${designSystem.shadows.sm};
@@ -498,7 +498,7 @@ const AccountPage: React.FC = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
           padding: 14px 24px;
           background: transparent;
           border: none;
@@ -548,12 +548,12 @@ const AccountPage: React.FC = () => {
         /* Subscriptions */
         .subscriptions-grid {
           display: grid;
-          gap: ${designSystem.spacing['6']};
+          gap: ${designSystem.spacing.scale['6']};
         }
 
         .subscription-card {
           background: white;
-          padding: ${designSystem.spacing['6']};
+          padding: ${designSystem.spacing.scale['6']};
           border-radius: ${designSystem.borderRadius['2xl']};
           box-shadow: ${designSystem.shadows.md};
           transition: all ${designSystem.animation.duration.normal} ${designSystem.animation.easing.default};
@@ -568,14 +568,14 @@ const AccountPage: React.FC = () => {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
-          margin-bottom: ${designSystem.spacing['6']};
-          padding-bottom: ${designSystem.spacing['6']};
+          margin-bottom: ${designSystem.spacing.scale['6']};
+          padding-bottom: ${designSystem.spacing.scale['6']};
           border-bottom: 1px solid ${designSystem.colors.neutral[200]};
         }
 
         .subscription-info {
           display: flex;
-          gap: ${designSystem.spacing['4']};
+          gap: ${designSystem.spacing.scale['4']};
         }
 
         .subscription-icon {
@@ -587,7 +587,7 @@ const AccountPage: React.FC = () => {
           font-size: ${designSystem.typography.fontSize.xl};
           font-weight: ${designSystem.typography.fontWeight.bold};
           color: ${designSystem.colors.text.primary};
-          margin: 0 0 ${designSystem.spacing['2']};
+          margin: 0 0 ${designSystem.spacing.scale['2']};
         }
 
         .subscription-date {
@@ -608,8 +608,8 @@ const AccountPage: React.FC = () => {
         .subscription-details {
           display: flex;
           flex-direction: column;
-          gap: ${designSystem.spacing['3']};
-          margin-bottom: ${designSystem.spacing['6']};
+          gap: ${designSystem.spacing.scale['3']};
+          margin-bottom: ${designSystem.spacing.scale['6']};
         }
 
         .detail-row {
@@ -629,10 +629,10 @@ const AccountPage: React.FC = () => {
         }
 
         .credentials-section {
-          padding: ${designSystem.spacing['4']};
+          padding: ${designSystem.spacing.scale['4']};
           background: ${designSystem.colors.neutral[50]};
           border-radius: ${designSystem.borderRadius.xl};
-          margin-bottom: ${designSystem.spacing['4']};
+          margin-bottom: ${designSystem.spacing.scale['4']};
         }
 
         .credentials-title {
@@ -640,14 +640,14 @@ const AccountPage: React.FC = () => {
           font-size: ${designSystem.typography.fontSize.sm};
           font-weight: ${designSystem.typography.fontWeight.semibold};
           color: ${designSystem.colors.text.primary};
-          margin: 0 0 ${designSystem.spacing['3']};
+          margin: 0 0 ${designSystem.spacing.scale['3']};
         }
 
         .credential-item {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: ${designSystem.spacing['2']} 0;
+          padding: ${designSystem.spacing.scale['2']} 0;
           font-family: ${designSystem.typography.fontFamily.persian};
           font-size: ${designSystem.typography.fontSize.sm};
           color: ${designSystem.colors.text.secondary};
@@ -666,8 +666,8 @@ const AccountPage: React.FC = () => {
         .access-link {
           display: inline-flex;
           align-items: center;
-          gap: ${designSystem.spacing['2']};
-          margin-top: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
+          margin-top: ${designSystem.spacing.scale['2']};
           padding: 8px 16px;
           background: ${designSystem.colors.primary.DEFAULT};
           color: white;
@@ -708,7 +708,7 @@ const AccountPage: React.FC = () => {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: ${designSystem.spacing['6']};
+          margin-bottom: ${designSystem.spacing.scale['6']};
         }
 
         .section-title {
@@ -722,7 +722,7 @@ const AccountPage: React.FC = () => {
         .new-ticket-button {
           display: inline-flex;
           align-items: center;
-          gap: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
           padding: 12px 24px;
           background: ${designSystem.colors.primary.DEFAULT};
           color: white;
@@ -745,14 +745,14 @@ const AccountPage: React.FC = () => {
         .tickets-list {
           display: flex;
           flex-direction: column;
-          gap: ${designSystem.spacing['4']};
+          gap: ${designSystem.spacing.scale['4']};
         }
 
         .ticket-card {
           display: flex;
           flex-direction: column;
-          gap: ${designSystem.spacing['3']};
-          padding: ${designSystem.spacing['6']};
+          gap: ${designSystem.spacing.scale['3']};
+          padding: ${designSystem.spacing.scale['6']};
           background: white;
           border-radius: ${designSystem.borderRadius.xl};
           box-shadow: ${designSystem.shadows.sm};
@@ -781,7 +781,7 @@ const AccountPage: React.FC = () => {
 
         .ticket-badges {
           display: flex;
-          gap: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
         }
 
         .priority-badge {
@@ -840,7 +840,7 @@ const AccountPage: React.FC = () => {
 
         .ticket-meta {
           display: flex;
-          gap: ${designSystem.spacing['6']};
+          gap: ${designSystem.spacing.scale['6']};
           font-family: ${designSystem.typography.fontFamily.persian};
           font-size: ${designSystem.typography.fontSize.sm};
           color: ${designSystem.colors.text.secondary};
@@ -850,7 +850,7 @@ const AccountPage: React.FC = () => {
         .ticket-messages {
           display: flex;
           align-items: center;
-          gap: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
         }
 
         /* Empty State */
@@ -859,7 +859,7 @@ const AccountPage: React.FC = () => {
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          padding: ${designSystem.spacing['16']};
+          padding: ${designSystem.spacing.scale['16']};
           text-align: center;
         }
 
@@ -868,14 +868,14 @@ const AccountPage: React.FC = () => {
           font-size: ${designSystem.typography.fontSize.xl};
           font-weight: ${designSystem.typography.fontWeight.bold};
           color: ${designSystem.colors.text.primary};
-          margin: ${designSystem.spacing['4']} 0;
+          margin: ${designSystem.spacing.scale['4']} 0;
         }
 
         .empty-state p {
           font-family: ${designSystem.typography.fontFamily.persian};
           font-size: ${designSystem.typography.fontSize.base};
           color: ${designSystem.colors.text.secondary};
-          margin: 0 0 ${designSystem.spacing['6']};
+          margin: 0 0 ${designSystem.spacing.scale['6']};
         }
 
         .browse-link {
@@ -902,7 +902,7 @@ const AccountPage: React.FC = () => {
         @media (max-width: 768px) {
           .account-header {
             flex-direction: column;
-            gap: ${designSystem.spacing['4']};
+            gap: ${designSystem.spacing.scale['4']};
             align-items: flex-start;
           }
 
@@ -920,7 +920,7 @@ const AccountPage: React.FC = () => {
 
           .ticket-meta {
             flex-direction: column;
-            gap: ${designSystem.spacing['2']};
+            gap: ${designSystem.spacing.scale['2']};
           }
         }
       `}</style>

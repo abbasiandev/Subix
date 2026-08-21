@@ -271,7 +271,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
 
         /* Hero Section */
         .product-hero {
-          padding: ${designSystem.spacing['16']} 0;
+          padding: ${designSystem.spacing.scale['16']} 0;
           background: linear-gradient(
             180deg,
             ${designSystem.colors.neutral[50]} 0%,
@@ -282,13 +282,13 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
         .hero-container {
           max-width: 1200px;
           margin: 0 auto;
-          padding: 0 ${designSystem.spacing['6']};
+          padding: 0 ${designSystem.spacing.scale['6']};
         }
 
         .back-button {
           display: inline-flex;
           align-items: center;
-          gap: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
           padding: 10px 20px;
           background: ${designSystem.colors.surface.light};
           border: 1px solid ${designSystem.colors.neutral[200]};
@@ -298,7 +298,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
           color: ${designSystem.colors.text.secondary};
           cursor: pointer;
           transition: all ${designSystem.animation.duration.fast} ${designSystem.animation.easing.default};
-          margin-bottom: ${designSystem.spacing['8']};
+          margin-bottom: ${designSystem.spacing.scale['8']};
         }
 
         .back-button:hover {
@@ -310,7 +310,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
         .hero-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: ${designSystem.spacing['12']};
+          gap: ${designSystem.spacing.scale['12']};
           align-items: center;
         }
 
@@ -330,7 +330,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
           background: white;
           border-radius: ${designSystem.borderRadius['3xl']};
           box-shadow: ${designSystem.shadows.xl};
-          padding: ${designSystem.spacing['12']};
+          padding: ${designSystem.spacing.scale['12']};
         }
 
         .brand-icon {
@@ -369,7 +369,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
         .product-info {
           display: flex;
           flex-direction: column;
-          gap: ${designSystem.spacing['6']};
+          gap: ${designSystem.spacing.scale['6']};
         }
 
         .category-badge {
@@ -404,8 +404,8 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
         .pricing-section {
           display: flex;
           flex-direction: column;
-          gap: ${designSystem.spacing['2']};
-          padding: ${designSystem.spacing['6']};
+          gap: ${designSystem.spacing.scale['2']};
+          padding: ${designSystem.spacing.scale['6']};
           background: ${designSystem.colors.neutral[50]};
           border-radius: ${designSystem.borderRadius.xl};
         }
@@ -420,7 +420,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
         .current-price {
           display: flex;
           align-items: baseline;
-          gap: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
           font-family: ${designSystem.typography.fontFamily.persian};
         }
 
@@ -440,7 +440,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: ${designSystem.spacing['3']};
+          gap: ${designSystem.spacing.scale['3']};
           width: 100%;
           padding: 18px 32px;
           background: ${designSystem.colors.primary.DEFAULT};
@@ -464,14 +464,14 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
 
         .trust-indicators {
           display: flex;
-          gap: ${designSystem.spacing['4']};
+          gap: ${designSystem.spacing.scale['4']};
           flex-wrap: wrap;
         }
 
         .trust-item {
           display: flex;
           align-items: center;
-          gap: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
           font-family: ${designSystem.typography.fontFamily.persian};
           font-size: ${designSystem.typography.fontSize.sm};
           color: ${designSystem.colors.text.secondary};
@@ -483,14 +483,14 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
 
         /* Features Section */
         .product-features {
-          padding: ${designSystem.spacing['16']} 0;
+          padding: ${designSystem.spacing.scale['16']} 0;
           background: white;
         }
 
         .features-container {
           max-width: 1200px;
           margin: 0 auto;
-          padding: 0 ${designSystem.spacing['6']};
+          padding: 0 ${designSystem.spacing.scale['6']};
         }
 
         .features-title {
@@ -499,20 +499,20 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
           font-weight: ${designSystem.typography.fontWeight.bold};
           color: ${designSystem.colors.text.primary};
           text-align: center;
-          margin: 0 0 ${designSystem.spacing['10']};
+          margin: 0 0 ${designSystem.spacing.scale['10']};
         }
 
         .features-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: ${designSystem.spacing['4']};
+          gap: ${designSystem.spacing.scale['4']};
         }
 
         .feature-item {
           display: flex;
           align-items: center;
-          gap: ${designSystem.spacing['3']};
-          padding: ${designSystem.spacing['4']};
+          gap: ${designSystem.spacing.scale['3']};
+          padding: ${designSystem.spacing.scale['4']};
           background: ${designSystem.colors.neutral[50]};
           border-radius: ${designSystem.borderRadius.xl};
           transition: all ${designSystem.animation.duration.fast} ${designSystem.animation.easing.default};
@@ -542,14 +542,14 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
 
         /* How It Works */
         .how-it-works {
-          padding: ${designSystem.spacing['16']} 0;
+          padding: ${designSystem.spacing.scale['16']} 0;
           background: ${designSystem.colors.neutral[50]};
         }
 
         .how-container {
           max-width: 1200px;
           margin: 0 auto;
-          padding: 0 ${designSystem.spacing['6']};
+          padding: 0 ${designSystem.spacing.scale['6']};
         }
 
         .how-title {
@@ -558,18 +558,18 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
           font-weight: ${designSystem.typography.fontWeight.bold};
           color: ${designSystem.colors.text.primary};
           text-align: center;
-          margin: 0 0 ${designSystem.spacing['10']};
+          margin: 0 0 ${designSystem.spacing.scale['10']};
         }
 
         .steps-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: ${designSystem.spacing['6']};
+          gap: ${designSystem.spacing.scale['6']};
         }
 
         .step-card {
           background: white;
-          padding: ${designSystem.spacing['8']};
+          padding: ${designSystem.spacing.scale['8']};
           border-radius: ${designSystem.borderRadius['2xl']};
           text-align: center;
           box-shadow: ${designSystem.shadows.md};
@@ -584,7 +584,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
         .step-number {
           width: 60px;
           height: 60px;
-          margin: 0 auto ${designSystem.spacing['4']};
+          margin: 0 auto ${designSystem.spacing.scale['4']};
           display: flex;
           align-items: center;
           justify-content: center;
@@ -601,7 +601,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
           font-size: ${designSystem.typography.fontSize.lg};
           font-weight: ${designSystem.typography.fontWeight.bold};
           color: ${designSystem.colors.text.primary};
-          margin: 0 0 ${designSystem.spacing['2']};
+          margin: 0 0 ${designSystem.spacing.scale['2']};
         }
 
         .step-description {
@@ -616,7 +616,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
         @media (max-width: 768px) {
           .hero-grid {
             grid-template-columns: 1fr;
-            gap: ${designSystem.spacing['8']};
+            gap: ${designSystem.spacing.scale['8']};
           }
 
           .product-icon-large {

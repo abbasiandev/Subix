@@ -247,7 +247,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
           align-items: center;
           justify-content: center;
           z-index: 9999;
-          padding: ${designSystem.spacing['4']};
+          padding: ${designSystem.spacing.scale['4']};
           animation: fadeIn ${designSystem.animation.duration.normal} ${designSystem.animation.easing.default};
         }
 
@@ -287,14 +287,14 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
         }
 
         .modal-header {
-          padding: ${designSystem.spacing['6']};
+          padding: ${designSystem.spacing.scale['6']};
           border-bottom: 1px solid ${designSystem.colors.neutral[200]};
         }
 
         .product-info-small {
           display: flex;
           align-items: center;
-          gap: ${designSystem.spacing['4']};
+          gap: ${designSystem.spacing.scale['4']};
         }
 
         .product-icon-small {
@@ -306,7 +306,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
           font-size: ${designSystem.typography.fontSize.lg};
           font-weight: ${designSystem.typography.fontWeight.bold};
           color: ${designSystem.colors.text.primary};
-          margin: 0 0 ${designSystem.spacing['1']};
+          margin: 0 0 ${designSystem.spacing.scale['1']};
         }
 
         .product-price {
@@ -318,14 +318,14 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
         }
 
         .modal-content {
-          padding: ${designSystem.spacing['6']};
+          padding: ${designSystem.spacing.scale['6']};
         }
 
         /* Payment Step */
         .payment-step {
           display: flex;
           flex-direction: column;
-          gap: ${designSystem.spacing['6']};
+          gap: ${designSystem.spacing.scale['6']};
         }
 
         .step-title {
@@ -340,7 +340,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
         .gateway-options {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: ${designSystem.spacing['4']};
+          gap: ${designSystem.spacing.scale['4']};
         }
 
         .gateway-option {
@@ -348,8 +348,8 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: ${designSystem.spacing['3']};
-          padding: ${designSystem.spacing['6']};
+          gap: ${designSystem.spacing.scale['3']};
+          padding: ${designSystem.spacing.scale['6']};
           background: ${designSystem.colors.neutral[50]};
           border: 2px solid ${designSystem.colors.neutral[200]};
           border-radius: ${designSystem.borderRadius.xl};
@@ -390,8 +390,8 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
         .payment-summary {
           display: flex;
           flex-direction: column;
-          gap: ${designSystem.spacing['3']};
-          padding: ${designSystem.spacing['4']};
+          gap: ${designSystem.spacing.scale['3']};
+          padding: ${designSystem.spacing.scale['4']};
           background: ${designSystem.colors.neutral[50]};
           border-radius: ${designSystem.borderRadius.lg};
         }
@@ -406,7 +406,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
         }
 
         .summary-row.total {
-          padding-top: ${designSystem.spacing['3']};
+          padding-top: ${designSystem.spacing.scale['3']};
           border-top: 1px solid ${designSystem.colors.neutral[200]};
           font-size: ${designSystem.typography.fontSize.lg};
           font-weight: ${designSystem.typography.fontWeight.bold};
@@ -417,7 +417,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
           width: 100%;
           padding: 16px;
           background: ${designSystem.colors.primary.DEFAULT};
@@ -441,7 +441,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
         .security-note {
           display: flex;
           align-items: center;
-          gap: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
           justify-content: center;
           font-family: ${designSystem.typography.fontFamily.persian};
           font-size: ${designSystem.typography.fontSize.xs};
@@ -458,8 +458,8 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: ${designSystem.spacing['4']};
-          padding: ${designSystem.spacing['8']} 0;
+          gap: ${designSystem.spacing.scale['4']};
+          padding: ${designSystem.spacing.scale['8']} 0;
           text-align: center;
         }
 
@@ -483,8 +483,8 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: ${designSystem.spacing['4']};
-          padding: ${designSystem.spacing['8']} 0;
+          gap: ${designSystem.spacing.scale['4']};
+          padding: ${designSystem.spacing.scale['8']} 0;
           text-align: center;
         }
 
@@ -507,9 +507,9 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
         .success-actions {
           display: flex;
           flex-direction: column;
-          gap: ${designSystem.spacing['3']};
+          gap: ${designSystem.spacing.scale['3']};
           width: 100%;
-          margin-top: ${designSystem.spacing['4']};
+          margin-top: ${designSystem.spacing.scale['4']};
         }
 
         .primary-action,

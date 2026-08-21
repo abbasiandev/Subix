@@ -190,11 +190,11 @@ export const NavigationBar: React.FC = () => {
         .nav-container {
           max-width: 1440px;
           margin: 0 auto;
-          padding: 0 ${designSystem.spacing['6']};
+          padding: 0 ${designSystem.spacing.scale['6']};
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: ${designSystem.spacing['8']};
+          gap: ${designSystem.spacing.scale['8']};
         }
 
         .logo {
@@ -220,7 +220,7 @@ export const NavigationBar: React.FC = () => {
         .nav-links {
           display: flex;
           align-items: center;
-          gap: ${designSystem.spacing['8']};
+          gap: ${designSystem.spacing.scale['8']};
           list-style: none;
           margin: 0;
           padding: 0;
@@ -267,7 +267,7 @@ export const NavigationBar: React.FC = () => {
         .nav-actions {
           display: flex;
           align-items: center;
-          gap: ${designSystem.spacing['4']};
+          gap: ${designSystem.spacing.scale['4']};
         }
 
         .account-link {
@@ -360,10 +360,10 @@ export const NavigationBar: React.FC = () => {
         .mobile-nav-links {
           list-style: none;
           margin: 0;
-          padding: ${designSystem.spacing['4']};
+          padding: ${designSystem.spacing.scale['4']};
           display: flex;
           flex-direction: column;
-          gap: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
         }
 
         .mobile-nav-links a {
@@ -406,11 +406,11 @@ export const NavigationBar: React.FC = () => {
         /* Tablet */
         @media (max-width: 1024px) {
           .nav-container {
-            padding: 0 ${designSystem.spacing['4']};
+            padding: 0 ${designSystem.spacing.scale['4']};
           }
 
           .nav-links {
-            gap: ${designSystem.spacing['4']};
+            gap: ${designSystem.spacing.scale['4']};
           }
         }
 
