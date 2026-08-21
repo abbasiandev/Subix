@@ -342,7 +342,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
           flex: 1;
           padding: 14px 16px;
           padding-left: 60px;
-          font-family: ${designSystem.typography.fontFamily.english};
+          font-family: ${designSystem.typography.fontFamily.text};
           font-size: ${designSystem.typography.fontSize.lg};
           color: ${designSystem.colors.text.primary};
           background: ${designSystem.colors.neutral[50]};
@@ -371,7 +371,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
         .phone-prefix {
           position: absolute;
           left: 16px;
-          font-family: ${designSystem.typography.fontFamily.english};
+          font-family: ${designSystem.typography.fontFamily.text};
           font-size: ${designSystem.typography.fontSize.base};
           color: ${designSystem.colors.text.tertiary};
           pointer-events: none;
@@ -445,7 +445,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
         .otp-input {
           width: 48px;
           height: 56px;
-          font-family: ${designSystem.typography.fontFamily.english};
+          font-family: ${designSystem.typography.fontFamily.text};
           font-size: ${designSystem.typography.fontSize['2xl']};
           font-weight: ${designSystem.typography.fontWeight.bold};
           color: ${designSystem.colors.text.primary};
