@@ -3,6 +3,7 @@ import hashlib
 import hmac
 import json
 import time
+from typing import Optional, Dict
 from urllib.parse import unquote
 
 from app.core.config import settings
@@ -10,8 +11,8 @@ from app.core.config import settings
 
 # ── Telegram initData verification (stdlib only) ─────────────────────────────
 
-def verify_telegram_init_data(init_data: str) -> dict | None:
-    parsed: dict[str, str] = {}
+def verify_telegram_init_data(init_data: str) -> Optional[dict]:
+    parsed: Dict[str, str] = {}
     for part in init_data.split("&"):
         if "=" in part:
             k, v = part.split("=", 1)
@@ -47,7 +48,7 @@ def verify_telegram_init_data(init_data: str) -> dict | None:
     return json.loads(user_json)
 
 
-def verify_telegram_widget_auth(data: dict) -> dict | None:
+def verify_telegram_widget_auth(data: dict) -> Optional[dict]:
     received_hash = data.get("hash")
     if not received_hash:
         return None
@@ -115,7 +116,7 @@ def create_access_token(telegram_id: int) -> str:
     return f"{header}.{payload}.{sig}"
 
 
-def decode_access_token(token: str) -> int | None:
+def decode_access_token(token: str) -> Optional[int]:
     try:
         header_b64, payload_b64, sig_b64 = token.split(".")
         signing_input = f"{header_b64}.{payload_b64}".encode()

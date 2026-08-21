@@ -1,5 +1,6 @@
 import logging
 import time
+from typing import Optional, Dict
 
 from app.services.user import UserService
 from app.telegram.api import send_message
@@ -7,7 +8,7 @@ from app.telegram.keyboards import main_menu_keyboard
 
 logger = logging.getLogger(__name__)
 
-_last_seen: dict[int, float] = {}
+_last_seen: Dict[int, float] = {}
 RATE_LIMIT_SECONDS = 1.5
 
 WELCOME_TEXT = (
@@ -25,7 +26,7 @@ WELCOME_TEXT = (
 )
 
 
-def _throttled(user_id: int | None) -> bool:
+def _throttled(user_id: Optional[int]) -> bool:
     if not user_id:
         return False
     now = time.monotonic()
