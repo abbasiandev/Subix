@@ -1,9 +1,5 @@
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import Script from "next/script";
-import { AuthProvider } from "@/context/AuthContext";
-import { LayoutProvider } from "@/context/LayoutContext";
-import AppLayout from "@/components/layouts/AppLayout";
 import "@/styles/globals.css";
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -13,7 +9,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         
         <title>سابیکس - خرید اشتراک‌های هوش مصنوعی</title>
         <meta name="description" content="خرید اشتراک ChatGPT، Gemini، Cursor، Claude و سایر ابزارهای هوش مصنوعی با فعال‌سازی سریع و پشتیبانی 24/7" />
@@ -35,26 +31,15 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="twitter:description" content="خرید اشتراک ChatGPT، Gemini، Cursor و سایر ابزارهای هوش مصنوعی" />
         
         {/* Theme Color for mobile browsers */}
-        <meta name="theme-color" content="#14b8a6" />
+        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000" />
         
-        {/* Favicon - using existing logo */}
+        {/* Favicon */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </Head>
 
-      {/* Telegram WebApp SDK - only load in Telegram context */}
-      <Script
-        src="https://telegram.org/js/telegram-web-app.js"
-        strategy="beforeInteractive"
-        id="telegram-sdk"
-      />
-
-      <AuthProvider>
-        <LayoutProvider>
-          <AppLayout>
-            <Component {...pageProps} />
-          </AppLayout>
-        </LayoutProvider>
-      </AuthProvider>
+      <Component {...pageProps} />
     </>
   );
 }

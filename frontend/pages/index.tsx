@@ -1,457 +1,590 @@
-import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/router';
+import React, { Suspense } from 'react';
 import Head from 'next/head';
-import { ProductIconReal } from '../components/RealProductIcons';
+import dynamic from 'next/dynamic';
+import { NavigationBar, Footer } from '@/components/Layout';
+import { ProductGrid } from '@/components/Products/ProductGrid';
+import { ArticleGrid } from '@/components/Articles/ArticleGrid';
+import { ScrollReveal, Counter } from '@/components/Animations/ScrollReveal';
+import { PageTransition, LoadingSpinner } from '@/components/Animations/PageTransition';
+import { useScrollProgress } from '@/hooks/useScrollProgress';
+import { designSystem } from '@/styles/apple-design-system';
+import { products } from '@/data/products';
 
-export default function Home() {
-  const router = useRouter();
-  const heroRef = useRef<HTMLDivElement>(null);
-  const [scrollY, setScrollY] = useState(0);
+// Dynamic import for WebGL components (client-side only)
+const Canvas = dynamic(() => import('@react-three/fiber').then(mod => ({ default: mod.Canvas })), { ssr: false });
+const HeroScene = dynamic(() => import('@/components/WebGL/HeroScene').then(mod => ({ default: mod.HeroScene })), { ssr: false });
+const ScrollParallax = dynamic(() => import('@/components/WebGL/ScrollParallax').then(mod => ({ default: mod.ScrollParallax })), { ssr: false });
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const products = [
-    { id: 'chatgpt', name: 'ChatGPT Plus', price: '۳۹۰,۰۰۰', period: 'ماهانه' },
-    { id: 'claude', name: 'Claude Pro', price: '۳۵۰,۰۰۰', period: 'ماهانه' },
-    { id: 'gemini', name: 'Gemini Advanced', price: '۳۲۰,۰۰۰', period: 'ماهانه' },
-    { id: 'cursor', name: 'Cursor Pro', price: '۲۸۰,۰۰۰', period: 'ماهانه' },
-    { id: 'spotify', name: 'Spotify Premium', price: '۱۵۰,۰۰۰', period: 'ماهانه' },
-  ];
+/**
+ * Homepage - Premium Apple-Inspired Single-Page Design
+ * All products and articles visible on one page with WebGL effects
+ */
+const HomePage: React.FC = () => {
+  const { scrollProgress } = useScrollProgress();
 
   return (
     <>
       <Head>
-        <title>Subix - اشتراک هوش مصنوعی</title>
+        <title>سابیکس - فروشگاه تخصصی اشتراک‌های دیجیتال و ابزارهای هوش مصنوعی</title>
+        <meta
+          name="description"
+          content="خرید امن اشتراک ChatGPT، Spotify، Netflix، GitHub Copilot و ابزارهای هوش مصنوعی با بهترین قیمت"
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="سابیکس - فروشگاه اشتراک‌های دیجیتال" />
+        <meta
+          property="og:description"
+          content="خرید امن اشتراک‌های پریمیوم با پشتیبانی ۲۴ ساعته"
+        />
+        <meta property="og:type" content="website" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="apple-page">
-        {/* Hero Section */}
-        <section className="hero-section" ref={heroRef}>
+      <PageTransition>
+        {/* Navigation */}
+        <NavigationBar />
+
+        {/* Hero Section with WebGL */}
+        <section className="hero-section">
+          {/* WebGL Background */}
+          <div className="webgl-hero-background">
+            <Suspense fallback={<LoadingSpinner />}>
+              <HeroScene scrollProgress={scrollProgress} />
+            </Suspense>
+          </div>
+
+          {/* 3D Parallax Layers */}
+          <div className="parallax-background">
+            <Canvas camera={{ position: [0, 0, 10], fov: 75 }}>
+              <Suspense fallback={null}>
+                <ScrollParallax scrollProgress={scrollProgress} layer="background" />
+                <ScrollParallax scrollProgress={scrollProgress} layer="mid" />
+                <ScrollParallax scrollProgress={scrollProgress} layer="foreground" />
+              </Suspense>
+            </Canvas>
+          </div>
+
+          {/* Hero Content */}
           <div className="hero-content">
-            <h1 
-              className="hero-title"
-              style={{ 
-                transform: `translateY(${scrollY * 0.5}px)`,
-                opacity: 1 - scrollY / 500
-              }}
-            >
-              Subix
-            </h1>
-            <p className="hero-subtitle">
-              دسترسی به قدرتمندترین هوش‌های مصنوعی
-            </p>
-            <p className="hero-description">
-              ChatGPT، Claude، Gemini و بیشتر. همه در یک مکان.
-            </p>
-            <button 
-              className="hero-cta"
-              onClick={() => router.push('/products')}
-            >
-              مشاهده محصولات
-            </button>
-          </div>
+            <ScrollReveal direction="up">
+              <h1 className="hero-title">
+                دسترسی آسان به
+                <span className="hero-title-gradient"> ابزارهای هوش مصنوعی</span>
+              </h1>
+            </ScrollReveal>
 
-          {/* Floating 3D Product Icons */}
-          <div className="floating-icons">
-            <div className="icon-orbit icon-1">
-              <ProductIconReal product="chatgpt" size={80} />
-            </div>
-            <div className="icon-orbit icon-2">
-              <ProductIconReal product="claude" size={70} />
-            </div>
-            <div className="icon-orbit icon-3">
-              <ProductIconReal product="gemini" size={75} />
-            </div>
-            <div className="icon-orbit icon-4">
-              <ProductIconReal product="cursor" size={65} />
-            </div>
-            <div className="icon-orbit icon-5">
-              <ProductIconReal product="spotify" size={70} />
-            </div>
-          </div>
-        </section>
+            <ScrollReveal direction="up" delay={100}>
+              <p className="hero-description">
+                خرید امن اشتراک ChatGPT، Claude، Spotify، Netflix و بیش از ۵۰ سرویس دیگر
+                <br />
+                با پشتیبانی ۲۴ ساعته و بهترین قیمت بازار
+              </p>
+            </ScrollReveal>
 
-        {/* Stats Section */}
-        <section className="stats-section">
-          <div className="stat-item">
-            <div className="stat-number">۱۲,۰۰۰+</div>
-            <div className="stat-label">کاربر فعال</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-number">۵</div>
-            <div className="stat-label">محصول پریمیوم</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-number">۲۴/۷</div>
-            <div className="stat-label">پشتیبانی</div>
-          </div>
-        </section>
-
-        {/* Products Carousel */}
-        <section className="products-section">
-          <h2 className="section-title">محصولات</h2>
-          <div className="products-grid">
-            {products.map((product, index) => (
-              <div 
-                key={product.id}
-                className="product-card-3d"
-                style={{ 
-                  animationDelay: `${index * 0.1}s`,
-                  transform: `translateY(${Math.max(0, 300 - scrollY + index * 50)}px)`
-                }}
-                onClick={() => router.push(`/products/${product.id}`)}
-              >
-                <div className="product-icon-wrapper">
-                  <ProductIconReal product={product.id} size={100} />
+            <ScrollReveal direction="up" delay={200}>
+              <div className="hero-stats">
+                <div className="stat-item">
+                  <Counter end={15000} suffix="+" className="stat-number" />
+                  <span className="stat-label">کاربر فعال</span>
                 </div>
-                <h3 className="product-name">{product.name}</h3>
-                <div className="product-price">
-                  <span className="price-amount">{product.price}</span>
-                  <span className="price-period">تومان / {product.period}</span>
+                <div className="stat-item">
+                  <Counter end={50} suffix="+" className="stat-number" />
+                  <span className="stat-label">محصول</span>
                 </div>
-                <button className="product-buy-btn">خرید اشتراک</button>
+                <div className="stat-item">
+                  <Counter end={99} suffix="%" className="stat-number" />
+                  <span className="stat-label">رضایت مشتری</span>
+                </div>
               </div>
-            ))}
+            </ScrollReveal>
+
+            <ScrollReveal direction="up" delay={300}>
+              <div className="hero-cta">
+                <a href="#products" className="cta-button primary">
+                  <span>مشاهده محصولات</span>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path
+                      d="M10 4L10 16M10 16L6 12M10 16L14 12"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </a>
+                <a href="#articles" className="cta-button secondary">
+                  <span>مقالات آموزشی</span>
+                </a>
+              </div>
+            </ScrollReveal>
+          </div>
+
+          {/* Scroll Indicator */}
+          <div className="scroll-indicator">
+            <div className="scroll-mouse">
+              <div className="scroll-wheel"></div>
+            </div>
+          </div>
+        </section>
+
+        {/* Products Section - ALL Products Visible */}
+        <section id="products" className="products-section">
+          <div className="section-container">
+            <ScrollReveal direction="up">
+              <div className="section-header">
+                <h2 className="section-title">محصولات پرطرفدار</h2>
+                <p className="section-description">
+                  تمامی اشتراک‌های دیجیتال و ابزارهای هوش مصنوعی در یک مکان
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal direction="up" delay={100}>
+              <ProductGrid products={products} />
+            </ScrollReveal>
           </div>
         </section>
 
         {/* Features Section */}
         <section className="features-section">
-          <h2 className="section-title">چرا Subix؟</h2>
-          <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon">⚡</div>
-              <h3>فعال‌سازی آنی</h3>
-              <p>اشتراک شما در کمتر از ۱ دقیقه فعال می‌شود</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">🔒</div>
-              <h3>امنیت بالا</h3>
-              <p>تراکنش‌های امن با رمزنگاری پیشرفته</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">💎</div>
-              <h3>قیمت مناسب</h3>
-              <p>بهترین قیمت‌ها در بازار ایران</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">🎯</div>
-              <h3>پشتیبانی ۲۴/۷</h3>
-              <p>تیم پشتیبانی همیشه در دسترس شماست</p>
+          <div className="section-container">
+            <ScrollReveal direction="up">
+              <h2 className="section-title">چرا سابیکس؟</h2>
+            </ScrollReveal>
+
+            <div className="features-grid">
+              <ScrollReveal direction="up" delay={0}>
+                <div className="feature-card">
+                  <div className="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                      <path
+                        d="M16 4L20 12L28 16L20 20L16 28L12 20L4 16L12 12L16 4Z"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="feature-title">تحویل فوری</h3>
+                  <p className="feature-description">
+                    دریافت اشتراک بلافاصله پس از پرداخت
+                  </p>
+                </div>
+              </ScrollReveal>
+
+              <ScrollReveal direction="up" delay={100}>
+                <div className="feature-card">
+                  <div className="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                      <rect x="6" y="8" width="20" height="16" rx="2" stroke="currentColor" strokeWidth="2" />
+                      <path d="M6 12H26" stroke="currentColor" strokeWidth="2" />
+                      <circle cx="16" cy="18" r="2" fill="currentColor" />
+                    </svg>
+                  </div>
+                  <h3 className="feature-title">پرداخت امن</h3>
+                  <p className="feature-description">
+                    درگاه‌های معتبر با نماد اعتماد الکترونیکی
+                  </p>
+                </div>
+              </ScrollReveal>
+
+              <ScrollReveal direction="up" delay={200}>
+                <div className="feature-card">
+                  <div className="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                      <circle cx="16" cy="16" r="12" stroke="currentColor" strokeWidth="2" />
+                      <path d="M16 8V16L20 20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                  </div>
+                  <h3 className="feature-title">پشتیبانی ۲۴/۷</h3>
+                  <p className="feature-description">
+                    پاسخگویی سریع در تمام ساعات شبانه‌روز
+                  </p>
+                </div>
+              </ScrollReveal>
+
+              <ScrollReveal direction="up" delay={300}>
+                <div className="feature-card">
+                  <div className="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                      <path
+                        d="M16 4V8M16 24V28M28 16H24M8 16H4M24.485 24.485L21.657 21.657M24.485 7.515L21.657 10.343M7.515 24.485L10.343 21.657M7.515 7.515L10.343 10.343"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="feature-title">قیمت مناسب</h3>
+                  <p className="feature-description">
+                    بهترین قیمت با تخفیف‌های ویژه
+                  </p>
+                </div>
+              </ScrollReveal>
             </div>
           </div>
         </section>
-      </div>
+
+        {/* Articles Section - ALL Articles Visible */}
+        <section id="articles" className="articles-section">
+          <div className="section-container">
+            <ScrollReveal direction="up">
+              <div className="section-header">
+                <h2 className="section-title">مقالات و راهنماها</h2>
+                <p className="section-description">
+                  آموزش‌ها و نکات کاربردی برای استفاده بهینه از محصولات
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal direction="up" delay={100}>
+              <ArticleGrid showFilters={true} />
+            </ScrollReveal>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <Footer />
+      </PageTransition>
 
       <style jsx>{`
-        .apple-page {
-          min-height: 100vh;
-          background: #000;
-          color: #fff;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-          overflow-x: hidden;
-        }
-
+        /* Hero Section */
         .hero-section {
           position: relative;
-          height: 100vh;
+          min-height: 100vh;
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, #1a1a2e 0%, #0a0a15 100%);
           overflow: hidden;
+          padding-top: 80px;
+        }
+
+        .webgl-hero-background {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 0;
+        }
+
+        .parallax-background {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 1;
+          pointer-events: none;
         }
 
         .hero-content {
-          text-align: center;
+          position: relative;
           z-index: 10;
-          padding: 0 20px;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 ${designSystem.spacing.scale['6']};
+          text-align: center;
         }
 
         .hero-title {
-          font-size: clamp(4rem, 15vw, 10rem);
-          font-weight: 900;
-          background: linear-gradient(135deg, #fff 0%, #999 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          margin: 0;
-          letter-spacing: -0.02em;
+          font-family: ${designSystem.typography.fontFamily.persian};
+          font-size: clamp(2.5rem, 5vw, 4rem);
+          font-weight: ${designSystem.typography.fontWeight.heavy};
+          color: ${designSystem.colors.text.primary};
+          line-height: ${designSystem.typography.lineHeight.tight};
+          margin: 0 0 ${designSystem.spacing.scale['6']};
         }
 
-        .hero-subtitle {
-          font-size: clamp(1.5rem, 4vw, 2.5rem);
-          font-weight: 600;
-          margin: 1.5rem 0;
-          color: #fff;
+        .hero-title-gradient {
+          background: linear-gradient(
+            135deg,
+            ${designSystem.colors.primary.DEFAULT},
+            ${designSystem.colors.primary.active}
+          );
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
 
         .hero-description {
+          font-family: ${designSystem.typography.fontFamily.persian};
           font-size: clamp(1rem, 2vw, 1.25rem);
-          color: #aaa;
-          margin: 1rem 0 2.5rem;
+          color: ${designSystem.colors.text.secondary};
+          line-height: ${designSystem.typography.lineHeight.relaxed};
+          margin: 0 0 ${designSystem.spacing.scale['10']};
+          max-width: 800px;
+          margin-left: auto;
+          margin-right: auto;
         }
 
-        .hero-cta {
-          background: #fff;
-          color: #000;
-          padding: 18px 48px;
-          border-radius: 980px;
-          font-size: 1.125rem;
-          font-weight: 600;
-          border: none;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .hero-cta:hover {
-          transform: scale(1.05);
-          box-shadow: 0 10px 40px rgba(255,255,255,0.3);
-        }
-
-        .floating-icons {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          top: 0;
-          left: 0;
-        }
-
-        .icon-orbit {
-          position: absolute;
-          animation: float 6s ease-in-out infinite;
-        }
-
-        .icon-1 {
-          top: 15%;
-          left: 15%;
-          animation-delay: 0s;
-        }
-
-        .icon-2 {
-          top: 25%;
-          right: 15%;
-          animation-delay: 1s;
-        }
-
-        .icon-3 {
-          bottom: 20%;
-          left: 20%;
-          animation-delay: 2s;
-        }
-
-        .icon-4 {
-          bottom: 30%;
-          right: 20%;
-          animation-delay: 3s;
-        }
-
-        .icon-5 {
-          top: 50%;
-          right: 10%;
-          animation-delay: 4s;
-        }
-
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotateY(0deg); }
-          50% { transform: translateY(-30px) rotateY(180deg); }
-        }
-
-        .stats-section {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: 3rem;
-          padding: 5rem 2rem;
-          max-width: 1200px;
-          margin: 0 auto;
-          background: #000;
+        .hero-stats {
+          display: flex;
+          justify-content: center;
+          gap: ${designSystem.spacing.scale['12']};
+          margin-bottom: ${designSystem.spacing.scale['10']};
+          flex-wrap: wrap;
         }
 
         .stat-item {
-          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: ${designSystem.spacing.scale['2']};
         }
 
         .stat-number {
-          font-size: clamp(3rem, 8vw, 5rem);
-          font-weight: 900;
-          background: linear-gradient(135deg, #FF6B35 0%, #6B4FE8 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
+          font-family: ${designSystem.typography.fontFamily.text};
+          font-size: clamp(2rem, 4vw, 3rem);
+          font-weight: ${designSystem.typography.fontWeight.bold};
+          color: ${designSystem.colors.primary.DEFAULT};
         }
 
         .stat-label {
-          font-size: 1.25rem;
-          color: #888;
-          margin-top: 0.5rem;
+          font-family: ${designSystem.typography.fontFamily.persian};
+          font-size: ${designSystem.typography.fontSize.sm};
+          color: ${designSystem.colors.text.secondary};
+        }
+
+        .hero-cta {
+          display: flex;
+          gap: ${designSystem.spacing.scale['4']};
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+
+        .cta-button {
+          display: inline-flex;
+          align-items: center;
+          gap: ${designSystem.spacing.scale['2']};
+          padding: 16px 32px;
+          font-family: ${designSystem.typography.fontFamily.persian};
+          font-size: ${designSystem.typography.fontSize.base};
+          font-weight: ${designSystem.typography.fontWeight.semibold};
+          border-radius: ${designSystem.borderRadius.full};
+          text-decoration: none;
+          transition: all ${designSystem.animation.duration.normal} ${designSystem.animation.easing.default};
+          box-shadow: ${designSystem.shadows.md};
+          min-height: ${designSystem.accessibility.touchTarget.mobile};
+        }
+
+        .cta-button.primary {
+          background: ${designSystem.colors.primary.DEFAULT};
+          color: white;
+        }
+
+        .cta-button.primary:hover {
+          background: ${designSystem.colors.primary.active};
+          transform: translateY(-4px);
+          box-shadow: ${designSystem.shadows.xl};
+        }
+
+        .cta-button.secondary {
+          background: ${designSystem.colors.surface.light};
+          color: ${designSystem.colors.text.primary};
+          border: 2px solid ${designSystem.colors.neutral[300]};
+        }
+
+        .cta-button.secondary:hover {
+          background: white;
+          border-color: ${designSystem.colors.primary.DEFAULT};
+          transform: translateY(-4px);
+          box-shadow: ${designSystem.shadows.xl};
+        }
+
+        .scroll-indicator {
+          position: absolute;
+          bottom: 40px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 10;
+        }
+
+        .scroll-mouse {
+          width: 24px;
+          height: 40px;
+          border: 2px solid ${designSystem.colors.text.tertiary};
+          border-radius: 12px;
+          position: relative;
+          animation: float 2s ease-in-out infinite;
+        }
+
+        .scroll-wheel {
+          width: 4px;
+          height: 8px;
+          background: ${designSystem.colors.text.tertiary};
+          border-radius: 2px;
+          position: absolute;
+          top: 8px;
+          left: 50%;
+          transform: translateX(-50%);
+          animation: scroll 1.5s ease-in-out infinite;
+        }
+
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        @keyframes scroll {
+          0% {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+          }
+          100% {
+            opacity: 0;
+            transform: translateX(-50%) translateY(12px);
+          }
+        }
+
+        /* Section Styles */
+        .products-section,
+        .articles-section,
+        .features-section {
+          padding: ${designSystem.spacing.scale['20']} 0;
+          position: relative;
         }
 
         .products-section {
-          padding: 5rem 2rem;
-          background: #000;
-        }
-
-        .section-title {
-          font-size: clamp(2.5rem, 6vw, 4rem);
-          font-weight: 900;
-          text-align: center;
-          margin-bottom: 4rem;
-          background: linear-gradient(135deg, #fff 0%, #888 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-
-        .products-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 2rem;
-          max-width: 1400px;
-          margin: 0 auto;
-          padding: 0 1rem;
-        }
-
-        .product-card-3d {
-          background: rgba(255,255,255,0.05);
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(255,255,255,0.1);
-          border-radius: 24px;
-          padding: 2.5rem 2rem;
-          text-align: center;
-          cursor: pointer;
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-          animation: slideUp 0.6s ease-out forwards;
-          opacity: 0;
-          transform: translateY(50px);
-        }
-
-        @keyframes slideUp {
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .product-card-3d:hover {
-          transform: translateY(-10px) scale(1.02);
-          background: rgba(255,255,255,0.08);
-          border-color: rgba(255,255,255,0.2);
-          box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-
-        .product-icon-wrapper {
-          margin: 0 auto 1.5rem;
-          width: 100px;
-          height: 100px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .product-name {
-          font-size: 1.75rem;
-          font-weight: 700;
-          margin: 0 0 1rem;
-        }
-
-        .product-price {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-          margin: 1.5rem 0;
-        }
-
-        .price-amount {
-          font-size: 2rem;
-          font-weight: 800;
-          background: linear-gradient(135deg, #FF6B35 0%, #6B4FE8 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-
-        .price-period {
-          font-size: 0.9rem;
-          color: #888;
-        }
-
-        .product-buy-btn {
-          width: 100%;
-          background: linear-gradient(135deg, #FF6B35 0%, #6B4FE8 100%);
-          color: #fff;
-          padding: 14px 32px;
-          border-radius: 980px;
-          font-size: 1rem;
-          font-weight: 600;
-          border: none;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .product-buy-btn:hover {
-          transform: scale(1.05);
-          box-shadow: 0 10px 30px rgba(255,107,53,0.4);
+          background: linear-gradient(
+            180deg,
+            transparent 0%,
+            ${designSystem.colors.neutral[50]} 50%,
+            transparent 100%
+          );
         }
 
         .features-section {
-          padding: 5rem 2rem;
-          background: linear-gradient(180deg, #000 0%, #0a0a15 100%);
+          background: linear-gradient(
+            135deg,
+            ${designSystem.colors.neutral[50]},
+            ${designSystem.colors.primary.DEFAULT}10
+          );
         }
 
-        .features-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: 2rem;
-          max-width: 1200px;
+        .section-container {
+          max-width: 1440px;
           margin: 0 auto;
+          padding: 0 ${designSystem.spacing.scale['6']};
         }
 
-        .feature-card {
-          background: rgba(255,255,255,0.03);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 20px;
-          padding: 2.5rem 2rem;
+        .section-header {
           text-align: center;
-          transition: all 0.3s ease;
+          margin-bottom: ${designSystem.spacing.scale['12']};
         }
 
-        .feature-card:hover {
-          background: rgba(255,255,255,0.05);
-          border-color: rgba(255,255,255,0.15);
-          transform: translateY(-5px);
+        .section-title {
+          font-family: ${designSystem.typography.fontFamily.persian};
+          font-size: clamp(2rem, 4vw, 3rem);
+          font-weight: ${designSystem.typography.fontWeight.bold};
+          color: ${designSystem.colors.text.primary};
+          margin: 0 0 ${designSystem.spacing.scale['4']};
         }
 
-        .feature-icon {
-          font-size: 3rem;
-          margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-          font-size: 1.5rem;
-          font-weight: 700;
-          margin: 0 0 1rem;
-        }
-
-        .feature-card p {
-          color: #aaa;
-          line-height: 1.6;
+        .section-description {
+          font-family: ${designSystem.typography.fontFamily.persian};
+          font-size: ${designSystem.typography.fontSize.lg};
+          color: ${designSystem.colors.text.secondary};
           margin: 0;
         }
 
+        /* Features Grid */
+        .features-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: ${designSystem.spacing.scale['8']};
+        }
+
+        .feature-card {
+          background: white;
+          padding: ${designSystem.spacing.scale['8']};
+          border-radius: ${designSystem.borderRadius['2xl']};
+          text-align: center;
+          box-shadow: ${designSystem.shadows.md};
+          transition: all ${designSystem.animation.duration.normal} ${designSystem.animation.easing.default};
+        }
+
+        .feature-card:hover {
+          transform: translateY(-8px);
+          box-shadow: ${designSystem.shadows.xl};
+        }
+
+        .feature-icon {
+          width: 64px;
+          height: 64px;
+          margin: 0 auto ${designSystem.spacing.scale['4']};
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: ${designSystem.colors.primary.DEFAULT}15;
+          border-radius: ${designSystem.borderRadius.full};
+          color: ${designSystem.colors.primary.DEFAULT};
+        }
+
+        .feature-title {
+          font-family: ${designSystem.typography.fontFamily.persian};
+          font-size: ${designSystem.typography.fontSize.xl};
+          font-weight: ${designSystem.typography.fontWeight.bold};
+          color: ${designSystem.colors.text.primary};
+          margin: 0 0 ${designSystem.spacing.scale['3']};
+        }
+
+        .feature-description {
+          font-family: ${designSystem.typography.fontFamily.persian};
+          font-size: ${designSystem.typography.fontSize.sm};
+          color: ${designSystem.colors.text.secondary};
+          line-height: ${designSystem.typography.lineHeight.relaxed};
+          margin: 0;
+        }
+
+        /* Mobile Adjustments */
         @media (max-width: 768px) {
-          .floating-icons {
-            display: none;
+          .hero-section {
+            min-height: 90vh;
+            padding-top: 100px;
           }
-          
-          .stats-section {
-            gap: 2rem;
-            padding: 3rem 1rem;
+
+          .hero-content {
+            padding: 0 ${designSystem.spacing.scale['4']};
+          }
+
+          .hero-stats {
+            gap: ${designSystem.spacing.scale['6']};
+          }
+
+          .products-section,
+          .articles-section,
+          .features-section {
+            padding: ${designSystem.spacing.scale['12']} 0;
+          }
+
+          .section-container {
+            padding: 0 ${designSystem.spacing.scale['4']};
+          }
+
+          .features-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .scroll-indicator {
+            bottom: 20px;
+          }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+          .scroll-mouse,
+          .scroll-wheel {
+            animation: none;
           }
         }
       `}</style>
     </>
   );
-}
+};
+
+export default HomePage;
