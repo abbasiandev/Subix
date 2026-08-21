@@ -406,7 +406,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
         }
 
         .submit-button:hover:not(:disabled) {
-          background: ${designSystem.colors.primary.dark};
+          background: ${designSystem.colors.primary.active};
           transform: translateY(-2px);
           box-shadow: ${designSystem.shadows.lg};
         }
