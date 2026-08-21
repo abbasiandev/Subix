@@ -1,3 +1,5 @@
+from typing import Optional
+
 from app.db.client import execute
 from app.schemas.schemas import UserOut
 
@@ -12,7 +14,7 @@ def _row_to_user(row) -> UserOut:
 
 class UserService:
 
-    def get_by_telegram_id(self, telegram_id: int) -> UserOut | None:
+    def get_by_telegram_id(self, telegram_id: int) -> Optional[UserOut]:
         rs = execute("SELECT * FROM users WHERE telegram_id = ?", [telegram_id])
         if not rs.rows:
             return None
@@ -21,10 +23,10 @@ class UserService:
     def upsert_from_telegram(
         self,
         telegram_id: int,
-        username: str | None,
-        first_name: str | None,
-        last_name: str | None,
-        phone_number: str | None = None,
+        username: Optional[str],
+        first_name: Optional[str],
+        last_name: Optional[str],
+        phone_number: Optional[str] = None,
     ) -> UserOut:
         execute(
             """
