@@ -30,7 +30,8 @@ const Ctx = createContext<AuthCtx>({
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  // For SSR/SSG, don't show loading state initially
+  const [loading, setLoading] = useState(typeof window === 'undefined' ? false : true);
   const [error, setError] = useState<string | null>(null);
   const [isTelegram, setIsTelegram] = useState(false);
   const router = useRouter();
@@ -45,6 +46,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const hasTelegramContext = !!(tg?.initData && tg.initData.length > 0);
     setIsTelegram(hasTelegramContext);
 
+    // Set a timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+      setError("زمان اتصال به سرور به پایان رسید");
+    }, 10000); // 10 second timeout
+
     if (hasTelegramContext) {
       // Telegram Mini App flow (existing)
       tg.ready();
@@ -57,6 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const initData = tg?.initData;
       if (!initData) {
+        clearTimeout(timeoutId);
         setLoading(false);
         return;
       }
@@ -66,26 +74,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setToken(res.access_token);
           setUser(res.user);
         })
-        .catch((e) => setError(e.message))
-        .finally(() => setLoading(false));
+        .catch((e) => {
+          console.error('Telegram login failed:', e);
+          setError(e.message);
+        })
+        .finally(() => {
+          clearTimeout(timeoutId);
+          setLoading(false);
+        });
     } else {
       // Desktop browser flow (new)
       // Session cookie is sent automatically with fetch (credentials: "include")
       // Try to fetch current user
+      const publicPages = ["/", "/login", "/terms", "/products", "/contact", "/blog"];
+      const isPublicPage = publicPages.includes(router.pathname) || router.pathname.startsWith('/products/');
+      
+      // For public pages, don't try to authenticate - just show the page
+      if (isPublicPage) {
+        clearTimeout(timeoutId);
+        setLoading(false);
+        return;
+      }
+
       getMe()
         .then((userData) => {
           setUser(userData);
         })
         .catch(() => {
-          // Not authenticated - will be handled by route protection
-          // Don't redirect if on public pages (landing, login, terms)
-          const publicPages = ["/", "/login", "/terms"];
-          if (!publicPages.includes(router.pathname)) {
+          // Not authenticated - redirect to login for protected pages
+          if (!isPublicPage) {
             router.push("/login");
           }
         })
-        .finally(() => setLoading(false));
+        .finally(() => {
+          clearTimeout(timeoutId);
+          setLoading(false);
+        });
     }
+
+    return () => clearTimeout(timeoutId);
   }, [router]);
 
   const logout = async () => {

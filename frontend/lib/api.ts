@@ -55,13 +55,30 @@ async function request<T>(
         credentials: options.credentials || "include",
     };
 
-    const res = await fetch(resolveUrl(path), fetchOptions);
+    // Add timeout to prevent hanging
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
 
-    if (!res.ok) {
-        const err = await res.json().catch(() => ({detail: res.statusText}));
-        throw new Error(err.detail ?? "خطا در ارتباط با سرور");
+    try {
+        const res = await fetch(resolveUrl(path), {
+            ...fetchOptions,
+            signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({detail: res.statusText}));
+            throw new Error(err.detail ?? "خطا در ارتباط با سرور");
+        }
+        return res.json();
+    } catch (error: any) {
+        clearTimeout(timeoutId);
+        if (error.name === 'AbortError') {
+            throw new Error('زمان اتصال به سرور به پایان رسید');
+        }
+        throw error;
     }
-    return res.json();
 }
 
 async function adminRequest<T>(

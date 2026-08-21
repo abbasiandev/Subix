@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
+  basePath: '/Subix',
+  assetPrefix: '/Subix',
   reactStrictMode: true,
   swcMinify: true,
   
