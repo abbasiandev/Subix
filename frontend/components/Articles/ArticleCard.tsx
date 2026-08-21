@@ -15,19 +15,15 @@ interface ArticleCardProps {
 export const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
   return (
     <>
-      <Link href={`/articles/${article.slug}`}>
+      <Link href={`/blog/${article.slug}`}>
         <div className="article-card">
           {/* Article Image */}
           <div className="article-image-container">
-            <Image
-              src={article.imagePath}
-              alt={article.title}
-              fill
-              className="article-image"
-              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              placeholder="blur"
-              blurDataURL={article.imageBlurDataURL}
-            />
+            <div className="article-image-placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" fill="currentColor" opacity="0.3"/>
+              </svg>
+            </div>
             
             {/* Category Badge */}
             <span className="category-badge">
@@ -79,7 +75,15 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
           width: 100%;
           aspect-ratio: 16 / 9;
           overflow: hidden;
-          background: ${designSystem.colors.neutral[100]};
+          background: linear-gradient(135deg, ${designSystem.colors.primary.DEFAULT} 0%, ${designSystem.colors.primary.active} 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .article-image-placeholder {
+          color: white;
+          opacity: 0.5;
         }
 
         .article-image-container :global(.article-image) {

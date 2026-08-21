@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { GetStaticProps, GetStaticPaths } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import DesktopContainer from '../../components/layouts/DesktopContainer';
@@ -6,32 +7,41 @@ import BottomNav from '../../components/BottomNav';
 import GlassContainer from '../../components/GlassContainer';
 import { blogPosts, blogCategories } from '../../data/blog-posts';
 
-export default function BlogPost() {
-  const router = useRouter();
-  const { slug } = router.query;
-  const isTelegram = typeof window !== 'undefined' && window.Telegram?.WebApp;
+export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = blogPosts.map((post) => ({
+    params: { slug: post.slug },
+  }));
 
-  const post = blogPosts.find(p => p.slug === slug);
-  const relatedPosts = blogPosts
-    .filter(p => p.slug !== slug && p.category === post?.category)
-    .slice(0, 3);
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const post = blogPosts.find((p) => p.slug === params?.slug);
 
   if (!post) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" dir="rtl">
-        <GlassContainer elevation="light" className="rounded-2xl p-8 text-center">
-          <div className="text-6xl mb-4">📄</div>
-          <h2 className="text-2xl font-bold text-white mb-2">مقاله یافت نشد</h2>
-          <p className="text-gray-400 mb-6">مقاله مورد نظر حذف شده یا وجود ندارد</p>
-          <Link href="/blog">
-            <button className="bg-teal-500 hover:bg-teal-600 text-white px-6 py-3 rounded-xl transition-all">
-              بازگشت به بلاگ
-            </button>
-          </Link>
-        </GlassContainer>
-      </div>
-    );
+    return {
+      notFound: true,
+    };
   }
+
+  return {
+    props: {
+      post,
+    },
+  };
+};
+
+export default function BlogPost({ post: initialPost }: { post: typeof blogPosts[0] }) {
+  const router = useRouter();
+  const isTelegram = typeof window !== 'undefined' && window.Telegram?.WebApp;
+
+  const post = initialPost;
+  const relatedPosts = blogPosts
+    .filter(p => p.slug !== post.slug && p.category === post.category)
+    .slice(0, 3);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
