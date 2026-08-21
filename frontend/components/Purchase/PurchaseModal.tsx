@@ -429,7 +429,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
           border-radius: ${designSystem.borderRadius.xl};
           cursor: pointer;
           transition: all ${designSystem.animation.duration.fast} ${designSystem.animation.easing.default};
-          min-height: ${designSystem.accessibility.touchTargetSize};
+          min-height: ${designSystem.accessibility.touchTarget.mobile};
         }
 
         .pay-button:hover {
@@ -521,7 +521,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
           border-radius: ${designSystem.borderRadius.xl};
           cursor: pointer;
           transition: all ${designSystem.animation.duration.fast} ${designSystem.animation.easing.default};
-          min-height: ${designSystem.accessibility.touchTargetSize};
+          min-height: ${designSystem.accessibility.touchTarget.mobile};
         }
 
         .primary-action {

@@ -1,15 +1,19 @@
 import React, { Suspense } from 'react';
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
 import { NavigationBar, Footer } from '@/components/Layout';
-import { HeroScene } from '@/components/WebGL/HeroScene';
-import { ScrollParallax } from '@/components/WebGL/ScrollParallax';
 import { ProductGrid } from '@/components/Products/ProductGrid';
 import { ArticleGrid } from '@/components/Articles/ArticleGrid';
 import { ScrollReveal, Counter } from '@/components/Animations/ScrollReveal';
 import { PageTransition, LoadingSpinner } from '@/components/Animations/PageTransition';
 import { useScrollProgress } from '@/hooks/useScrollProgress';
 import { designSystem } from '@/styles/apple-design-system';
-import { Canvas } from '@react-three/fiber';
+import { products } from '@/data/products';
+
+// Dynamic import for WebGL components (client-side only)
+const Canvas = dynamic(() => import('@react-three/fiber').then(mod => ({ default: mod.Canvas })), { ssr: false });
+const HeroScene = dynamic(() => import('@/components/WebGL/HeroScene').then(mod => ({ default: mod.HeroScene })), { ssr: false });
+const ScrollParallax = dynamic(() => import('@/components/WebGL/ScrollParallax').then(mod => ({ default: mod.ScrollParallax })), { ssr: false });
 
 /**
  * Homepage - Premium Apple-Inspired Single-Page Design
@@ -136,7 +140,7 @@ const HomePage: React.FC = () => {
             </ScrollReveal>
 
             <ScrollReveal direction="up" delay={100}>
-              <ProductGrid showFilters={true} />
+              <ProductGrid products={products} />
             </ScrollReveal>
           </div>
         </section>
@@ -286,7 +290,7 @@ const HomePage: React.FC = () => {
         .hero-title {
           font-family: ${designSystem.typography.fontFamily.persian};
           font-size: clamp(2.5rem, 5vw, 4rem);
-          font-weight: ${designSystem.typography.fontWeight.black};
+          font-weight: ${designSystem.typography.fontWeight.heavy};
           color: ${designSystem.colors.text.primary};
           line-height: ${designSystem.typography.lineHeight.tight};
           margin: 0 0 ${designSystem.spacing.scale['6']};
@@ -330,7 +334,7 @@ const HomePage: React.FC = () => {
         }
 
         .stat-number {
-          font-family: ${designSystem.typography.fontFamily.english};
+          font-family: ${designSystem.typography.fontFamily.text};
           font-size: clamp(2rem, 4vw, 3rem);
           font-weight: ${designSystem.typography.fontWeight.bold};
           color: ${designSystem.colors.primary.DEFAULT};
@@ -361,7 +365,7 @@ const HomePage: React.FC = () => {
           text-decoration: none;
           transition: all ${designSystem.animation.duration.normal} ${designSystem.animation.easing.default};
           box-shadow: ${designSystem.shadows.md};
-          min-height: ${designSystem.accessibility.touchTargetSize};
+          min-height: ${designSystem.accessibility.touchTarget.mobile};
         }
 
         .cta-button.primary {

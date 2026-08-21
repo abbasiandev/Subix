@@ -25,9 +25,9 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
     return <div>در حال بارگذاری...</div>;
   }
 
-  const discountPercentage = Math.round(
-    ((product.originalPrice - product.price) / product.originalPrice) * 100
-  );
+  const discountPercentage = product.originalPrice 
+    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    : 0;
 
   return (
     <>
@@ -98,7 +98,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
 
                     {/* Pricing */}
                     <div className="pricing-section">
-                      {product.hasDiscount && (
+                      {product.hasDiscount && product.originalPrice && (
                         <span className="original-price">
                           {product.originalPrice.toLocaleString('fa-IR')} تومان
                         </span>
@@ -387,7 +387,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
         .product-title {
           font-family: ${designSystem.typography.fontFamily.persian};
           font-size: ${designSystem.typography.fontSize['4xl']};
-          font-weight: ${designSystem.typography.fontWeight.black};
+          font-weight: ${designSystem.typography.fontWeight.heavy};
           color: ${designSystem.colors.text.primary};
           margin: 0;
           line-height: ${designSystem.typography.lineHeight.tight};
@@ -453,7 +453,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
           cursor: pointer;
           transition: all ${designSystem.animation.duration.normal} ${designSystem.animation.easing.default};
           box-shadow: ${designSystem.shadows.lg};
-          min-height: ${designSystem.accessibility.touchTargetSize};
+          min-height: ${designSystem.accessibility.touchTarget.mobile};
         }
 
         .purchase-button:hover {
@@ -590,7 +590,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
           justify-content: center;
           background: linear-gradient(135deg, ${designSystem.colors.primary.DEFAULT}, ${designSystem.colors.primary.active});
           color: white;
-          font-family: ${designSystem.typography.fontFamily.english};
+          font-family: ${designSystem.typography.fontFamily.text};
           font-size: ${designSystem.typography.fontSize['2xl']};
           font-weight: ${designSystem.typography.fontWeight.bold};
           border-radius: ${designSystem.borderRadius.full};
@@ -685,8 +685,8 @@ const getCategoryLabel = (category: Product['category']): string => {
   const labels: Record<Product['category'], string> = {
     ai: 'هوش مصنوعی',
     music: 'موسیقی',
-    video: 'ویدئو',
-    development: 'توسعه نرم‌افزار',
+    media: 'رسانه',
+    devTools: 'توسعه نرم‌افزار',
     design: 'طراحی',
     productivity: 'بهره‌وری',
   };

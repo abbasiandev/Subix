@@ -455,7 +455,7 @@ const AccountPage: React.FC = () => {
         }
 
         .user-phone {
-          font-family: ${designSystem.typography.fontFamily.english};
+          font-family: ${designSystem.typography.fontFamily.text};
           font-size: ${designSystem.typography.fontSize.sm};
           color: ${designSystem.colors.text.secondary};
           margin: 0;
@@ -509,7 +509,7 @@ const AccountPage: React.FC = () => {
           color: ${designSystem.colors.text.secondary};
           cursor: pointer;
           transition: all ${designSystem.animation.duration.fast} ${designSystem.animation.easing.default};
-          min-height: ${designSystem.accessibility.touchTargetSize};
+          min-height: ${designSystem.accessibility.touchTarget.mobile};
         }
 
         .tab:hover {
@@ -654,7 +654,7 @@ const AccountPage: React.FC = () => {
         }
 
         .credential-item code {
-          font-family: ${designSystem.typography.fontFamily.english};
+          font-family: ${designSystem.typography.fontFamily.text};
           padding: 4px 12px;
           background: white;
           border: 1px solid ${designSystem.colors.neutral[200]};
@@ -733,7 +733,7 @@ const AccountPage: React.FC = () => {
           border-radius: ${designSystem.borderRadius.xl};
           cursor: pointer;
           transition: all ${designSystem.animation.duration.fast} ${designSystem.animation.easing.default};
-          min-height: ${designSystem.accessibility.touchTargetSize};
+          min-height: ${designSystem.accessibility.touchTarget.mobile};
         }
 
         .new-ticket-button:hover {
@@ -772,7 +772,7 @@ const AccountPage: React.FC = () => {
         }
 
         .ticket-id {
-          font-family: ${designSystem.typography.fontFamily.english};
+          font-family: ${designSystem.typography.fontFamily.text};
           font-size: ${designSystem.typography.fontSize.sm};
           font-weight: ${designSystem.typography.fontWeight.semibold};
           color: ${designSystem.colors.text.tertiary};
