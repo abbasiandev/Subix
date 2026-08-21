@@ -4,7 +4,6 @@ import { NavigationBar, Footer } from '@/components/Layout';
 import { ProductGrid } from '@/components/Products/ProductGrid';
 import { ArticleGrid } from '@/components/Articles/ArticleGrid';
 import { ScrollReveal, Counter } from '@/components/Animations/ScrollReveal';
-import { PageTransition } from '@/components/Animations/PageTransition';
 import { designSystem } from '@/styles/apple-design-system';
 import { products } from '@/data/products';
 
@@ -31,12 +30,11 @@ const HomePage: React.FC = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <PageTransition>
-        {/* Navigation */}
-        <NavigationBar />
+      {/* Navigation */}
+      <NavigationBar />
 
-        {/* Hero Section */}
-        <section className="hero-section">
+      {/* Hero Section */}
+      <section className="hero-section">
           {/* Hero Content */}
           <div className="hero-content">
             <ScrollReveal direction="up">
@@ -218,7 +216,6 @@ const HomePage: React.FC = () => {
 
         {/* Footer */}
         <Footer />
-      </PageTransition>
 
       <style jsx>{`
         /* Hero Section */
