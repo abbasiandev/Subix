@@ -1,27 +1,18 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import Head from 'next/head';
-import dynamic from 'next/dynamic';
 import { NavigationBar, Footer } from '@/components/Layout';
 import { ProductGrid } from '@/components/Products/ProductGrid';
 import { ArticleGrid } from '@/components/Articles/ArticleGrid';
 import { ScrollReveal, Counter } from '@/components/Animations/ScrollReveal';
-import { PageTransition, LoadingSpinner } from '@/components/Animations/PageTransition';
-import { useScrollProgress } from '@/hooks/useScrollProgress';
+import { PageTransition } from '@/components/Animations/PageTransition';
 import { designSystem } from '@/styles/apple-design-system';
 import { products } from '@/data/products';
-
-// Dynamic import for WebGL components (client-side only)
-const Canvas = dynamic(() => import('@react-three/fiber').then(mod => ({ default: mod.Canvas })), { ssr: false });
-const HeroScene = dynamic(() => import('@/components/WebGL/HeroScene').then(mod => ({ default: mod.HeroScene })), { ssr: false });
-const ScrollParallax = dynamic(() => import('@/components/WebGL/ScrollParallax').then(mod => ({ default: mod.ScrollParallax })), { ssr: false });
 
 /**
  * Homepage - Premium Apple-Inspired Single-Page Design
  * All products and articles visible on one page with WebGL effects
  */
 const HomePage: React.FC = () => {
-  const { scrollProgress } = useScrollProgress();
-
   return (
     <>
       <Head>
@@ -44,26 +35,8 @@ const HomePage: React.FC = () => {
         {/* Navigation */}
         <NavigationBar />
 
-        {/* Hero Section with WebGL */}
+        {/* Hero Section */}
         <section className="hero-section">
-          {/* WebGL Background */}
-          <div className="webgl-hero-background">
-            <Suspense fallback={<LoadingSpinner />}>
-              <HeroScene scrollProgress={scrollProgress} />
-            </Suspense>
-          </div>
-
-          {/* 3D Parallax Layers */}
-          <div className="parallax-background">
-            <Canvas camera={{ position: [0, 0, 10], fov: 75 }}>
-              <Suspense fallback={null}>
-                <ScrollParallax scrollProgress={scrollProgress} layer="background" />
-                <ScrollParallax scrollProgress={scrollProgress} layer="mid" />
-                <ScrollParallax scrollProgress={scrollProgress} layer="foreground" />
-              </Suspense>
-            </Canvas>
-          </div>
-
           {/* Hero Content */}
           <div className="hero-content">
             <ScrollReveal direction="up">
