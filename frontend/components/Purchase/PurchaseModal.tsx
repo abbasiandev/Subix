@@ -61,7 +61,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
           <div className="modal-header">
             <div className="product-info-small">
               <Image
-                src={product.brandIcon}
+                src={product.brandLogoPath}
                 alt={product.name}
                 width={48}
                 height={48}

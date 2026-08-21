@@ -36,7 +36,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
         <meta name="description" content={product.description} />
         <meta property="og:title" content={`${product.name} - سابیکس`} />
         <meta property="og:description" content={product.description} />
-        <meta property="og:image" content={product.brandIcon} />
+        <meta property="og:image" content={product.brandLogoPath} />
       </Head>
 
       <NavigationBar />
@@ -71,7 +71,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
                   <div className="product-image-container">
                     <div className="product-icon-large">
                       <Image
-                        src={product.brandIcon}
+                        src={product.brandLogoPath}
                         alt={product.name}
                         width={200}
                         height={200}
