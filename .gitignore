@@ -53,3 +53,7 @@ pnpm-debug.log*
 *.log
 *.sqlite3
 *.db
+
+# Scraped data (sensitive - benchmark only)
+backend/scripts/scraper/scraped_products.json
+backend/scripts/scraper/price_comparison.txt
