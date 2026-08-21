@@ -176,10 +176,10 @@ export const NavigationBar: React.FC = () => {
         }
 
         .navigation-bar.scrolled {
-          background: ${designSystem.effects.liquidGlass.background};
-          backdrop-filter: ${designSystem.effects.liquidGlass.backdropBlur};
-          -webkit-backdrop-filter: ${designSystem.effects.liquidGlass.backdropBlur};
-          border-bottom: 1px solid ${designSystem.effects.liquidGlass.border};
+          background: ${designSystem.colors.surface.glass.vibrant};
+          backdrop-filter: blur(${designSystem.liquidGlass.blur.nav}) saturate(${designSystem.liquidGlass.saturation.boost});
+          -webkit-backdrop-filter: blur(${designSystem.liquidGlass.blur.nav}) saturate(${designSystem.liquidGlass.saturation.boost});
+          border-bottom: 1px solid rgba(255, 255, 255, 0.18);
           box-shadow: ${designSystem.shadows.md};
         }
 
@@ -343,10 +343,10 @@ export const NavigationBar: React.FC = () => {
           top: 100%;
           left: 0;
           right: 0;
-          background: ${designSystem.effects.liquidGlass.background};
-          backdrop-filter: ${designSystem.effects.liquidGlass.backdropBlur};
-          -webkit-backdrop-filter: ${designSystem.effects.liquidGlass.backdropBlur};
-          border-bottom: 1px solid ${designSystem.effects.liquidGlass.border};
+          background: ${designSystem.colors.surface.glass.vibrant};
+          backdrop-filter: blur(${designSystem.liquidGlass.blur.nav}) saturate(${designSystem.liquidGlass.saturation.boost});
+          -webkit-backdrop-filter: blur(${designSystem.liquidGlass.blur.nav}) saturate(${designSystem.liquidGlass.saturation.boost});
+          border-bottom: 1px solid rgba(255, 255, 255, 0.18);
           box-shadow: ${designSystem.shadows.xl};
           max-height: 0;
           overflow: hidden;
