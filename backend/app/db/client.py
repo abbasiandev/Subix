@@ -1,4 +1,4 @@
-"""Turso/libSQL over HTTP — sync (PythonAnywhere WSGI compatible)."""
+from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any
@@ -55,8 +55,8 @@ def _cell(value: Any) -> Any:
     return value
 
 
-def _parse_rows(result: dict) -> list[Row]:
-    rows_out: list[Row] = []
+def _parse_rows(result: dict) -> List[Row]:
+    rows_out: List[Row] = []
     raw_rows = result.get("rows") or []
     for row in raw_rows:
         if row and isinstance(row[0], dict):
@@ -94,7 +94,7 @@ def _to_arg(value: Any) -> dict:
     return {"type": "text", "value": str(value)}
 
 
-def _query(sql: str, args: list | None = None) -> ResultSet:
+def _query(sql: str, args: Optional[List] = None) -> ResultSet:
     client = _client()
     args = args or []
 
@@ -193,7 +193,7 @@ def ensure_migrated() -> None:
     _migrated = True
 
 
-def execute(sql: str, args: list | None = None) -> ResultSet:
+def execute(sql: str, args: Optional[List] = None) -> ResultSet:
     ensure_migrated()
     return _query(sql, args)
 

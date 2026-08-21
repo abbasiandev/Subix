@@ -1,3 +1,5 @@
+from typing import Optional, List
+
 from app.db.client import execute
 from app.schemas.schemas import ProductOut
 
@@ -15,7 +17,7 @@ def _row_to_product(row) -> ProductOut:
 
 class ProductService:
 
-    def list_active(self, category: str | None = None) -> list[ProductOut]:
+    def list_active(self, category: Optional[str] = None) -> List[ProductOut]:
         if category:
             rs = execute(
                 """
@@ -35,7 +37,7 @@ class ProductService:
             )
         return [_row_to_product(r) for r in rs.rows]
 
-    def get(self, product_id: int) -> ProductOut | None:
+    def get(self, product_id: int) -> Optional[ProductOut]:
         rs = execute(
             """
             SELECT id, name, description, category, price, duration_days,
@@ -48,11 +50,11 @@ class ProductService:
             return None
         return _row_to_product(rs.rows[0])
 
-    def categories(self) -> list[str]:
+    def categories(self) -> List[str]:
         rs = execute("SELECT DISTINCT category FROM products WHERE is_active=1")
         return [r.values[0] for r in rs.rows]
 
-    def list_all(self) -> list[ProductOut]:
+    def list_all(self) -> List[ProductOut]:
         rs = execute(
             """
             SELECT id, name, description, category, price, duration_days,
@@ -62,7 +64,7 @@ class ProductService:
         )
         return [_row_to_product(r) for r in rs.rows]
 
-    def update_price(self, product_id: int, price: float) -> ProductOut | None:
+    def update_price(self, product_id: int, price: float) -> Optional[ProductOut]:
         rs = execute(
             """
             UPDATE products SET price=?

@@ -1,11 +1,10 @@
-"""HTTP client helper — PythonAnywhere free tier needs the platform proxy."""
-
 import os
+from typing import Optional
 
 import httpx
 
 
-def proxy_url() -> str | None:
+def proxy_url() -> Optional[str]:
     return (
         os.environ.get("HTTPS_PROXY")
         or os.environ.get("https_proxy")

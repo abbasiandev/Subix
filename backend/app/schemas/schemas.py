@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Literal
+from typing import Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -8,10 +8,10 @@ class UserOut(BaseModel):
 
     id: int
     telegram_id: int
-    username: str | None
-    first_name: str | None
-    last_name: str | None
-    phone_number: str | None
+    username: Optional[str]
+    first_name: Optional[str]
+    last_name: Optional[str]
+    phone_number: Optional[str]
     wallet: float
     is_active: bool
     created_at: str
@@ -23,10 +23,10 @@ class TelegramAuthIn(BaseModel):
 class TelegramWidgetAuthIn(BaseModel):
     """Telegram Login Widget authentication data"""
     id: int
-    first_name: str | None = None
-    last_name: str | None = None
-    username: str | None = None
-    photo_url: str | None = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    username: Optional[str] = None
+    photo_url: Optional[str] = None
     auth_date: int
     hash: str
 
@@ -41,7 +41,7 @@ class ProductOut(BaseModel):
 
     id: int
     name: str
-    description: str | None
+    description: Optional[str]
     category: str
     price: float
     duration_days: int
@@ -65,10 +65,10 @@ class OrderOut(BaseModel):
     product_id: int
     status: Literal["pending", "processing", "completed", "failed"]
     price_paid: float
-    account_email: str | None
-    note: str | None
+    account_email: Optional[str]
+    note: Optional[str]
     created_at: str
-    activated_at: str | None
+    activated_at: Optional[str]
 
 
 class TopupCreate(BaseModel):
