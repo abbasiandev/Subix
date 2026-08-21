@@ -272,13 +272,13 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
         .otp-form {
           display: flex;
           flex-direction: column;
-          gap: ${designSystem.spacing['6']};
+          gap: ${designSystem.spacing.scale['6']};
         }
 
         .back-link {
           display: inline-flex;
           align-items: center;
-          gap: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
           padding: 8px 16px;
           background: transparent;
           border: none;
@@ -322,7 +322,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
         .input-group {
           display: flex;
           flex-direction: column;
-          gap: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
         }
 
         .input-label {
@@ -391,7 +391,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
           padding: 16px;
           background: ${designSystem.colors.primary.DEFAULT};
           color: white;
@@ -437,7 +437,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
         /* OTP Inputs */
         .otp-inputs {
           display: flex;
-          gap: ${designSystem.spacing['3']};
+          gap: ${designSystem.spacing.scale['3']};
           justify-content: center;
           direction: ltr;
         }
@@ -503,7 +503,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: ${designSystem.spacing['2']};
+          gap: ${designSystem.spacing.scale['2']};
           font-family: ${designSystem.typography.fontFamily.persian};
           font-size: ${designSystem.typography.fontSize.sm};
           color: ${designSystem.colors.text.secondary};
@@ -541,7 +541,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
           }
 
           .otp-inputs {
-            gap: ${designSystem.spacing['2']};
+            gap: ${designSystem.spacing.scale['2']};
           }
         }
       `}</style>
