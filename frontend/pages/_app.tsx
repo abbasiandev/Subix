@@ -31,9 +31,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="twitter:description" content="خرید اشتراک ChatGPT، Gemini، Cursor و سایر ابزارهای هوش مصنوعی" />
         
         {/* Theme Color for mobile browsers */}
-        <meta name="theme-color" content="#000000" />
-        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000" />
+        <meta name="theme-color" content="#070a0d" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#070a0d" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#070a0d" />
         
         {/* Favicon */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
