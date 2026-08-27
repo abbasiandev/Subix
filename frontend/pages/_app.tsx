@@ -1,11 +1,15 @@
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import "@/styles/globals.css";
 
 const WebGLRouteStage = dynamic(() => import("@/components/WebGLRouteStage"), { ssr: false });
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+  const isHome = router.pathname === "/";
+
   return (
     <>
       <Head>
@@ -42,7 +46,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </Head>
 
-      <WebGLRouteStage />
+      {!isHome && <WebGLRouteStage />}
       <div className="route-content-layer">
         <Component {...pageProps} />
       </div>

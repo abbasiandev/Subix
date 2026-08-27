@@ -176,8 +176,8 @@ body { background: #070314; color: #f7f4ff; overflow-x: hidden; }
 .navigation-bar { background: rgba(7,3,20,.56) !important; border-bottom: 1px solid rgba(0,245,255,.15) !important; }
 .navigation-bar .nav-container { padding-block: 8px; }
 .flash-hero { min-height: 100svh; position: relative; overflow: hidden; isolation: isolate; background: radial-gradient(circle at 50% 42%, rgba(139,92,246,.24), transparent 28%), #070314; }
-.flash-grid { position: absolute; inset: 0; opacity: .22; background-image: linear-gradient(rgba(0,245,255,.16) 1px, transparent 1px), linear-gradient(90deg, rgba(0,245,255,.16) 1px, transparent 1px); background-size: 58px 58px; transform: perspective(520px) rotateX(58deg) scale(1.8) translateY(26%); transform-origin: bottom; mask-image: linear-gradient(to top, black, transparent 72%); }
-.flash-canvas { position: absolute; inset: 0; z-index: -1; opacity: .94; }
+.flash-grid { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: .22; background-image: linear-gradient(rgba(0,245,255,.16) 1px, transparent 1px), linear-gradient(90deg, rgba(0,245,255,.16) 1px, transparent 1px); background-size: 58px 58px; transform: perspective(520px) rotateX(58deg) scale(1.8) translateY(26%); transform-origin: bottom; mask-image: linear-gradient(to top, black, transparent 72%); }
+.flash-canvas { position: absolute; inset: 0; z-index: 1; opacity: .94; pointer-events: none; }
 .flash-hero-content { position: relative; z-index: 2; max-width: 1180px; margin: 0 auto; padding: 170px 28px 80px; text-align: right; }
 .flash-kicker, .section-index, .flash-corner { font-family: ui-monospace, SFMono-Regular, monospace; letter-spacing: .12em; color: var(--electric); font-size: 11px; }
 .flash-hero h1 { max-width: 740px; margin: 24px 0; font-size: clamp(3.6rem, 9vw, 8.5rem); line-height: .98; letter-spacing: -.07em; font-weight: 800; text-wrap: balance; }
@@ -258,6 +258,9 @@ button { transition: transform .2s, box-shadow .2s, background .2s; } button:hov
 .status-dot { width:6px; height:6px; margin-inline-end:7px; display:inline-block; border-radius:50%; background:#00f5ff; box-shadow:0 0 12px #00f5ff; }
 .product-icon-stage { position:relative; height:285px; margin:0; background:radial-gradient(circle at 50% 48%, color-mix(in srgb, var(--product-accent) 22%, transparent), transparent 43%), linear-gradient(180deg, rgba(0,245,255,.06), transparent 80%); border-bottom:1px solid rgba(0,245,255,.12); }
 .product-icon-stage canvas { position:absolute !important; inset:0; }
+.product-icon-preview { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; }
+.product-brand-icon { width:68px; height:68px; object-fit:contain; filter:drop-shadow(0 0 20px color-mix(in srgb, var(--product-accent) 60%, transparent)); transition:transform .4s ease; }
+.product-constellation-card:hover .product-brand-icon { transform:scale(1.1); }
 .product-icon-halo { position:absolute; width:180px; height:180px; top:53px; left:50%; transform:translateX(-50%); border:1px solid color-mix(in srgb, var(--product-accent) 55%, transparent); border-radius:50%; box-shadow:0 0 55px color-mix(in srgb, var(--product-accent) 28%, transparent), inset 0 0 40px color-mix(in srgb, var(--product-accent) 15%, transparent); pointer-events:none; }
 .product-icon-caption { position:absolute; bottom:16px; inset-inline-start:20px; color:color-mix(in srgb, var(--product-accent) 80%, white); font:10px ui-monospace, monospace; letter-spacing:.16em; }
 .product-constellation-info { position:relative; z-index:2; display:flex; flex-direction:column; gap:12px; padding:22px; }
