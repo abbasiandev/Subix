@@ -214,3 +214,37 @@ input, select, textarea { background: rgba(10,5,30,.8) !important; color: #f7f4f
 input:focus, select:focus, textarea:focus { border-color: var(--electric) !important; box-shadow: 0 0 0 3px rgba(0,245,255,.12) !important; }
 button { transition: transform .2s, box-shadow .2s, background .2s; } button:hover { box-shadow: 0 8px 28px rgba(0,245,255,.16); }
 @media (max-width: 700px) { .pt-32 { padding-top: 112px !important; } .text-5xl, .text-6xl { font-size: 2.7rem !important; letter-spacing: -.05em; } }
+
+/* Immersive marketplace layer: every route shares the same living AI signal field. */
+.route-webgl-stage { position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; background: #06020f; }
+.route-webgl-stage::before, .route-webgl-stage::after { content: ''; position: absolute; inset: 0; pointer-events: none; }
+.route-webgl-stage::before { background: radial-gradient(circle at 78% 24%, rgba(0,234,255,.14), transparent 24%), radial-gradient(circle at 18% 72%, rgba(217,40,255,.12), transparent 28%); mix-blend-mode: screen; }
+.route-webgl-stage::after { opacity: .22; background: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,.05) 4px); mix-blend-mode: overlay; }
+.route-webgl-stage canvas { position: absolute !important; inset: 0; opacity: .72; }
+.route-stage-grid { position: absolute; inset: 0; z-index: 1; opacity: .16; background-image: linear-gradient(rgba(0,234,255,.2) 1px, transparent 1px), linear-gradient(90deg, rgba(0,234,255,.2) 1px, transparent 1px); background-size: 72px 72px; transform: perspective(700px) rotateX(64deg) translateY(28%); transform-origin: center bottom; mask-image: linear-gradient(to top, black, transparent 68%); }
+.route-content-layer { position: relative; z-index: 0; min-height: 100vh; isolation: isolate; }
+.route-content-layer main, .route-content-layer > div { position: relative; }
+.route-content-layer main::before, .route-content-layer > div::before { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: -1; background: linear-gradient(115deg, rgba(6,2,15,.82), rgba(6,2,15,.48) 52%, rgba(6,2,15,.78)); }
+.navigation-bar { box-shadow: 0 0 0 1px rgba(0,234,255,.08), 0 18px 80px rgba(0,0,0,.26) !important; }
+.product-card, .product-card-new, .feature-card, .article-card, .glass-container, .card { backdrop-filter: blur(20px) saturate(140%) !important; }
+.product-card:hover, .product-card-new:hover { transform: translateY(-8px) rotateX(1deg); box-shadow: 0 24px 80px rgba(0,234,255,.18), 0 0 0 1px rgba(255,92,186,.35) !important; }
+@media (max-width: 700px) { .route-webgl-stage canvas { opacity: .48; } .route-stage-grid { background-size: 46px 46px; opacity: .1; } }
+@media (prefers-reduced-motion: reduce) { .route-webgl-stage canvas { opacity: .2; } .route-stage-grid { transform: none; } }
+
+/* Bring legacy route-local styles into the new art direction. */
+.account-page, .account-page .account-container, .account-page .account-header, .account-page .tabs, .account-page .subscription-card, .account-page .credentials-section, .account-page .ticket-card { background: rgba(12, 5, 30, .78) !important; color: #f7f4ff !important; border-color: rgba(0,234,255,.18) !important; box-shadow: 0 20px 70px rgba(0,0,0,.28), inset 0 1px rgba(255,255,255,.08) !important; backdrop-filter: blur(22px) saturate(145%) !important; }
+.account-page .tabs { background: rgba(6,2,15,.82) !important; }
+.account-page .tab.active, .account-page .access-link, .account-page .renew-button, .account-page .new-ticket-button { background: linear-gradient(110deg, #00eaff, #d928ff) !important; color: #090315 !important; box-shadow: 0 0 30px rgba(0,234,255,.2) !important; }
+.account-page .user-name, .account-page h1, .account-page h2, .account-page h3, .account-page h4 { color: #fff !important; }
+.account-page p, .account-page .user-phone, .account-page .subscription-meta, .account-page .ticket-meta { color: #b9abc9 !important; }
+.account-page code { background: rgba(0,234,255,.08) !important; color: #b7f7ff !important; border-color: rgba(0,234,255,.2) !important; }
+.min-h-screen.gradient-mesh, .min-h-screen.bg-black, .min-h-screen.bg-gray-50 { background: rgba(6,2,15,.72) !important; }
+.min-h-screen.gradient-mesh > .container, .min-h-screen.gradient-mesh .glass-container, .min-h-screen.bg-black .bg-white\/5 { border-color: rgba(0,234,255,.18) !important; box-shadow: 0 20px 80px rgba(0,0,0,.3), 0 0 50px rgba(217,40,255,.08) !important; }
+.min-h-screen.bg-black { background: transparent !important; }
+.min-h-screen.bg-black h1, .min-h-screen.bg-black h2 { text-shadow: 0 0 32px rgba(0,234,255,.24); }
+.min-h-screen.bg-black .bg-white\/5 { background: linear-gradient(145deg, rgba(20,10,43,.82), rgba(7,4,20,.76)) !important; backdrop-filter: blur(24px) saturate(150%) !important; }
+.min-h-screen.bg-black input, .min-h-screen.bg-black textarea, .min-h-screen.bg-black select { background: rgba(4,2,16,.72) !important; border-color: rgba(0,234,255,.2) !important; }
+.min-h-screen.bg-black button:not([aria-label]), .min-h-screen.bg-black a.rounded-xl { transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease !important; }
+.min-h-screen.bg-black button:not([aria-label]):hover, .min-h-screen.bg-black a.rounded-xl:hover { transform: translateY(-3px); box-shadow: 0 0 28px rgba(0,234,255,.16); }
+.gradient-mesh .glass-container, .gradient-mesh .rounded-3xl { border-color: rgba(0,234,255,.2) !important; background: linear-gradient(145deg, rgba(23,10,47,.86), rgba(9,3,23,.8)) !important; box-shadow: 0 28px 90px rgba(0,0,0,.38), inset 0 1px rgba(255,255,255,.09) !important; }
+.blog-card, .article-card { transform-style: preserve-3d; }
