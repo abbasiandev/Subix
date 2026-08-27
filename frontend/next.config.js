@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
+  basePath: process.env.NODE_ENV === 'production' ? '/Subix' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/Subix' : '',
   reactStrictMode: true,
   swcMinify: true,
   
