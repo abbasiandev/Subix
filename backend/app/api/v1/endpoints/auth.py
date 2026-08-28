@@ -1,10 +1,49 @@
 from fastapi import APIRouter, HTTPException, Response, status
 
 from app.core.security import create_access_token, verify_telegram_init_data, verify_telegram_widget_auth
-from app.schemas.schemas import TelegramAuthIn, TelegramWidgetAuthIn, TokenOut
+from app.schemas.schemas import (
+    OtpSentOut,
+    SendOtpIn,
+    TelegramAuthIn,
+    TelegramWidgetAuthIn,
+    TokenOut,
+    VerifyOtpIn,
+)
+from app.services.sms import SMSService
 from app.services.user import UserService
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+
+@router.post("/send-otp", response_model=OtpSentOut)
+async def send_otp(body: SendOtpIn):
+    """Send SMS OTP via SMS.ir to the given Iranian mobile number"""
+    result = await SMSService.send_otp(body.phone_number)
+    return OtpSentOut(**result)
+
+
+@router.post("/verify-otp", response_model=TokenOut)
+def verify_otp(body: VerifyOtpIn, response: Response):
+    """Verify SMS OTP code and log the user in"""
+    SMSService.verify_otp(body.phone_number, body.code)
+
+    # Upsert user in database
+    user = UserService().upsert_from_phone(phone_number=body.phone_number)
+
+    # Create JWT token (using user.telegram_id as sub identifier)
+    token = create_access_token(user.telegram_id)
+
+    # Set session cookie
+    response.set_cookie(
+        key="subix_session",
+        value=token,
+        max_age=30 * 24 * 60 * 60,  # 30 days
+        httponly=True,
+        secure=True,
+        samesite="none",
+    )
+
+    return TokenOut(access_token=token, user=user)
 
 
 @router.post("/telegram", response_model=TokenOut)

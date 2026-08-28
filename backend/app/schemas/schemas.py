@@ -31,6 +31,22 @@ class TelegramWidgetAuthIn(BaseModel):
     hash: str
 
 
+class SendOtpIn(BaseModel):
+    phone_number: str = Field(..., description="شماره موبایل با فرمت 09xxxxxxxxx")
+
+
+class VerifyOtpIn(BaseModel):
+    phone_number: str = Field(...)
+    code: str = Field(..., min_length=4, max_length=6)
+
+
+class OtpSentOut(BaseModel):
+    message: str
+    phone_number: str
+    expires_in: int
+    debug_code: Optional[str] = None
+
+
 class TokenOut(BaseModel):
     access_token: str
     token_type: str = "bearer"

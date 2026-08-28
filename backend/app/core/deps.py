@@ -25,7 +25,7 @@ def get_current_user_id(
 def get_current_user(
     telegram_id: int = Depends(get_current_user_id),
 ):
-    user = UserService().get_by_telegram_id(telegram_id)
+    user = UserService().get_by_identifier(telegram_id)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

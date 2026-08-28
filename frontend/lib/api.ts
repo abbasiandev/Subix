@@ -55,13 +55,30 @@ async function request<T>(
         credentials: options.credentials || "include",
     };
 
-    const res = await fetch(resolveUrl(path), fetchOptions);
+    // Add timeout to prevent hanging
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
 
-    if (!res.ok) {
-        const err = await res.json().catch(() => ({detail: res.statusText}));
-        throw new Error(err.detail ?? "خطا در ارتباط با سرور");
+    try {
+        const res = await fetch(resolveUrl(path), {
+            ...fetchOptions,
+            signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({detail: res.statusText}));
+            throw new Error(err.detail ?? "خطا در ارتباط با سرور");
+        }
+        return res.json();
+    } catch (error: any) {
+        clearTimeout(timeoutId);
+        if (error.name === 'AbortError') {
+            throw new Error('زمان اتصال به سرور به پایان رسید');
+        }
+        throw error;
     }
-    return res.json();
 }
 
 async function adminRequest<T>(
@@ -82,6 +99,27 @@ export async function loginWithTelegram(initData: string) {
     return request<{ access_token: string; user: User }>(
         "/api/v1/auth/telegram",
         {method: "POST", body: JSON.stringify({init_data: initData})}
+    );
+}
+
+export async function sendOtp(phoneNumber: string) {
+    return request<{ message: string; phone_number: string; expires_in: number; debug_code?: string }>(
+        "/api/v1/auth/send-otp",
+        {
+            method: "POST",
+            body: JSON.stringify({ phone_number: phoneNumber }),
+        }
+    );
+}
+
+export async function verifyOtp(phoneNumber: string, code: string) {
+    return request<{ access_token: string; user: User }>(
+        "/api/v1/auth/verify-otp",
+        {
+            method: "POST",
+            body: JSON.stringify({ phone_number: phoneNumber, code }),
+            credentials: "include",
+        }
     );
 }
 

@@ -1,37 +1,74 @@
 import { useRouter } from 'next/router';
+import { GetStaticProps, GetStaticPaths } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import DesktopContainer from '../../components/layouts/DesktopContainer';
 import BottomNav from '../../components/BottomNav';
 import GlassContainer from '../../components/GlassContainer';
-import { blogPosts, blogCategories } from '../../data/blog-posts';
+import { blogPosts, blogCategories, type BlogPost } from '../../data/blog-posts';
+import { articles, type Article } from '../../data/articles';
+import { asset } from '@/lib/assets';
 
-export default function BlogPost() {
-  const router = useRouter();
-  const { slug } = router.query;
-  const isTelegram = typeof window !== 'undefined' && window.Telegram?.WebApp;
+function getUnifiedPosts(): BlogPost[] {
+  const mappedArticles: BlogPost[] = articles.map((a: Article) => ({
+    slug: a.slug,
+    title: a.title,
+    excerpt: a.excerpt,
+    content: a.content,
+    coverImage: a.imagePath,
+    category: a.category === 'guide' ? 'guides' : a.category === 'comparison' ? 'comparison' : 'tips',
+    tags: a.tags || [],
+    author: {
+      name: a.author || 'تیم سابیکس',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+    },
+    publishedAt: a.publishDate,
+    readTime: a.readTime,
+    views: 150,
+  }));
 
-  const post = blogPosts.find(p => p.slug === slug);
-  const relatedPosts = blogPosts
-    .filter(p => p.slug !== slug && p.category === post?.category)
-    .slice(0, 3);
+  const postSlugs = new Set(blogPosts.map(p => p.slug));
+  const uniqueArticles = mappedArticles.filter(a => !postSlugs.has(a.slug));
+  return [...blogPosts, ...uniqueArticles];
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const allPosts = getUnifiedPosts();
+  const paths = allPosts.map((post) => ({
+    params: { slug: post.slug },
+  }));
+
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const allPosts = getUnifiedPosts();
+  const post = allPosts.find((p) => p.slug === params?.slug);
 
   if (!post) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" dir="rtl">
-        <GlassContainer elevation="light" className="rounded-2xl p-8 text-center">
-          <div className="text-6xl mb-4">📄</div>
-          <h2 className="text-2xl font-bold text-white mb-2">مقاله یافت نشد</h2>
-          <p className="text-gray-400 mb-6">مقاله مورد نظر حذف شده یا وجود ندارد</p>
-          <Link href="/blog">
-            <button className="bg-teal-500 hover:bg-teal-600 text-white px-6 py-3 rounded-xl transition-all">
-              بازگشت به بلاگ
-            </button>
-          </Link>
-        </GlassContainer>
-      </div>
-    );
+    return {
+      notFound: true,
+    };
   }
+
+  return {
+    props: {
+      post,
+    },
+  };
+};
+
+export default function BlogPost({ post: initialPost }: { post: typeof blogPosts[0] }) {
+  const router = useRouter();
+  const isTelegram = typeof window !== 'undefined' && window.Telegram?.WebApp;
+
+  const post = initialPost;
+  const relatedPosts = blogPosts
+    .filter(p => p.slug !== post.slug && p.category === post.category)
+    .slice(0, 3);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -158,11 +195,7 @@ function BlogPostContent({
 
         {/* Article Content */}
         <GlassContainer elevation="light" className="rounded-3xl p-8 md:p-12 mb-8 animate-fade-up stagger-1">
-          <div className="prose prose-invert prose-lg max-w-none">
-            <div className="text-gray-300 leading-relaxed whitespace-pre-line">
-              {post.content}
-            </div>
-          </div>
+          <FormattedArticleContent content={post.content} />
         </GlassContainer>
 
         {/* Share Section */}
@@ -201,10 +234,18 @@ function BlogPostContent({
                     hover
                     className="rounded-2xl overflow-hidden cursor-pointer h-full"
                   >
-                    <div className="h-32 bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center">
-                      <div className="text-4xl">
-                        {blogCategories.find(c => c.id === relatedPost.category)?.icon || '📝'}
-                      </div>
+                    <div className="h-36 relative bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center overflow-hidden">
+                      {relatedPost.coverImage ? (
+                        <img
+                          src={asset(relatedPost.coverImage)}
+                          alt={relatedPost.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="text-4xl">
+                          {blogCategories.find(c => c.id === relatedPost.category)?.icon || '📝'}
+                        </div>
+                      )}
                     </div>
                     <div className="p-4">
                       <h3 className="text-white font-bold mb-2 line-clamp-2 text-sm">
@@ -228,5 +269,75 @@ function BlogPostContent({
       </div>
       </div>
     </>
+  );
+}
+
+function FormattedArticleContent({ content }: { content: string }) {
+  if (!content) return null;
+
+  const sections = content.split('\n\n');
+  return (
+    <div className="space-y-5 text-gray-200 leading-relaxed">
+      {sections.map((section, idx) => {
+        const trimmed = section.trim();
+        if (trimmed.startsWith('### ')) {
+          return (
+            <h3 key={idx} className="text-xl md:text-2xl font-bold text-white mt-8 mb-3 border-r-4 border-teal-400 pr-3">
+              {trimmed.replace('### ', '')}
+            </h3>
+          );
+        }
+        if (trimmed.startsWith('## ')) {
+          return (
+            <h2 key={idx} className="text-2xl md:text-3xl font-bold text-white mt-10 mb-4 border-r-4 border-teal-500 pr-3">
+              {trimmed.replace('## ', '')}
+            </h2>
+          );
+        }
+        if (trimmed.startsWith('# ')) {
+          return (
+            <h2 key={idx} className="text-2xl md:text-3xl font-bold text-white mt-8 mb-4">
+              {trimmed.replace('# ', '')}
+            </h2>
+          );
+        }
+        if (trimmed.includes('\n- ') || trimmed.startsWith('- ') || /^\d+[.)]\s/.test(trimmed)) {
+          const lines = trimmed.split('\n');
+          return (
+            <ul key={idx} className="space-y-3 my-4 list-none pr-0">
+              {lines.map((line, lIdx) => {
+                const cleanLine = line.replace(/^[-*]\s+|\d+[.)]\s+/, '');
+                const parts = cleanLine.split(/(\*\*.*?\*\*)/g);
+                return (
+                  <li key={lIdx} className="flex items-start gap-3 text-gray-300 text-base leading-7">
+                    <span className="w-2 h-2 rounded-full bg-teal-400 mt-2.5 flex-shrink-0" />
+                    <span>
+                      {parts.map((part, pIdx) => {
+                        if (part.startsWith('**') && part.endsWith('**')) {
+                          return <strong key={pIdx} className="text-white font-semibold">{part.slice(2, -2)}</strong>;
+                        }
+                        return part;
+                      })}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          );
+        }
+
+        const parts = trimmed.split(/(\*\*.*?\*\*)/g);
+        return (
+          <p key={idx} className="text-gray-300 text-base md:text-lg leading-8 my-3">
+            {parts.map((part, pIdx) => {
+              if (part.startsWith('**') && part.endsWith('**')) {
+                return <strong key={pIdx} className="text-white font-semibold">{part.slice(2, -2)}</strong>;
+              }
+              return part;
+            })}
+          </p>
+        );
+      })}
+    </div>
   );
 }

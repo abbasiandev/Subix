@@ -14,11 +14,51 @@ def _row_to_user(row) -> UserOut:
 
 class UserService:
 
+    def get_by_id(self, user_id: int) -> Optional[UserOut]:
+        rs = execute("SELECT * FROM users WHERE id = ?", [user_id])
+        if not rs.rows:
+            return None
+        return _row_to_user(rs.rows[0])
+
+    def get_by_phone(self, phone_number: str) -> Optional[UserOut]:
+        rs = execute("SELECT * FROM users WHERE phone_number = ?", [phone_number])
+        if not rs.rows:
+            return None
+        return _row_to_user(rs.rows[0])
+
+    def get_by_identifier(self, identifier: int) -> Optional[UserOut]:
+        """Lookup user by telegram_id OR id OR phone synthetic id"""
+        rs = execute("SELECT * FROM users WHERE telegram_id = ? OR id = ?", [identifier, identifier])
+        if not rs.rows:
+            return None
+        return _row_to_user(rs.rows[0])
+
     def get_by_telegram_id(self, telegram_id: int) -> Optional[UserOut]:
         rs = execute("SELECT * FROM users WHERE telegram_id = ?", [telegram_id])
         if not rs.rows:
             return None
         return _row_to_user(rs.rows[0])
+
+    def upsert_from_phone(self, phone_number: str) -> UserOut:
+        existing = self.get_by_phone(phone_number)
+        if existing:
+            return existing
+
+        # Generate a distinct synthetic telegram_id for phone-registered accounts (e.g. 980000000000 + 912...)
+        # to satisfy the UNIQUE constraint on telegram_id while avoiding collision with real telegram user IDs
+        digits = ''.join(filter(str.isdigit, phone_number))
+        synthetic_tg_id = int(f"98{digits[-9:]}")
+
+        execute(
+            """
+            INSERT INTO users (telegram_id, phone_number, first_name, is_active)
+            VALUES (?, ?, ?, 1)
+            ON CONFLICT(telegram_id) DO UPDATE SET
+                phone_number = excluded.phone_number
+            """,
+            [synthetic_tg_id, phone_number, f"کاربر {phone_number[-4:]}"],
+        )
+        return self.get_by_phone(phone_number) or self.get_by_telegram_id(synthetic_tg_id)
 
     def upsert_from_telegram(
         self,

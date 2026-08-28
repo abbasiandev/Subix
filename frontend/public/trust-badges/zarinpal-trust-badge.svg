@@ -1,0 +1,12 @@
+<svg width="120" height="60" viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+  <rect width="120" height="60" rx="8" fill="#21254E"/>
+  <text x="60" y="18" text-anchor="middle" fill="#fff" font-size="9" font-weight="600" font-family="Arial, sans-serif">
+    پرداخت امن با
+  </text>
+  <text x="60" y="36" text-anchor="middle" fill="#FFC700" font-size="16" font-weight="700" font-family="Arial, sans-serif">
+    زرین‌پال
+  </text>
+  <path d="M20,48 L100,48" stroke="#FFC700" stroke-width="2"/>
+  <circle cx="15" cy="30" r="8" fill="none" stroke="#34c759" stroke-width="2"/>
+  <path d="M12,30 L14,32 L18,28" stroke="#34c759" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

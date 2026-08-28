@@ -34,6 +34,10 @@ class Settings(BaseSettings):
     debug: bool = False
     admin_secret: str = ""
 
+    # SMS.ir
+    sms_ir_api_key: str = "aLVO1vrblneOnxGCEmaXt6znbMcT776wv3XIMAVZHwe9h1d8"
+    sms_ir_template_id: int = 100000
+
     @property
     def cors_origins(self) -> list[str]:
         """Browser Origin has no path — include scheme+host from frontend_url."""

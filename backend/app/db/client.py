@@ -1,14 +1,12 @@
-from __future__ import annotations
-
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Optional, List, Union
 
 import httpx
 
 from app.core.config import settings
 from app.http_pa import make_client
 
-_http: httpx.Client | None = None
+_http: Optional[httpx.Client] = None
 _migrated = False
 
 
@@ -19,7 +17,7 @@ class Row:
 
 @dataclass
 class ResultSet:
-    rows: list[Row]
+    rows: List[Row]
 
 
 def _db_base() -> str:

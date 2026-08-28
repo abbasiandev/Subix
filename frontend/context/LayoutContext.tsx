@@ -13,8 +13,9 @@ const LayoutContext = createContext<LayoutContextType>({
 });
 
 export function LayoutProvider({ children }: { children: ReactNode }) {
+  // For SSR/SSG, don't show loading state - assume browser mode
   const [isTelegram, setIsTelegram] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(typeof window === 'undefined' ? false : true);
 
   useEffect(() => {
     // Check if running in Telegram Mini App context

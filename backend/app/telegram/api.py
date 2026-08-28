@@ -1,11 +1,13 @@
 """Minimal Telegram Bot API client — sync."""
 
+from typing import Optional
+
 import httpx
 
 from app.core.config import settings
 from app.http_pa import make_client
 
-_client: httpx.Client | None = None
+_client: Optional[httpx.Client] = None
 
 
 def _http() -> httpx.Client:
@@ -37,7 +39,7 @@ def send_message(
     chat_id: int,
     text: str,
     *,
-    reply_markup: dict | None = None,
+    reply_markup: Optional[dict] = None,
     parse_mode: str = "HTML",
 ) -> None:
     payload: dict = {"chat_id": chat_id, "text": text, "parse_mode": parse_mode}
