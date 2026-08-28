@@ -5,10 +5,35 @@ import Link from 'next/link';
 import DesktopContainer from '../../components/layouts/DesktopContainer';
 import BottomNav from '../../components/BottomNav';
 import GlassContainer from '../../components/GlassContainer';
-import { blogPosts, blogCategories } from '../../data/blog-posts';
+import { blogPosts, blogCategories, type BlogPost } from '../../data/blog-posts';
+import { articles, type Article } from '../../data/articles';
+
+function getUnifiedPosts(): BlogPost[] {
+  const mappedArticles: BlogPost[] = articles.map((a: Article) => ({
+    slug: a.slug,
+    title: a.title,
+    excerpt: a.excerpt,
+    content: a.content,
+    coverImage: a.imagePath,
+    category: a.category === 'guide' ? 'guides' : a.category === 'comparison' ? 'comparison' : 'tips',
+    tags: a.tags || [],
+    author: {
+      name: a.author || 'تیم سابیکس',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+    },
+    publishedAt: a.publishDate,
+    readTime: a.readTime,
+    views: 150,
+  }));
+
+  const postSlugs = new Set(blogPosts.map(p => p.slug));
+  const uniqueArticles = mappedArticles.filter(a => !postSlugs.has(a.slug));
+  return [...blogPosts, ...uniqueArticles];
+}
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = blogPosts.map((post) => ({
+  const allPosts = getUnifiedPosts();
+  const paths = allPosts.map((post) => ({
     params: { slug: post.slug },
   }));
 
@@ -19,7 +44,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const post = blogPosts.find((p) => p.slug === params?.slug);
+  const allPosts = getUnifiedPosts();
+  const post = allPosts.find((p) => p.slug === params?.slug);
 
   if (!post) {
     return {
