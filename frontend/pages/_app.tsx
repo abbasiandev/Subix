@@ -2,6 +2,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import { asset } from "@/lib/assets";
 import "@/styles/globals.css";
 
 const WebGLRouteStage = dynamic(() => import("@/components/WebGLRouteStage"), { ssr: false });
@@ -43,7 +44,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#070a0d" />
         
         {/* Favicon */}
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/svg+xml" href={asset('/favicon.svg')} />
       </Head>
 
       {!isHome && <WebGLRouteStage />}

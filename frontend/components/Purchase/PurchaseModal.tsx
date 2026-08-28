@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { Product } from '@/data/products';
 import { PhoneAuth } from '@/components/Auth/PhoneAuth';
+import { asset } from '@/lib/assets';
 import { designSystem } from '@/styles/apple-design-system';
 
 interface PurchaseModalProps {
@@ -61,7 +62,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
           <div className="modal-header">
             <div className="product-info-small">
               <Image
-                src={product.brandLogoPath}
+                src={asset(product.brandLogoPath)}
                 alt={product.name}
                 width={48}
                 height={48}
@@ -116,7 +117,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
                   >
                     <div className="gateway-icon">
                       <Image
-                        src="/trust-badges/idpay-logo.svg"
+                        src={asset('/trust-badges/idpay-logo.svg')}
                         alt="آی‌دی‌پی"
                         width={60}
                         height={30}

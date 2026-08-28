@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Article } from '@/data/articles';
+import { asset } from '@/lib/assets';
 import { designSystem } from '@/styles/apple-design-system';
 
 interface ArticleCardProps {
@@ -20,7 +21,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
           {/* Article Image */}
           <div className="article-image-container">
             <Image
-              src={article.imagePath}
+              src={asset(article.imagePath)}
               alt={article.title}
               fill
               className="article-image"

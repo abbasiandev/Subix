@@ -2,6 +2,7 @@ import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Float } from '@react-three/drei';
 import * as THREE from 'three';
+import { asset } from '@/lib/assets';
 
 interface Logo {
   path: string;
@@ -29,18 +30,18 @@ export const MorphingLogoCloud: React.FC<MorphingLogoCloudProps> = ({
 
   // Brand logo paths
   const brandLogos = [
-    '/brands/openai.svg',
-    '/brands/spotify.svg',
-    '/brands/youtube.svg',
-    '/brands/netflix.svg',
-    '/brands/github.svg',
-    '/brands/canva.svg',
-    '/brands/figma.svg',
-    '/brands/adobe.svg',
-    '/brands/notion.svg',
-    '/brands/discord.svg',
-    '/brands/cursor.svg',
-    '/brands/google.svg',
+    asset('/brands/openai.svg'),
+    asset('/brands/spotify.svg'),
+    asset('/brands/youtube.svg'),
+    asset('/brands/netflix.svg'),
+    asset('/brands/github.svg'),
+    asset('/brands/canva.svg'),
+    asset('/brands/figma.svg'),
+    asset('/brands/adobe.svg'),
+    asset('/brands/notion.svg'),
+    asset('/brands/discord.svg'),
+    asset('/brands/cursor.svg'),
+    asset('/brands/google.svg'),
   ];
 
   // Generate logo data with random and target positions

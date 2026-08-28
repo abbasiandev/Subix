@@ -7,6 +7,7 @@ import { NavigationBar, Footer } from '@/components/Layout';
 import { PurchaseModal } from '@/components/Purchase/PurchaseModal';
 import { ScrollReveal } from '@/components/Animations/ScrollReveal';
 import { products, Product, getProductBySlug } from '@/data/products';
+import { asset } from '@/lib/assets';
 import { designSystem } from '@/styles/apple-design-system';
 
 interface ProductDetailPageProps {
@@ -36,7 +37,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
         <meta name="description" content={product.description} />
         <meta property="og:title" content={`${product.name} - سابیکس`} />
         <meta property="og:description" content={product.description} />
-        <meta property="og:image" content={product.brandLogoPath} />
+        <meta property="og:image" content={asset(product.brandLogoPath)} />
       </Head>
 
       <NavigationBar />
@@ -71,7 +72,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
                   <div className="product-image-container">
                     <div className="product-icon-large">
                       <Image
-                        src={product.brandLogoPath}
+                        src={asset(product.brandLogoPath)}
                         alt={product.name}
                         width={200}
                         height={200}

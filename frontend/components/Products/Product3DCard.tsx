@@ -4,6 +4,7 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { Float, Sparkles } from '@react-three/drei'
 import * as THREE from 'three'
 import { Product } from '@/data/products'
+import { asset } from '@/lib/assets'
 import { DiscountBadge } from './DiscountBadge'
 import { getCategoryColor } from '@/data/product-icons'
 
@@ -68,7 +69,7 @@ export const Product3DCard: React.FC<Product3DCardProps> = ({ product, onPurchas
           </Canvas>
         ) : (
           <div className="product-icon-preview">
-            <img src={product.brandLogoPath} alt={product.name} className="product-brand-icon" />
+            <img src={asset(product.brandLogoPath)} alt={product.name} className="product-brand-icon" />
           </div>
         )}
         <div className="product-icon-halo" />

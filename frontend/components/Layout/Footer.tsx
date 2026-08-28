@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { asset } from '@/lib/assets';
 import { designSystem } from '@/styles/apple-design-system';
 
 /**
@@ -92,7 +93,7 @@ export const Footer: React.FC = () => {
               rel="noopener noreferrer"
             >
               <Image
-                src="/trust-badges/zarinpal-trust-badge.svg"
+                src={asset('/trust-badges/zarinpal-trust-badge.svg')}
                 alt="نماد اعتماد الکترونیکی زرین‌پال"
                 width={100}
                 height={100}
@@ -107,7 +108,7 @@ export const Footer: React.FC = () => {
             <div className="payment-icons">
               <div className="payment-icon">
                 <Image
-                  src="/trust-badges/idpay-logo.svg"
+                  src={asset('/trust-badges/idpay-logo.svg')}
                   alt="آی‌دی‌پی"
                   width={60}
                   height={30}

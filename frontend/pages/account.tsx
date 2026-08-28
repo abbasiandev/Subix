@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { NavigationBar, Footer } from '@/components/Layout';
 import { ScrollReveal } from '@/components/Animations/ScrollReveal';
+import { asset } from '@/lib/assets';
 import { designSystem } from '@/styles/apple-design-system';
 
 type TabType = 'subscriptions' | 'tickets';
@@ -44,7 +45,7 @@ const AccountPage: React.FC = () => {
     {
       id: '1',
       productName: 'ChatGPT Plus',
-      productIcon: '/brands/openai.svg',
+      productIcon: asset('/brands/openai.svg'),
       status: 'active',
       expiryDate: '2024-03-15',
       purchaseDate: '2024-02-15',
@@ -58,7 +59,7 @@ const AccountPage: React.FC = () => {
     {
       id: '2',
       productName: 'Spotify Premium',
-      productIcon: '/brands/spotify.svg',
+      productIcon: asset('/brands/spotify.svg'),
       status: 'active',
       expiryDate: '2024-02-28',
       purchaseDate: '2024-01-28',
@@ -67,7 +68,7 @@ const AccountPage: React.FC = () => {
     {
       id: '3',
       productName: 'GitHub Copilot',
-      productIcon: '/brands/github.svg',
+      productIcon: asset('/brands/github.svg'),
       status: 'expired',
       expiryDate: '2024-01-20',
       purchaseDate: '2023-12-20',
@@ -236,7 +237,7 @@ const AccountPage: React.FC = () => {
                           <div className="subscription-header">
                             <div className="subscription-info">
                               <Image
-                                src={sub.productIcon}
+                                src={asset(sub.productIcon)}
                                 alt={sub.productName}
                                 width={48}
                                 height={48}
