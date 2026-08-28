@@ -7,6 +7,7 @@ import BottomNav from '../../components/BottomNav';
 import GlassContainer from '../../components/GlassContainer';
 import { blogPosts, blogCategories, type BlogPost } from '../../data/blog-posts';
 import { articles, type Article } from '../../data/articles';
+import { asset } from '@/lib/assets';
 
 function getUnifiedPosts(): BlogPost[] {
   const mappedArticles: BlogPost[] = articles.map((a: Article) => ({
@@ -194,11 +195,7 @@ function BlogPostContent({
 
         {/* Article Content */}
         <GlassContainer elevation="light" className="rounded-3xl p-8 md:p-12 mb-8 animate-fade-up stagger-1">
-          <div className="prose prose-invert prose-lg max-w-none">
-            <div className="text-gray-300 leading-relaxed whitespace-pre-line">
-              {post.content}
-            </div>
-          </div>
+          <FormattedArticleContent content={post.content} />
         </GlassContainer>
 
         {/* Share Section */}
@@ -237,10 +234,18 @@ function BlogPostContent({
                     hover
                     className="rounded-2xl overflow-hidden cursor-pointer h-full"
                   >
-                    <div className="h-32 bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center">
-                      <div className="text-4xl">
-                        {blogCategories.find(c => c.id === relatedPost.category)?.icon || '📝'}
-                      </div>
+                    <div className="h-36 relative bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center overflow-hidden">
+                      {relatedPost.coverImage ? (
+                        <img
+                          src={asset(relatedPost.coverImage)}
+                          alt={relatedPost.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="text-4xl">
+                          {blogCategories.find(c => c.id === relatedPost.category)?.icon || '📝'}
+                        </div>
+                      )}
                     </div>
                     <div className="p-4">
                       <h3 className="text-white font-bold mb-2 line-clamp-2 text-sm">
@@ -264,5 +269,75 @@ function BlogPostContent({
       </div>
       </div>
     </>
+  );
+}
+
+function FormattedArticleContent({ content }: { content: string }) {
+  if (!content) return null;
+
+  const sections = content.split('\n\n');
+  return (
+    <div className="space-y-5 text-gray-200 leading-relaxed">
+      {sections.map((section, idx) => {
+        const trimmed = section.trim();
+        if (trimmed.startsWith('### ')) {
+          return (
+            <h3 key={idx} className="text-xl md:text-2xl font-bold text-white mt-8 mb-3 border-r-4 border-teal-400 pr-3">
+              {trimmed.replace('### ', '')}
+            </h3>
+          );
+        }
+        if (trimmed.startsWith('## ')) {
+          return (
+            <h2 key={idx} className="text-2xl md:text-3xl font-bold text-white mt-10 mb-4 border-r-4 border-teal-500 pr-3">
+              {trimmed.replace('## ', '')}
+            </h2>
+          );
+        }
+        if (trimmed.startsWith('# ')) {
+          return (
+            <h2 key={idx} className="text-2xl md:text-3xl font-bold text-white mt-8 mb-4">
+              {trimmed.replace('# ', '')}
+            </h2>
+          );
+        }
+        if (trimmed.includes('\n- ') || trimmed.startsWith('- ') || /^\d+[.)]\s/.test(trimmed)) {
+          const lines = trimmed.split('\n');
+          return (
+            <ul key={idx} className="space-y-3 my-4 list-none pr-0">
+              {lines.map((line, lIdx) => {
+                const cleanLine = line.replace(/^[-*]\s+|\d+[.)]\s+/, '');
+                const parts = cleanLine.split(/(\*\*.*?\*\*)/g);
+                return (
+                  <li key={lIdx} className="flex items-start gap-3 text-gray-300 text-base leading-7">
+                    <span className="w-2 h-2 rounded-full bg-teal-400 mt-2.5 flex-shrink-0" />
+                    <span>
+                      {parts.map((part, pIdx) => {
+                        if (part.startsWith('**') && part.endsWith('**')) {
+                          return <strong key={pIdx} className="text-white font-semibold">{part.slice(2, -2)}</strong>;
+                        }
+                        return part;
+                      })}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          );
+        }
+
+        const parts = trimmed.split(/(\*\*.*?\*\*)/g);
+        return (
+          <p key={idx} className="text-gray-300 text-base md:text-lg leading-8 my-3">
+            {parts.map((part, pIdx) => {
+              if (part.startsWith('**') && part.endsWith('**')) {
+                return <strong key={pIdx} className="text-white font-semibold">{part.slice(2, -2)}</strong>;
+              }
+              return part;
+            })}
+          </p>
+        );
+      })}
+    </div>
   );
 }

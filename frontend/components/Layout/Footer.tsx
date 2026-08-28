@@ -19,8 +19,7 @@ export const Footer: React.FC = () => {
           <div className="footer-column">
             <h3 className="footer-title">درباره سابیکس</h3>
             <p className="footer-description">
-              فروشگاه تخصصی اشتراک‌های دیجیتال و ابزارهای هوش مصنوعی.
-              خرید امن با بهترین قیمت و پشتیبانی ۲۴ ساعته.
+              مرجع تخصصی خرید انواع اکانت و لایسنس اورجینال، ابزارهای هوش مصنوعی، نرم‌افزارهای تخصصی، طراحی و استریم با تحویل آنی و تضمین اصالت قانونی.
             </p>
             <div className="social-links">
               <a href="https://t.me/subix" target="_blank" rel="noopener noreferrer" aria-label="تلگرام">
@@ -135,7 +134,7 @@ export const Footer: React.FC = () => {
             © {currentYear} سابیکس. تمامی حقوق محفوظ است.
           </p>
           <p className="footer-note">
-            خرید و فروش اشتراک‌های دیجیتال به صورت کاملاً قانونی
+            خرید و صدور قانونی انواع اکانت، لایسنس و اشتراک‌های دیجیتال
           </p>
         </div>
       </footer>
