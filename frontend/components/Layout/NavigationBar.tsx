@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import { designSystem } from '@/styles/apple-design-system';
 import { useScrollDirection, useSmoothScroll } from '@/hooks/useScrollProgress';
 
+import { useAuth } from '@/context/AuthContext';
+
 /**
  * Navigation Bar Component
  * Apple-inspired navigation with Liquid Glass effect
@@ -11,6 +13,7 @@ import { useScrollDirection, useSmoothScroll } from '@/hooks/useScrollProgress';
  */
 export const NavigationBar: React.FC = () => {
   const router = useRouter();
+  const { user } = useAuth();
   const scrollDirection = useScrollDirection();
   const { scrollToElement } = useSmoothScroll();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -111,18 +114,27 @@ export const NavigationBar: React.FC = () => {
 
           {/* Action Buttons */}
           <div className="nav-actions">
-            <Link href="/account" className="account-link desktop">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <circle cx="10" cy="7" r="3" stroke="currentColor" strokeWidth="1.5" />
-                <path
-                  d="M4 17C4 14 6.5 12 10 12C13.5 12 16 14 16 17"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <span>حساب کاربری</span>
-            </Link>
+            {user ? (
+              <Link href="/account" className="account-link desktop">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <circle cx="10" cy="7" r="3" stroke="currentColor" strokeWidth="1.5" />
+                  <path
+                    d="M4 17C4 14 6.5 12 10 12C13.5 12 16 14 16 17"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <span>حساب کاربری</span>
+              </Link>
+            ) : (
+              <Link href="/login-phone" className="account-link desktop">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span>ورود / عضویت</span>
+              </Link>
+            )}
 
             {/* Mobile Menu Button */}
             <button
@@ -154,9 +166,15 @@ export const NavigationBar: React.FC = () => {
               </li>
             ))}
             <li>
-              <Link href="/account" onClick={() => setIsMobileMenuOpen(false)}>
-                حساب کاربری
-              </Link>
+              {user ? (
+                <Link href="/account" onClick={() => setIsMobileMenuOpen(false)}>
+                  حساب کاربری
+                </Link>
+              ) : (
+                <Link href="/login-phone" onClick={() => setIsMobileMenuOpen(false)}>
+                  ورود / عضویت با شماره موبایل
+                </Link>
+              )}
             </li>
           </ul>
         </div>

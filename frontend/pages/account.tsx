@@ -4,9 +4,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { NavigationBar, Footer } from '@/components/Layout';
 import { ScrollReveal } from '@/components/Animations/ScrollReveal';
+import { PhoneAuth } from '@/components/Auth/PhoneAuth';
 import { asset } from '@/lib/assets';
 import { designSystem } from '@/styles/apple-design-system';
-
 import { useAuth } from '@/context/AuthContext';
 
 type TabType = 'subscriptions' | 'tickets';
@@ -36,73 +36,24 @@ interface Ticket {
 }
 
 /**
- * Account Page - Minimal Dashboard
- * Shows user profile, subscriptions and support tickets
+ * Account Page - Protected User Dashboard
+ * Requires login to view active subscriptions, licenses and support tickets.
  */
-const AccountPage: React.FC = () => {
+export default function AccountPage() {
   const { user, loading, logout } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>('subscriptions');
 
-  // Mock data - replace with API calls
-  const subscriptions: Subscription[] = [
-    {
-      id: '1',
-      productName: 'ChatGPT Plus',
-      productIcon: asset('/brands/openai.svg'),
-      status: 'active',
-      expiryDate: '2024-03-15',
-      purchaseDate: '2024-02-15',
-      price: 850000,
-      credentials: {
-        email: 'user@example.com',
-        password: '••••••••',
-        accountLink: 'https://chat.openai.com',
-      },
-    },
-    {
-      id: '2',
-      productName: 'Spotify Premium',
-      productIcon: asset('/brands/spotify.svg'),
-      status: 'active',
-      expiryDate: '2024-02-28',
-      purchaseDate: '2024-01-28',
-      price: 350000,
-    },
-    {
-      id: '3',
-      productName: 'GitHub Copilot',
-      productIcon: asset('/brands/github.svg'),
-      status: 'expired',
-      expiryDate: '2024-01-20',
-      purchaseDate: '2023-12-20',
-      price: 450000,
-    },
-  ];
+  // Real user subscriptions (empty by default for new accounts)
+  const subscriptions: Subscription[] = [];
 
-  const tickets: Ticket[] = [
-    {
-      id: 'T-1001',
-      subject: 'مشکل در دسترسی به اشتراک ChatGPT',
-      status: 'answered',
-      priority: 'high',
-      lastUpdate: '1403/11/25',
-      messageCount: 3,
-    },
-    {
-      id: 'T-1002',
-      subject: 'درخواست تمدید اشتراک Spotify',
-      status: 'open',
-      priority: 'medium',
-      lastUpdate: '1403/11/26',
-      messageCount: 1,
-    },
-  ];
+  // Real user tickets (empty by default for new accounts)
+  const tickets: Ticket[] = [];
 
   const getStatusLabel = (status: Subscription['status']) => {
     const labels = {
       active: 'فعال',
       expired: 'منقضی شده',
-      pending: 'در انتظار',
+      pending: 'در انتظار فعال‌سازی',
     };
     return labels[status];
   };
@@ -118,7 +69,7 @@ const AccountPage: React.FC = () => {
 
   const getTicketStatusLabel = (status: Ticket['status']) => {
     const labels = {
-      open: 'باز',
+      open: 'در حال بررسی',
       answered: 'پاسخ داده شده',
       closed: 'بسته شده',
     };
@@ -127,18 +78,89 @@ const AccountPage: React.FC = () => {
 
   const getPriorityLabel = (priority: Ticket['priority']) => {
     const labels = {
-      low: 'کم',
+      low: 'عادی',
       medium: 'متوسط',
       high: 'فوری',
     };
     return labels[priority];
   };
 
+  // 1. Loading State
+  if (loading) {
+    return (
+      <>
+        <Head>
+          <title>حساب کاربری | سابیکس</title>
+        </Head>
+        <NavigationBar />
+        <main className="min-h-screen bg-black flex items-center justify-center pt-24" dir="rtl">
+          <div className="text-center p-8 bg-white/5 border border-white/10 rounded-3xl backdrop-blur-xl">
+            <div className="w-10 h-10 border-3 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-gray-400 text-sm">در حال بارگذاری حساب کاربری...</p>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  // 2. Unauthenticated State (Login Required Gate)
+  if (!user) {
+    return (
+      <>
+        <Head>
+          <title>ورود به حساب کاربری | سابیکس</title>
+          <meta name="description" content="ورود به حساب کاربری جهت مشاهده اشتراک‌ها، اطلاعات لایسنس و ارسال تیکت" />
+        </Head>
+
+        <NavigationBar />
+
+        <main className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black pt-32 pb-20 px-4 flex items-center justify-center" dir="rtl">
+          <div className="w-full max-w-lg">
+            <ScrollReveal direction="up">
+              <div className="bg-white/5 border border-white/10 backdrop-blur-2xl rounded-3xl p-8 md:p-10 shadow-2xl">
+                {/* Header Icon */}
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-500/20 to-cyan-500/20 border border-blue-500/30 flex items-center justify-center mx-auto mb-6">
+                  <svg className="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+
+                <h1 className="text-2xl md:text-3xl font-bold text-center text-white mb-3">
+                  ورود به حساب کاربری
+                </h1>
+                <p className="text-gray-400 text-center text-sm md:text-base mb-8 leading-relaxed">
+                  برای مشاهده و مدیریت اشتراک‌های فعال، دریافت مشخصات لایسنس و پیگیری تیکت‌ها، شماره موبایل خود را وارد کنید.
+                </p>
+
+                {/* Embedded Phone & OTP Form */}
+                <div className="mb-6">
+                  <PhoneAuth onSuccess={() => {}} />
+                </div>
+
+                {/* Notice */}
+                <div className="mt-8 p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-xs text-gray-300 leading-relaxed">
+                  💡 <strong>نکته:</strong> خرید و فعال‌سازی سرویس‌ها بدون نیاز به ثبت‌نام قبلی امکان‌پذیر است؛ ورود به این صفحه صرفاً برای دسترسی به پنل مدیریت لایسنس‌ها و ثبت تیکت پشتیبانی است.
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </main>
+
+        <Footer />
+      </>
+    );
+  }
+
+  // 3. Authenticated Dashboard
+  const displayName = user.first_name || user.username || (user.phone_number ? `کاربر ${user.phone_number.slice(-4)}` : 'کاربر سابیکس');
+  const displayPhone = user.phone_number || (user.username ? `@${user.username}` : 'ثبت‌نشده');
+
   return (
     <>
       <Head>
-        <title>حساب کاربری - سابیکس</title>
-        <meta name="description" content="مدیریت اشتراک‌ها و تیکت‌های پشتیبانی" />
+        <title>حساب کاربری - {displayName} | سابیکس</title>
+        <meta name="description" content="مدیریت اشتراک‌ها، لایسنس‌ها و تیکت‌های پشتیبانی" />
       </Head>
 
       <NavigationBar />
@@ -159,24 +181,24 @@ const AccountPage: React.FC = () => {
                   </svg>
                 </div>
                 <div>
-                  <h1 className="user-name">
-                    {user?.first_name || user?.username || 'کاربر سابیکس'}
-                  </h1>
-                  <p className="user-phone dir-ltr">
-                    {user?.phone_number || (user?.username ? `@${user.username}` : '۰۹۱۲۳۴۵۶۷۸۹')}
-                  </p>
+                  <h1 className="user-name">{displayName}</h1>
+                  <p className="user-phone dir-ltr">{displayPhone}</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                {user && (
-                  <button
-                    onClick={() => logout()}
-                    className="px-4 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs md:text-sm font-medium transition-all"
-                  >
-                    خروج از حساب
-                  </button>
-                )}
+              <div className="account-actions-top">
+                <button
+                  onClick={() => logout()}
+                  className="logout-btn"
+                  title="خروج از حساب"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                  </svg>
+                  <span>خروج</span>
+                </button>
                 <Link href="/" className="home-link">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path
@@ -232,108 +254,84 @@ const AccountPage: React.FC = () => {
               <div className="subscriptions-section">
                 {subscriptions.length === 0 ? (
                   <div className="empty-state">
-                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                      <circle cx="40" cy="40" r="38" fill={designSystem.colors.neutral[100]} />
-                      <path
-                        d="M30 40L35 45L50 30"
-                        stroke={designSystem.colors.text.tertiary}
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                    <h3>هنوز اشتراکی خریداری نکرده‌اید</h3>
-                    <Link href="/#products" className="browse-link">
-                      مشاهده محصولات
+                    <div className="empty-state-icon">
+                      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                      </svg>
+                    </div>
+                    <h3>هنوز اشتراک فعالی ندارید</h3>
+                    <p>
+                      شما تاکنون اشتراکی خریداری نکرده‌اید. با خرید هر یک از سرویس‌های هوش مصنوعی یا توسعه، مشخصات اکانت بلافاصله در این بخش قرار می‌گیرد.
+                    </p>
+                    <Link href="/#products" className="browse-button">
+                      مشاهده کاتالوگ محصولات سابیکس
                     </Link>
                   </div>
                 ) : (
                   <div className="subscriptions-grid">
-                    {subscriptions.map((sub, index) => (
-                      <ScrollReveal key={sub.id} direction="up" delay={index * 50}>
-                        <div className="subscription-card">
-                          <div className="subscription-header">
-                            <div className="subscription-info">
-                              <Image
-                                src={asset(sub.productIcon)}
-                                alt={sub.productName}
-                                width={48}
-                                height={48}
-                                className="subscription-icon"
-                              />
-                              <div>
-                                <h3 className="subscription-name">{sub.productName}</h3>
-                                <p className="subscription-date">
-                                  خریداری شده در {new Date(sub.purchaseDate).toLocaleDateString('fa-IR')}
-                                </p>
-                              </div>
-                            </div>
-
-                            <span
-                              className="status-badge"
-                              style={{ background: `${getStatusColor(sub.status)}20`, color: getStatusColor(sub.status) }}
-                            >
-                              {getStatusLabel(sub.status)}
-                            </span>
-                          </div>
-
-                          <div className="subscription-details">
-                            <div className="detail-row">
-                              <span className="detail-label">تاریخ انقضا:</span>
-                              <span className="detail-value">
-                                {new Date(sub.expiryDate).toLocaleDateString('fa-IR')}
-                              </span>
-                            </div>
-                            <div className="detail-row">
-                              <span className="detail-label">مبلغ پرداختی:</span>
-                              <span className="detail-value">
-                                {sub.price.toLocaleString('fa-IR')} تومان
-                              </span>
+                    {subscriptions.map((sub) => (
+                      <div key={sub.id} className="subscription-card">
+                        <div className="card-header">
+                          <div className="product-info">
+                            <Image
+                              src={sub.productIcon}
+                              alt={sub.productName}
+                              width={48}
+                              height={48}
+                              className="product-icon"
+                            />
+                            <div>
+                              <h3 className="product-title">{sub.productName}</h3>
+                              <p className="purchase-date">خرید: {sub.purchaseDate}</p>
                             </div>
                           </div>
-
-                          {sub.credentials && sub.status === 'active' && (
-                            <div className="credentials-section">
-                              <h4 className="credentials-title">اطلاعات دسترسی</h4>
-                              {sub.credentials.email && (
-                                <div className="credential-item">
-                                  <span>ایمیل:</span>
-                                  <code>{sub.credentials.email}</code>
-                                </div>
-                              )}
-                              {sub.credentials.password && (
-                                <div className="credential-item">
-                                  <span>رمز عبور:</span>
-                                  <code>{sub.credentials.password}</code>
-                                </div>
-                              )}
-                              {sub.credentials.accountLink && (
-                                <a
-                                  href={sub.credentials.accountLink}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="access-link"
-                                >
-                                  ورود به حساب
-                                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                    <path
-                                      d="M6 3H3V13H13V10M10 3H13M13 3V6M13 3L7 9"
-                                      stroke="currentColor"
-                                      strokeWidth="1.5"
-                                      strokeLinecap="round"
-                                    />
-                                  </svg>
-                                </a>
-                              )}
-                            </div>
-                          )}
-
-                          {sub.status === 'expired' && (
-                            <Link href={`/products/${sub.productName.toLowerCase().replace(/\s+/g, '-')}`} className="renew-button">
-                              تمدید اشتراک
-                            </Link>
-                          )}
+                          <span
+                            className="status-badge"
+                            style={{ backgroundColor: `${getStatusColor(sub.status)}20`, color: getStatusColor(sub.status) }}
+                          >
+                            {getStatusLabel(sub.status)}
+                          </span>
                         </div>
-                      </ScrollReveal>
+
+                        {sub.credentials && (
+                          <div className="credentials-box">
+                            <h4 className="credentials-title">اطلاعات دسترسی به اکانت:</h4>
+                            {sub.credentials.email && (
+                              <div className="credential-item">
+                                <span className="label">ایمیل:</span>
+                                <span className="value">{sub.credentials.email}</span>
+                              </div>
+                            )}
+                            {sub.credentials.password && (
+                              <div className="credential-item">
+                                <span className="label">رمز عبور:</span>
+                                <span className="value">{sub.credentials.password}</span>
+                              </div>
+                            )}
+                            {sub.credentials.accountLink && (
+                              <a
+                                href={sub.credentials.accountLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="account-link-btn"
+                              >
+                                ورود به سرویس
+                              </a>
+                            )}
+                          </div>
+                        )}
+
+                        <div className="card-footer">
+                          <div className="expiry-info">
+                            <span className="label">تاریخ انقضا:</span>
+                            <span className="value">{sub.expiryDate}</span>
+                          </div>
+                          <Link href="/#products" className="renew-button">
+                            تمدید اشتراک
+                          </Link>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 )}
@@ -342,9 +340,9 @@ const AccountPage: React.FC = () => {
 
             {activeTab === 'tickets' && (
               <div className="tickets-section">
-                <div className="tickets-header">
+                <div className="section-header">
                   <h2 className="section-title">تیکت‌های پشتیبانی</h2>
-                  <button className="new-ticket-button">
+                  <Link href="/tickets" className="new-ticket-button">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                       <path
                         d="M10 4V16M4 10H16"
@@ -353,60 +351,39 @@ const AccountPage: React.FC = () => {
                         strokeLinecap="round"
                       />
                     </svg>
-                    تیکت جدید
-                  </button>
+                    ثبت تیکت جدید
+                  </Link>
                 </div>
 
                 {tickets.length === 0 ? (
                   <div className="empty-state">
-                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                      <circle cx="40" cy="40" r="38" fill={designSystem.colors.neutral[100]} />
-                      <rect x="25" y="28" width="30" height="24" rx="2" stroke={designSystem.colors.text.tertiary} strokeWidth="2" />
-                      <path d="M25 34h30" stroke={designSystem.colors.text.tertiary} strokeWidth="2" />
-                    </svg>
-                    <h3>تیکت پشتیبانی وجود ندارد</h3>
-                    <p>در صورت نیاز به پشتیبانی، تیکت جدید ایجاد کنید</p>
+                    <div className="empty-state-icon">
+                      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                      </svg>
+                    </div>
+                    <h3>هیچ تیکت پشتیبانی ثبت نشده است</h3>
+                    <p>در صورت بروز هرگونه سوال یا مشکل در فعال‌سازی، کارشناسان سابیکس ۲۴ ساعته پاسخگوی شما هستند.</p>
+                    <Link href="/tickets" className="browse-button">
+                      ارسال تیکت پشتیبانی
+                    </Link>
                   </div>
                 ) : (
                   <div className="tickets-list">
-                    {tickets.map((ticket, index) => (
-                      <ScrollReveal key={ticket.id} direction="up" delay={index * 50}>
-                        <Link href={`/tickets/${ticket.id}`} className="ticket-card">
-                          <div className="ticket-header-row">
-                            <div className="ticket-id">#{ticket.id}</div>
-                            <div className="ticket-badges">
-                              <span className={`priority-badge priority-${ticket.priority}`}>
-                                {getPriorityLabel(ticket.priority)}
-                              </span>
-                              <span className={`status-badge status-${ticket.status}`}>
-                                {getTicketStatusLabel(ticket.status)}
-                              </span>
-                            </div>
-                          </div>
-
-                          <h3 className="ticket-subject">{ticket.subject}</h3>
-
-                          <div className="ticket-meta">
-                            <span className="ticket-date">
-                              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" />
-                                <path d="M8 4v4l3 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                              </svg>
-                              آخرین بروزرسانی: {ticket.lastUpdate}
-                            </span>
-                            <span className="ticket-messages">
-                              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <path
-                                  d="M2 6C2 4.89543 2.89543 4 4 4H12C13.1046 4 14 4.89543 14 6V10C14 11.1046 13.1046 12 12 12H8L4 14V12H4C2.89543 12 2 11.1046 2 10V6Z"
-                                  stroke="currentColor"
-                                  strokeWidth="1.5"
-                                />
-                              </svg>
-                              {ticket.messageCount} پیام
-                            </span>
-                          </div>
-                        </Link>
-                      </ScrollReveal>
+                    {tickets.map((ticket) => (
+                      <Link key={ticket.id} href={`/tickets?id=${ticket.id}`} className="ticket-card">
+                        <div className="ticket-header">
+                          <span className="ticket-id">{ticket.id}</span>
+                          <span className={`priority-badge ${ticket.priority}`}>
+                            {getPriorityLabel(ticket.priority)}
+                          </span>
+                        </div>
+                        <h3 className="ticket-subject">{ticket.subject}</h3>
+                        <div className="ticket-footer">
+                          <span className="ticket-status">{getTicketStatusLabel(ticket.status)}</span>
+                          <span className="last-update">آخرین بروزرسانی: {ticket.lastUpdate}</span>
+                        </div>
+                      </Link>
                     ))}
                   </div>
                 )}
@@ -421,529 +398,310 @@ const AccountPage: React.FC = () => {
       <style jsx>{`
         .account-page {
           min-height: 100vh;
-          padding-top: 80px;
-          background: linear-gradient(
-            180deg,
-            ${designSystem.colors.neutral[50]} 0%,
-            transparent 100%
-          );
+          background: #000000;
+          padding: 120px 24px 80px;
+          direction: rtl;
         }
 
         .account-container {
-          max-width: 1200px;
+          max-width: 1000px;
           margin: 0 auto;
-          padding: ${designSystem.spacing.scale['12']} ${designSystem.spacing.scale['6']};
         }
 
-        /* Header */
         .account-header {
           display: flex;
-          justify-content: space-between;
           align-items: center;
-          margin-bottom: ${designSystem.spacing.scale['10']};
-          padding: ${designSystem.spacing.scale['8']};
-          background: white;
-          border-radius: ${designSystem.borderRadius['2xl']};
-          box-shadow: ${designSystem.shadows.md};
+          justify-content: space-between;
+          padding: 24px 32px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 24px;
+          backdrop-filter: blur(20px);
+          margin-bottom: 32px;
+          flex-wrap: wrap;
+          gap: 16px;
         }
 
         .user-info {
           display: flex;
           align-items: center;
-          gap: ${designSystem.spacing.scale['4']};
+          gap: 16px;
         }
 
         .user-avatar {
-          width: 64px;
-          height: 64px;
+          width: 56px;
+          height: 56px;
+          border-radius: 18px;
+          background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, ${designSystem.colors.primary.DEFAULT}, ${designSystem.colors.primary.active});
           color: white;
-          border-radius: ${designSystem.borderRadius.full};
         }
 
         .user-name {
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize['2xl']};
-          font-weight: ${designSystem.typography.fontWeight.bold};
-          color: ${designSystem.colors.text.primary};
-          margin: 0 0 ${designSystem.spacing.scale['1']};
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: white;
+          margin-bottom: 4px;
         }
 
         .user-phone {
-          font-family: ${designSystem.typography.fontFamily.text};
-          font-size: ${designSystem.typography.fontSize.sm};
-          color: ${designSystem.colors.text.secondary};
-          margin: 0;
-          direction: ltr;
-          text-align: right;
+          font-size: 0.875rem;
+          color: rgba(255, 255, 255, 0.6);
+          font-family: monospace;
+        }
+
+        .account-actions-top {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .logout-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 16px;
+          background: rgba(239, 68, 68, 0.1);
+          border: 1px solid rgba(239, 68, 68, 0.2);
+          border-radius: 12px;
+          color: #f87171;
+          font-size: 0.875rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .logout-btn:hover {
+          background: rgba(239, 68, 68, 0.2);
+          color: #ef4444;
         }
 
         .home-link {
           display: inline-flex;
           align-items: center;
-          gap: ${designSystem.spacing.scale['2']};
-          padding: 10px 20px;
-          background: ${designSystem.colors.neutral[100]};
-          border-radius: ${designSystem.borderRadius.xl};
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.sm};
-          color: ${designSystem.colors.text.secondary};
+          gap: 8px;
+          padding: 10px 16px;
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          border-radius: 12px;
+          color: white;
+          font-size: 0.875rem;
           text-decoration: none;
-          transition: all ${designSystem.animation.duration.fast} ${designSystem.animation.easing.default};
+          transition: all 0.2s ease;
         }
 
         .home-link:hover {
-          background: ${designSystem.colors.primary.DEFAULT};
-          color: white;
+          background: rgba(255, 255, 255, 0.2);
         }
 
-        /* Tabs */
         .tabs {
           display: flex;
-          gap: ${designSystem.spacing.scale['4']};
-          margin-bottom: ${designSystem.spacing.scale['8']};
-          padding: ${designSystem.spacing.scale['2']};
-          background: white;
-          border-radius: ${designSystem.borderRadius.xl};
-          box-shadow: ${designSystem.shadows.sm};
+          gap: 12px;
+          margin-bottom: 24px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          padding-bottom: 16px;
         }
 
         .tab {
-          flex: 1;
-          display: flex;
+          display: inline-flex;
           align-items: center;
-          justify-content: center;
-          gap: ${designSystem.spacing.scale['2']};
-          padding: 14px 24px;
+          gap: 8px;
+          padding: 12px 20px;
           background: transparent;
-          border: none;
-          border-radius: ${designSystem.borderRadius.lg};
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.base};
-          font-weight: ${designSystem.typography.fontWeight.medium};
-          color: ${designSystem.colors.text.secondary};
+          border: 1px solid transparent;
+          border-radius: 14px;
+          color: rgba(255, 255, 255, 0.6);
+          font-size: 0.95rem;
+          font-weight: 500;
           cursor: pointer;
-          transition: all ${designSystem.animation.duration.fast} ${designSystem.animation.easing.default};
-          min-height: ${designSystem.accessibility.touchTarget.mobile};
+          transition: all 0.2s ease;
         }
 
         .tab:hover {
-          background: ${designSystem.colors.neutral[100]};
-          color: ${designSystem.colors.text.primary};
+          color: white;
+          background: rgba(255, 255, 255, 0.05);
         }
 
         .tab.active {
-          background: ${designSystem.colors.primary.DEFAULT};
           color: white;
-          box-shadow: ${designSystem.shadows.md};
+          background: rgba(255, 255, 255, 0.1);
+          border-color: rgba(255, 255, 255, 0.2);
         }
 
         .tab-badge {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          min-width: 24px;
-          height: 24px;
-          padding: 0 8px;
-          background: rgba(255, 255, 255, 0.2);
-          border-radius: ${designSystem.borderRadius.full};
-          font-size: ${designSystem.typography.fontSize.xs};
-          font-weight: ${designSystem.typography.fontWeight.bold};
+          min-width: 20px;
+          height: 20px;
+          padding: 0 6px;
+          border-radius: 10px;
+          background: rgba(255, 255, 255, 0.15);
+          font-size: 0.75rem;
+          font-weight: 600;
         }
 
-        .tab.active .tab-badge {
-          background: rgba(255, 255, 255, 0.3);
+        .empty-state {
+          text-align: center;
+          padding: 64px 24px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px dashed rgba(255, 255, 255, 0.15);
+          border-radius: 24px;
         }
 
-        /* Content */
-        .tab-content {
-          min-height: 400px;
-        }
-
-        /* Subscriptions */
-        .subscriptions-grid {
-          display: grid;
-          gap: ${designSystem.spacing.scale['6']};
-        }
-
-        .subscription-card {
-          background: white;
-          padding: ${designSystem.spacing.scale['6']};
-          border-radius: ${designSystem.borderRadius['2xl']};
-          box-shadow: ${designSystem.shadows.md};
-          transition: all ${designSystem.animation.duration.normal} ${designSystem.animation.easing.default};
-        }
-
-        .subscription-card:hover {
-          box-shadow: ${designSystem.shadows.xl};
-          transform: translateY(-4px);
-        }
-
-        .subscription-header {
+        .empty-state-icon {
+          width: 80px;
+          height: 80px;
+          border-radius: 24px;
+          background: rgba(255, 255, 255, 0.05);
           display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          margin-bottom: ${designSystem.spacing.scale['6']};
-          padding-bottom: ${designSystem.spacing.scale['6']};
-          border-bottom: 1px solid ${designSystem.colors.neutral[200]};
-        }
-
-        .subscription-info {
-          display: flex;
-          gap: ${designSystem.spacing.scale['4']};
-        }
-
-        .subscription-icon {
-          border-radius: ${designSystem.borderRadius.lg};
-        }
-
-        .subscription-name {
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.xl};
-          font-weight: ${designSystem.typography.fontWeight.bold};
-          color: ${designSystem.colors.text.primary};
-          margin: 0 0 ${designSystem.spacing.scale['2']};
-        }
-
-        .subscription-date {
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.sm};
-          color: ${designSystem.colors.text.secondary};
-          margin: 0;
-        }
-
-        .status-badge {
-          padding: 6px 16px;
-          border-radius: ${designSystem.borderRadius.full};
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.xs};
-          font-weight: ${designSystem.typography.fontWeight.semibold};
-        }
-
-        .subscription-details {
-          display: flex;
-          flex-direction: column;
-          gap: ${designSystem.spacing.scale['3']};
-          margin-bottom: ${designSystem.spacing.scale['6']};
-        }
-
-        .detail-row {
-          display: flex;
-          justify-content: space-between;
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.sm};
-        }
-
-        .detail-label {
-          color: ${designSystem.colors.text.secondary};
-        }
-
-        .detail-value {
-          color: ${designSystem.colors.text.primary};
-          font-weight: ${designSystem.typography.fontWeight.medium};
-        }
-
-        .credentials-section {
-          padding: ${designSystem.spacing.scale['4']};
-          background: ${designSystem.colors.neutral[50]};
-          border-radius: ${designSystem.borderRadius.xl};
-          margin-bottom: ${designSystem.spacing.scale['4']};
-        }
-
-        .credentials-title {
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.sm};
-          font-weight: ${designSystem.typography.fontWeight.semibold};
-          color: ${designSystem.colors.text.primary};
-          margin: 0 0 ${designSystem.spacing.scale['3']};
-        }
-
-        .credential-item {
-          display: flex;
-          justify-content: space-between;
           align-items: center;
-          padding: ${designSystem.spacing.scale['2']} 0;
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.sm};
-          color: ${designSystem.colors.text.secondary};
+          justify-content: center;
+          margin: 0 auto 20px;
+          color: rgba(255, 255, 255, 0.4);
         }
 
-        .credential-item code {
-          font-family: ${designSystem.typography.fontFamily.text};
-          padding: 4px 12px;
-          background: white;
-          border: 1px solid ${designSystem.colors.neutral[200]};
-          border-radius: ${designSystem.borderRadius.md};
-          color: ${designSystem.colors.text.primary};
-          direction: ltr;
+        .empty-state h3 {
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: white;
+          margin-bottom: 8px;
         }
 
-        .access-link {
+        .empty-state p {
+          font-size: 0.9rem;
+          color: rgba(255, 255, 255, 0.5);
+          max-width: 480px;
+          margin: 0 auto 24px;
+          line-height: 1.6;
+        }
+
+        .browse-button {
           display: inline-flex;
           align-items: center;
-          gap: ${designSystem.spacing.scale['2']};
-          margin-top: ${designSystem.spacing.scale['2']};
-          padding: 8px 16px;
-          background: ${designSystem.colors.primary.DEFAULT};
+          gap: 8px;
+          padding: 12px 28px;
+          background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+          border-radius: 14px;
           color: white;
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.sm};
-          font-weight: ${designSystem.typography.fontWeight.medium};
-          border-radius: ${designSystem.borderRadius.lg};
+          font-weight: 600;
+          font-size: 0.95rem;
           text-decoration: none;
-          transition: all ${designSystem.animation.duration.fast} ${designSystem.animation.easing.default};
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .access-link:hover {
-          background: ${designSystem.colors.primary.active};
-        }
-
-        .renew-button {
-          display: block;
-          width: 100%;
-          padding: 12px;
-          background: ${designSystem.colors.primary.DEFAULT};
-          color: white;
-          text-align: center;
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.base};
-          font-weight: ${designSystem.typography.fontWeight.semibold};
-          border-radius: ${designSystem.borderRadius.xl};
-          text-decoration: none;
-          transition: all ${designSystem.animation.duration.fast} ${designSystem.animation.easing.default};
-        }
-
-        .renew-button:hover {
-          background: ${designSystem.colors.primary.active};
+        .browse-button:hover {
           transform: translateY(-2px);
+          box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.4);
         }
 
-        /* Tickets */
-        .tickets-header {
+        .section-header {
           display: flex;
-          justify-content: space-between;
           align-items: center;
-          margin-bottom: ${designSystem.spacing.scale['6']};
+          justify-content: space-between;
+          margin-bottom: 24px;
         }
 
         .section-title {
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize['2xl']};
-          font-weight: ${designSystem.typography.fontWeight.bold};
-          color: ${designSystem.colors.text.primary};
-          margin: 0;
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: white;
         }
 
         .new-ticket-button {
           display: inline-flex;
           align-items: center;
-          gap: ${designSystem.spacing.scale['2']};
-          padding: 12px 24px;
-          background: ${designSystem.colors.primary.DEFAULT};
-          color: white;
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.base};
-          font-weight: ${designSystem.typography.fontWeight.semibold};
-          border: none;
-          border-radius: ${designSystem.borderRadius.xl};
-          cursor: pointer;
-          transition: all ${designSystem.animation.duration.fast} ${designSystem.animation.easing.default};
-          min-height: ${designSystem.accessibility.touchTarget.mobile};
+          gap: 8px;
+          padding: 10px 20px;
+          background: rgba(14, 165, 233, 0.15);
+          border: 1px solid rgba(14, 165, 233, 0.3);
+          border-radius: 12px;
+          color: #38bdf8;
+          font-size: 0.875rem;
+          font-weight: 600;
+          text-decoration: none;
+          transition: all 0.2s ease;
         }
 
         .new-ticket-button:hover {
-          background: ${designSystem.colors.primary.active};
-          transform: translateY(-2px);
-          box-shadow: ${designSystem.shadows.lg};
+          background: rgba(14, 165, 233, 0.25);
         }
 
-        .tickets-list {
-          display: flex;
-          flex-direction: column;
-          gap: ${designSystem.spacing.scale['4']};
+        .subscriptions-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+          gap: 20px;
         }
 
-        .ticket-card {
-          display: flex;
-          flex-direction: column;
-          gap: ${designSystem.spacing.scale['3']};
-          padding: ${designSystem.spacing.scale['6']};
-          background: white;
-          border-radius: ${designSystem.borderRadius.xl};
-          box-shadow: ${designSystem.shadows.sm};
-          text-decoration: none;
-          transition: all ${designSystem.animation.duration.normal} ${designSystem.animation.easing.default};
+        .subscription-card {
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 20px;
+          padding: 20px;
         }
 
-        .ticket-card:hover {
-          box-shadow: ${designSystem.shadows.lg};
-          transform: translateY(-2px);
-        }
-
-        .ticket-header-row {
+        .card-header {
           display: flex;
           justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 16px;
+        }
+
+        .product-info {
+          display: flex;
+          gap: 12px;
           align-items: center;
         }
 
-        .ticket-id {
-          font-family: ${designSystem.typography.fontFamily.text};
-          font-size: ${designSystem.typography.fontSize.sm};
-          font-weight: ${designSystem.typography.fontWeight.semibold};
-          color: ${designSystem.colors.text.tertiary};
-          direction: ltr;
+        .product-title {
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: white;
+          margin-bottom: 2px;
         }
 
-        .ticket-badges {
-          display: flex;
-          gap: ${designSystem.spacing.scale['2']};
-        }
-
-        .priority-badge {
-          padding: 4px 12px;
-          border-radius: ${designSystem.borderRadius.full};
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.xs};
-          font-weight: ${designSystem.typography.fontWeight.semibold};
-        }
-
-        .priority-low {
-          background: #10b98120;
-          color: #10b981;
-        }
-
-        .priority-medium {
-          background: #f59e0b20;
-          color: #f59e0b;
-        }
-
-        .priority-high {
-          background: #ef444420;
-          color: #ef4444;
+        .purchase-date {
+          font-size: 0.8rem;
+          color: rgba(255, 255, 255, 0.4);
         }
 
         .status-badge {
-          padding: 4px 12px;
-          border-radius: ${designSystem.borderRadius.full};
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.xs};
-          font-weight: ${designSystem.typography.fontWeight.semibold};
+          font-size: 0.75rem;
+          padding: 4px 10px;
+          border-radius: 8px;
+          font-weight: 600;
         }
 
-        .status-open {
-          background: ${designSystem.colors.primary.DEFAULT}20;
-          color: ${designSystem.colors.primary.DEFAULT};
-        }
-
-        .status-answered {
-          background: #10b98120;
-          color: #10b981;
-        }
-
-        .status-closed {
-          background: ${designSystem.colors.neutral[200]};
-          color: ${designSystem.colors.text.tertiary};
-        }
-
-        .ticket-subject {
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.lg};
-          font-weight: ${designSystem.typography.fontWeight.semibold};
-          color: ${designSystem.colors.text.primary};
-          margin: 0;
-        }
-
-        .ticket-meta {
+        .card-footer {
           display: flex;
-          gap: ${designSystem.spacing.scale['6']};
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.sm};
-          color: ${designSystem.colors.text.secondary};
-        }
-
-        .ticket-date,
-        .ticket-messages {
-          display: flex;
+          justify-content: space-between;
           align-items: center;
-          gap: ${designSystem.spacing.scale['2']};
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          padding-top: 16px;
+          margin-top: 16px;
         }
 
-        /* Empty State */
-        .empty-state {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: ${designSystem.spacing.scale['16']};
-          text-align: center;
+        .expiry-info .label {
+          font-size: 0.8rem;
+          color: rgba(255, 255, 255, 0.4);
+          margin-left: 6px;
         }
 
-        .empty-state h3 {
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.xl};
-          font-weight: ${designSystem.typography.fontWeight.bold};
-          color: ${designSystem.colors.text.primary};
-          margin: ${designSystem.spacing.scale['4']} 0;
-        }
-
-        .empty-state p {
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.base};
-          color: ${designSystem.colors.text.secondary};
-          margin: 0 0 ${designSystem.spacing.scale['6']};
-        }
-
-        .browse-link {
-          display: inline-flex;
-          align-items: center;
-          padding: 12px 24px;
-          background: ${designSystem.colors.primary.DEFAULT};
+        .expiry-info .value {
+          font-size: 0.85rem;
           color: white;
-          font-family: ${designSystem.typography.fontFamily.persian};
-          font-size: ${designSystem.typography.fontSize.base};
-          font-weight: ${designSystem.typography.fontWeight.semibold};
-          border-radius: ${designSystem.borderRadius.xl};
+          font-family: monospace;
+        }
+
+        .renew-button {
+          font-size: 0.8rem;
+          color: #38bdf8;
           text-decoration: none;
-          transition: all ${designSystem.animation.duration.fast} ${designSystem.animation.easing.default};
-        }
-
-        .browse-link:hover {
-          background: ${designSystem.colors.primary.active};
-          transform: translateY(-2px);
-          box-shadow: ${designSystem.shadows.lg};
-        }
-
-        /* Mobile */
-        @media (max-width: 768px) {
-          .account-header {
-            flex-direction: column;
-            gap: ${designSystem.spacing.scale['4']};
-            align-items: flex-start;
-          }
-
-          .tabs {
-            flex-direction: column;
-          }
-
-          .tab {
-            justify-content: flex-start;
-          }
-
-          .user-name {
-            font-size: ${designSystem.typography.fontSize.xl};
-          }
-
-          .ticket-meta {
-            flex-direction: column;
-            gap: ${designSystem.spacing.scale['2']};
-          }
+          font-weight: 500;
         }
       `}</style>
     </>
   );
-};
-
-export default AccountPage;
+}
