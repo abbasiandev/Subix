@@ -14,7 +14,7 @@ export interface Product {
   brandLogoPath: string;
   category: 'ai' | 'music' | 'devTools' | 'design' | 'media' | 'productivity';
   price: number;
-  originalPrice?: number;
+  originalPrice?: number | null;
   hasDiscount: boolean;
   duration: string;
   description: string;
