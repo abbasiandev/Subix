@@ -1,39 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Logo from '../components/Logo';
+import { sendOtp } from '@/lib/api';
+import { useAuth } from '@/context/AuthContext';
 
 export default function LoginPhone() {
   const router = useRouter();
+  const { loginWithPhone } = useAuth();
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [otp, setOtp] = useState(['', '', '', '', '']);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [countdown, setCountdown] = useState(0);
+
+  // Countdown timer for resend OTP
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [countdown]);
 
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     
-    // Validate phone number
-    if (!phoneNumber.match(/^09\d{9}$/)) {
-      setError('شماره موبایل وارد شده صحیح نیست');
+    const cleanPhone = phoneNumber.trim();
+    if (!cleanPhone.match(/^09\d{9}$/)) {
+      setError('شماره موبایل وارد شده صحیح نیست (مثال: 09123456789)');
       return;
     }
 
     setLoading(true);
     
     try {
-      // TODO: Call backend API to send OTP
-      // await sendOTP(phoneNumber);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      const res = await sendOtp(cleanPhone);
       setStep('otp');
+      setCountdown(res.expires_in || 120);
+      setTimeout(() => document.getElementById('otp-0')?.focus(), 150);
     } catch (err: any) {
-      setError(err.message || 'خطا در ارسال کد');
+      setError(err.message || 'خطا در ارسال کد تایید');
     } finally {
       setLoading(false);
     }
@@ -48,9 +58,14 @@ export default function LoginPhone() {
     setOtp(newOtp);
 
     // Auto-focus next input
-    if (value && index < 5) {
+    if (value && index < 4) {
       const nextInput = document.getElementById(`otp-${index + 1}`);
       nextInput?.focus();
+    }
+
+    // Auto-submit when all 5 digits are filled
+    if (newOtp.every(d => d !== '') && value) {
+      executeOtpVerification(newOtp.join(''));
     }
   };
 
@@ -61,45 +76,59 @@ export default function LoginPhone() {
     }
   };
 
-  const handleOtpSubmit = async (e: React.FormEvent) => {
+  const handleOtpPaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
+    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 5);
+    if (!pastedData) return;
+
+    const newOtp = pastedData.split('').concat(Array(5 - pastedData.length).fill(''));
+    setOtp(newOtp);
+
+    const focusIndex = Math.min(pastedData.length, 4);
+    document.getElementById(`otp-${focusIndex}`)?.focus();
+
+    if (pastedData.length === 5) {
+      executeOtpVerification(pastedData);
+    }
+  };
+
+  const executeOtpVerification = async (otpCode: string) => {
+    setLoading(true);
     setError('');
 
-    const otpCode = otp.join('');
-    if (otpCode.length !== 6) {
-      setError('لطفاً کد ۶ رقمی را وارد کنید');
-      return;
-    }
-
-    setLoading(true);
-
     try {
-      // TODO: Call backend API to verify OTP
-      // const response = await verifyOTP(phoneNumber, otpCode);
-      // setToken(response.access_token);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Redirect to dashboard
-      router.push('/dashboard');
+      await loginWithPhone(phoneNumber.trim(), otpCode);
+      // Redirect to user account dashboard
+      router.push('/account');
     } catch (err: any) {
       setError(err.message || 'کد وارد شده صحیح نیست');
-      setOtp(['', '', '', '', '', '']);
+      setOtp(['', '', '', '', '']);
       document.getElementById('otp-0')?.focus();
     } finally {
       setLoading(false);
     }
   };
 
+  const handleOtpSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const otpCode = otp.join('');
+    if (otpCode.length !== 5) {
+      setError('لطفاً کد ۵ رقمی را کامل وارد کنید');
+      return;
+    }
+    await executeOtpVerification(otpCode);
+  };
+
   const handleResendOtp = async () => {
+    if (countdown > 0 || loading) return;
     setLoading(true);
     setError('');
 
     try {
-      // TODO: Call backend API to resend OTP
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      alert('کد مجدداً ارسال شد');
+      const res = await sendOtp(phoneNumber.trim());
+      setCountdown(res.expires_in || 120);
+      setOtp(['', '', '', '', '']);
+      document.getElementById('otp-0')?.focus();
     } catch (err: any) {
       setError(err.message || 'خطا در ارسال مجدد کد');
     } finally {
@@ -107,16 +136,22 @@ export default function LoginPhone() {
     }
   };
 
+  const formatCountdown = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   return (
     <>
       <Head>
-        <title>ورود به سابیکس</title>
-        <meta name="description" content="ورود یا ثبت‌نام در سابیکس با شماره موبایل" />
+        <title>ورود با شماره موبایل | سابیکس</title>
+        <meta name="description" content="ورود یا ثبت‌نام در سابیکس با شماره موبایل و کد یکبار مصرف پیامکی" />
       </Head>
 
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4" dir="rtl">
         {/* Background elements */}
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
         </div>
@@ -125,33 +160,36 @@ export default function LoginPhone() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="relative w-full max-w-md"
+          className="relative w-full max-w-md z-10"
         >
           <div className="bg-white/5 backdrop-blur-2xl rounded-3xl p-8 md:p-10 border border-white/10 shadow-2xl">
             {/* Logo */}
             <div className="flex justify-center mb-8">
-              <Logo variant="full" size="lg" color="primary" animated />
+              <Link href="/">
+                <Logo variant="full" size="lg" color="primary" animated />
+              </Link>
             </div>
 
             {step === 'phone' ? (
               <>
-                <h1 className="text-3xl font-bold text-center mb-2">خوش آمدید</h1>
-                <p className="text-gray-400 text-center mb-8">
-                  شماره موبایل خود را وارد کنید
+                <h1 className="text-2xl md:text-3xl font-bold text-center mb-2 text-white">ورود با شماره موبایل</h1>
+                <p className="text-gray-400 text-center mb-8 text-sm md:text-base">
+                  برای دسترسی به حساب کاربری، شماره موبایل خود را وارد کنید
                 </p>
 
                 <form onSubmit={handlePhoneSubmit}>
                   <div className="mb-6">
-                    <label className="block text-sm font-medium mb-2">شماره موبایل</label>
+                    <label className="block text-sm font-medium mb-2 text-gray-300">شماره موبایل</label>
                     <input
                       type="tel"
                       placeholder="09123456789"
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-lg text-center tracking-wider focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white text-lg text-center tracking-wider focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-mono"
                       dir="ltr"
                       maxLength={11}
                       disabled={loading}
+                      autoFocus
                     />
                   </div>
 
@@ -167,25 +205,25 @@ export default function LoginPhone() {
 
                   <motion.button
                     type="submit"
-                    disabled={loading || phoneNumber.length !== 11}
+                    disabled={loading || phoneNumber.trim().length !== 11}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold text-lg rounded-full hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold text-lg rounded-xl hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? (
                       <span className="flex items-center justify-center gap-2">
                         <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        در حال ارسال کد...
+                        در حال ارسال پیامک...
                       </span>
                     ) : (
-                      'دریافت کد تایید'
+                      'دریافت کد تأیید پیامکی'
                     )}
                   </motion.button>
                 </form>
 
-                <p className="text-center text-sm text-gray-400 mt-6">
+                <p className="text-center text-xs text-gray-400 mt-6 leading-relaxed">
                   با ورود به سابیکس،{' '}
-                  <a href="/terms" className="text-blue-400 hover:text-blue-300">قوانین و مقررات</a>
+                  <Link href="/terms" className="text-blue-400 hover:text-blue-300">قوانین و مقررات</Link>
                   {' '}را می‌پذیرید
                 </p>
               </>
@@ -193,21 +231,21 @@ export default function LoginPhone() {
               <>
                 <button
                   onClick={() => setStep('phone')}
-                  className="flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors"
+                  className="flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors text-sm"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
-                  بازگشت
+                  ویرایش شماره ({phoneNumber})
                 </button>
 
-                <h1 className="text-3xl font-bold text-center mb-2">کد تایید</h1>
-                <p className="text-gray-400 text-center mb-8">
-                  کد ارسال شده به شماره {phoneNumber} را وارد کنید
+                <h1 className="text-2xl md:text-3xl font-bold text-center mb-2 text-white">کد تایید پیامکی</h1>
+                <p className="text-gray-400 text-center mb-8 text-sm">
+                  کد ۵ رقمی ارسال شده به شماره <strong className="text-white dir-ltr">{phoneNumber}</strong> را وارد کنید
                 </p>
 
                 <form onSubmit={handleOtpSubmit}>
-                  <div className="flex gap-2 justify-center mb-6" dir="ltr">
+                  <div className="flex gap-2 justify-center mb-6" dir="ltr" onPaste={handleOtpPaste}>
                     {otp.map((digit, index) => (
                       <input
                         key={index}
@@ -217,7 +255,7 @@ export default function LoginPhone() {
                         value={digit}
                         onChange={(e) => handleOtpChange(index, e.target.value)}
                         onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                        className="w-12 h-14 bg-white/5 border border-white/10 rounded-xl text-white text-2xl text-center font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+                        className="w-12 h-14 bg-white/5 border border-white/10 rounded-xl text-white text-2xl text-center font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-mono"
                         maxLength={1}
                         disabled={loading}
                       />
@@ -239,26 +277,34 @@ export default function LoginPhone() {
                     disabled={loading || otp.some(d => !d)}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold text-lg rounded-full hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed mb-4"
+                    className="w-full py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold text-lg rounded-xl hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed mb-4"
                   >
                     {loading ? (
                       <span className="flex items-center justify-center gap-2">
                         <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        در حال تایید...
+                        در حال اعتبارسنجی...
                       </span>
                     ) : (
-                      'تایید و ورود'
+                      'تأیید و ورود به حساب کاربری'
                     )}
                   </motion.button>
 
-                  <button
-                    type="button"
-                    onClick={handleResendOtp}
-                    disabled={loading}
-                    className="w-full text-blue-400 hover:text-blue-300 text-sm transition-colors disabled:opacity-50"
-                  >
-                    ارسال مجدد کد
-                  </button>
+                  <div className="text-center">
+                    {countdown > 0 ? (
+                      <span className="text-xs text-gray-400">
+                        امکان ارسال مجدد کد تا <strong className="text-blue-400 font-mono">{formatCountdown(countdown)}</strong>
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleResendOtp}
+                        disabled={loading}
+                        className="text-blue-400 hover:text-blue-300 text-sm transition-colors disabled:opacity-50 underline underline-offset-4"
+                      >
+                        ارسال مجدد کد تأیید
+                      </button>
+                    )}
+                  </div>
                 </form>
               </>
             )}
@@ -266,9 +312,9 @@ export default function LoginPhone() {
 
           {/* Back to home */}
           <div className="text-center mt-6">
-            <a href="/" className="text-gray-400 hover:text-white transition-colors">
+            <Link href="/" className="text-gray-400 hover:text-white transition-colors text-sm">
               بازگشت به صفحه اصلی
-            </a>
+            </Link>
           </div>
         </motion.div>
       </div>

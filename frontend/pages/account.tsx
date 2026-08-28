@@ -7,6 +7,8 @@ import { ScrollReveal } from '@/components/Animations/ScrollReveal';
 import { asset } from '@/lib/assets';
 import { designSystem } from '@/styles/apple-design-system';
 
+import { useAuth } from '@/context/AuthContext';
+
 type TabType = 'subscriptions' | 'tickets';
 
 interface Subscription {
@@ -35,9 +37,10 @@ interface Ticket {
 
 /**
  * Account Page - Minimal Dashboard
- * Shows only orders and support tickets
+ * Shows user profile, subscriptions and support tickets
  */
 const AccountPage: React.FC = () => {
+  const { user, loading, logout } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>('subscriptions');
 
   // Mock data - replace with API calls
@@ -156,22 +159,36 @@ const AccountPage: React.FC = () => {
                   </svg>
                 </div>
                 <div>
-                  <h1 className="user-name">کاربر سابیکس</h1>
-                  <p className="user-phone">۰۹۱۲۳۴۵۶۷۸۹</p>
+                  <h1 className="user-name">
+                    {user?.first_name || user?.username || 'کاربر سابیکس'}
+                  </h1>
+                  <p className="user-phone dir-ltr">
+                    {user?.phone_number || (user?.username ? `@${user.username}` : '۰۹۱۲۳۴۵۶۷۸۹')}
+                  </p>
                 </div>
               </div>
 
-              <Link href="/" className="home-link">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path
-                    d="M3 10L10 3L17 10M4 9V17H7V12H13V17H16V9"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                صفحه اصلی
-              </Link>
+              <div className="flex items-center gap-3">
+                {user && (
+                  <button
+                    onClick={() => logout()}
+                    className="px-4 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs md:text-sm font-medium transition-all"
+                  >
+                    خروج از حساب
+                  </button>
+                )}
+                <Link href="/" className="home-link">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path
+                      d="M3 10L10 3L17 10M4 9V17H7V12H13V17H16V9"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  صفحه اصلی
+                </Link>
+              </div>
             </div>
           </ScrollReveal>
 

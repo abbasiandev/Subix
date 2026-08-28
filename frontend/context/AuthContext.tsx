@@ -7,7 +7,14 @@ import {
   ReactNode,
 } from "react";
 import { useRouter } from "next/router";
-import { loginWithTelegram, setToken, getMe, logout as apiLogout, User } from "@/lib/api";
+import {
+  loginWithTelegram,
+  verifyOtp,
+  setToken,
+  getMe,
+  logout as apiLogout,
+  User,
+} from "@/lib/api";
 
 interface AuthCtx {
   user: User | null;
@@ -15,7 +22,9 @@ interface AuthCtx {
   loading: boolean;
   error: string | null;
   isTelegram: boolean;
+  loginWithPhone: (phoneNumber: string, code: string) => Promise<User>;
   logout: () => Promise<void>;
+  setUser: (user: User | null) => void;
 }
 
 const Ctx = createContext<AuthCtx>({
@@ -24,13 +33,14 @@ const Ctx = createContext<AuthCtx>({
   loading: true,
   error: null,
   isTelegram: false,
+  loginWithPhone: async () => { throw new Error("Not implemented"); },
   logout: async () => {},
+  setUser: () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
-  // For SSR/SSG, don't show loading state initially
   const [loading, setLoading] = useState(typeof window === 'undefined' ? false : true);
   const [error, setError] = useState<string | null>(null);
   const [isTelegram, setIsTelegram] = useState(false);
@@ -42,18 +52,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
+    // Restore token from localStorage if present
+    const savedToken = localStorage.getItem("subix_token");
+    if (savedToken) {
+      setToken(savedToken);
+    }
+
     const tg = window.Telegram?.WebApp;
     const hasTelegramContext = !!(tg?.initData && tg.initData.length > 0);
     setIsTelegram(hasTelegramContext);
 
-    // Set a timeout to prevent infinite loading
     const timeoutId = setTimeout(() => {
       setLoading(false);
-      setError("زمان اتصال به سرور به پایان رسید");
-    }, 10000); // 10 second timeout
+    }, 6000);
 
     if (hasTelegramContext) {
-      // Telegram Mini App flow (existing)
+      // Telegram Mini App flow
       tg.ready();
       tg.expand();
 
@@ -72,6 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loginWithTelegram(initData)
         .then((res) => {
           setToken(res.access_token);
+          localStorage.setItem("subix_token", res.access_token);
           setUser(res.user);
         })
         .catch((e) => {
@@ -83,27 +98,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setLoading(false);
         });
     } else {
-      // Desktop browser flow (new)
-      // Session cookie is sent automatically with fetch (credentials: "include")
-      // Try to fetch current user
-      const publicPages = ["/", "/login", "/terms", "/products", "/contact", "/blog"];
-      const isPublicPage = publicPages.includes(router.pathname) || router.pathname.startsWith('/products/');
-      
-      // For public pages, don't try to authenticate - just show the page
-      if (isPublicPage) {
-        clearTimeout(timeoutId);
-        setLoading(false);
-        return;
-      }
-
+      // Desktop / Phone browser flow
       getMe()
         .then((userData) => {
           setUser(userData);
         })
         .catch(() => {
-          // Not authenticated - redirect to login for protected pages
-          if (!isPublicPage) {
-            router.push("/login");
+          // If token was invalid, clear it
+          if (savedToken) {
+            localStorage.removeItem("subix_token");
+            setToken("");
           }
         })
         .finally(() => {
@@ -113,24 +117,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     return () => clearTimeout(timeoutId);
-  }, [router]);
+  }, []);
+
+  const loginWithPhone = async (phoneNumber: string, code: string): Promise<User> => {
+    setError(null);
+    try {
+      const res = await verifyOtp(phoneNumber, code);
+      setToken(res.access_token);
+      localStorage.setItem("subix_token", res.access_token);
+      setUser(res.user);
+      return res.user;
+    } catch (err: any) {
+      const msg = err.message || "کد تایید وارد شده نادرست است.";
+      setError(msg);
+      throw new Error(msg);
+    }
+  };
 
   const logout = async () => {
     try {
       await apiLogout();
-      setUser(null);
-      setToken("");
-      router.push("/login");
     } catch (e) {
-      // Silent error - logout locally anyway
-      setUser(null);
+      // Silent error
+    } finally {
+      localStorage.removeItem("subix_token");
       setToken("");
+      setUser(null);
       router.push("/login");
     }
   };
 
   return (
-    <Ctx.Provider value={{ user, photoUrl, loading, error, isTelegram, logout }}>
+    <Ctx.Provider value={{ user, photoUrl, loading, error, isTelegram, loginWithPhone, logout, setUser }}>
       {children}
     </Ctx.Provider>
   );

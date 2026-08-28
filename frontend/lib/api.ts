@@ -102,6 +102,27 @@ export async function loginWithTelegram(initData: string) {
     );
 }
 
+export async function sendOtp(phoneNumber: string) {
+    return request<{ message: string; phone_number: string; expires_in: number; debug_code?: string }>(
+        "/api/v1/auth/send-otp",
+        {
+            method: "POST",
+            body: JSON.stringify({ phone_number: phoneNumber }),
+        }
+    );
+}
+
+export async function verifyOtp(phoneNumber: string, code: string) {
+    return request<{ access_token: string; user: User }>(
+        "/api/v1/auth/verify-otp",
+        {
+            method: "POST",
+            body: JSON.stringify({ phone_number: phoneNumber, code }),
+            credentials: "include",
+        }
+    );
+}
+
 export async function loginWithTelegramWidget(telegramUser: {
     id: number;
     first_name?: string;

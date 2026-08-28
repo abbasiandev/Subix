@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { designSystem } from '@/styles/apple-design-system';
+import { sendOtp, verifyOtp, setToken } from '@/lib/api';
 
 interface PhoneAuthProps {
   onSuccess: (phoneNumber: string) => void;
@@ -9,12 +10,12 @@ type AuthStep = 'phone' | 'otp';
 
 /**
  * Phone Authentication Component
- * Two-step authentication: phone number + OTP verification
+ * Two-step authentication: phone number + OTP verification via SMS.ir
  */
 export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
   const [step, setStep] = useState<AuthStep>('phone');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [otp, setOtp] = useState(['', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [countdown, setCountdown] = useState(0);
@@ -30,53 +31,51 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
   }, [countdown]);
 
   const validatePhone = (phone: string): boolean => {
-    // Iranian mobile number format: 09xxxxxxxxx
     const phoneRegex = /^09[0-9]{9}$/;
-    return phoneRegex.test(phone);
+    return phoneRegex.test(phone.trim());
   };
 
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    if (!validatePhone(phoneNumber)) {
-      setError('شماره موبایل معتبر نیست');
+    const cleanPhone = phoneNumber.trim();
+    if (!validatePhone(cleanPhone)) {
+      setError('شماره موبایل معتبر نیست (مثال: 09123456789)');
       return;
     }
 
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const res = await sendOtp(cleanPhone);
       setStep('otp');
-      setCountdown(120); // 2 minutes
-      // Focus first OTP input
-      otpInputs.current[0]?.focus();
-    }, 1000);
+      setCountdown(res.expires_in || 120);
+      setTimeout(() => otpInputs.current[0]?.focus(), 100);
+    } catch (err: any) {
+      setError(err.message || 'خطا در ارسال کد تایید');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleOtpChange = (index: number, value: string) => {
-    // Only allow digits
     if (value && !/^\d$/.test(value)) return;
 
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
 
-    // Auto-focus next input
-    if (value && index < 5) {
+    if (value && index < 4) {
       otpInputs.current[index + 1]?.focus();
     }
 
-    // Auto-submit when all filled
     if (newOtp.every(digit => digit !== '')) {
       handleOtpSubmit(newOtp.join(''));
     }
   };
 
   const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    // Handle backspace
     if (e.key === 'Backspace' && !otp[index] && index > 0) {
       otpInputs.current[index - 1]?.focus();
     }
@@ -84,19 +83,16 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
 
   const handleOtpPaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pastedData = e.clipboardData.getData('text').slice(0, 6);
-    
-    if (!/^\d+$/.test(pastedData)) return;
+    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 5);
+    if (!pastedData) return;
 
-    const newOtp = pastedData.split('').concat(Array(6 - pastedData.length).fill(''));
+    const newOtp = pastedData.split('').concat(Array(5 - pastedData.length).fill(''));
     setOtp(newOtp);
 
-    // Focus last filled input or first empty
-    const focusIndex = Math.min(pastedData.length, 5);
+    const focusIndex = Math.min(pastedData.length, 4);
     otpInputs.current[focusIndex]?.focus();
 
-    // Auto-submit if complete
-    if (pastedData.length === 6) {
+    if (pastedData.length === 5) {
       handleOtpSubmit(pastedData);
     }
   };
@@ -105,32 +101,36 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
     setError('');
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const res = await verifyOtp(phoneNumber.trim(), otpCode);
+      setToken(res.access_token);
+      localStorage.setItem('subix_token', res.access_token);
+      onSuccess(phoneNumber.trim());
+    } catch (err: any) {
+      setError(err.message || 'کد وارد شده نادرست است');
+      setOtp(['', '', '', '', '']);
+      otpInputs.current[0]?.focus();
+    } finally {
       setIsLoading(false);
-      // In production, verify OTP with backend
-      if (otpCode === '123456') {
-        onSuccess(phoneNumber);
-      } else {
-        // For demo, accept any 6-digit code
-        onSuccess(phoneNumber);
-      }
-    }, 1000);
+    }
   };
 
-  const handleResendOtp = () => {
-    if (countdown > 0) return;
+  const handleResendOtp = async () => {
+    if (countdown > 0 || isLoading) return;
 
-    setOtp(['', '', '', '', '', '']);
+    setOtp(['', '', '', '', '']);
     setError('');
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      setCountdown(120);
+    try {
+      const res = await sendOtp(phoneNumber.trim());
+      setCountdown(res.expires_in || 120);
       otpInputs.current[0]?.focus();
-    }, 1000);
+    } catch (err: any) {
+      setError(err.message || 'خطا در ارسال مجدد کد');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const formatCountdown = (seconds: number): string => {
@@ -218,7 +218,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
 
             <h3 className="auth-title">کد تأیید را وارد کنید</h3>
             <p className="auth-description">
-              کد ۶ رقمی به شماره{' '}
+              کد تأیید ۵ رقمی به شماره{' '}
               <strong>{phoneNumber}</strong> ارسال شد
             </p>
 

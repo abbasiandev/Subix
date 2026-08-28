@@ -115,8 +115,27 @@ export default function LoginPage() {
             </p>
           </div>
 
+          {/* Phone Login Button */}
+          <div className="mb-6">
+            <a
+              href="/login-phone"
+              className="flex items-center justify-center gap-3 w-full py-4 px-6 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-base transition-all duration-300 shadow-lg hover:shadow-cyan-500/25 hover:scale-[1.02]"
+            >
+              <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              <span>ورود با شماره موبایل (پیامک OTP)</span>
+            </a>
+          </div>
+
+          <div className="flex items-center gap-3 my-4 opacity-40">
+            <div className="flex-1 h-px bg-white" />
+            <span className="text-xs text-white">یا ورود با تلگرام</span>
+            <div className="flex-1 h-px bg-white" />
+          </div>
+
           {/* Telegram Login Widget */}
-          <div className="my-8 flex justify-center">
+          <div className="mb-6 flex justify-center">
             {authenticating ? (
               <div className="flex flex-col items-center gap-4 py-6">
                 <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin" />
@@ -128,7 +147,7 @@ export default function LoginPage() {
           </div>
 
           {/* Terms */}
-          <p className="text-sm text-white/70 mt-8">
+          <p className="text-sm text-white/70 mt-6">
             با ورود، شما{" "}
             <a href="/terms" className="text-white font-bold hover:underline">
               شرایط و قوانین
