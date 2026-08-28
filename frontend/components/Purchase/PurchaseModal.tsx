@@ -4,6 +4,7 @@ import { Product } from '@/data/products';
 import { PhoneAuth } from '@/components/Auth/PhoneAuth';
 import { asset } from '@/lib/assets';
 import { designSystem } from '@/styles/apple-design-system';
+import { useAuth } from '@/context/AuthContext';
 
 interface PurchaseModalProps {
   product: Product;
@@ -14,11 +15,12 @@ type PurchaseStep = 'auth' | 'payment' | 'processing' | 'success';
 
 /**
  * Purchase Modal Component
- * Handles phone authentication and payment flow
+ * Handles direct purchase and payment flow (frictionless for guests and auto-filled for users)
  */
 export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }) => {
-  const [step, setStep] = useState<PurchaseStep>('auth');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const { user } = useAuth();
+  const [step, setStep] = useState<PurchaseStep>(user?.phone_number ? 'payment' : 'auth');
+  const [phoneNumber, setPhoneNumber] = useState(user?.phone_number || '');
   const [selectedGateway, setSelectedGateway] = useState<'zarinpal' | 'idpay'>('zarinpal');
 
   const handleAuthSuccess = (phone: string) => {
