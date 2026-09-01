@@ -1,13 +1,12 @@
 """Auth helpers for Flask (PythonAnywhere)."""
 
 from typing import Optional
+from flask import jsonify, request
 
 from app.core.security import decode_access_token
 
 
 def get_token_from_header() -> Optional[str]:
-    from flask import request
-
     auth = request.headers.get("Authorization", "")
     if auth.startswith("Bearer "):
         return auth[7:]

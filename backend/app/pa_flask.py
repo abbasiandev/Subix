@@ -8,6 +8,7 @@ from app.core.security import create_access_token, verify_telegram_init_data, ve
 from app.db.client import execute
 from app.services.order import OrderService
 from app.services.product import ProductService
+from app.services.sms import SMSService
 from app.services.user import UserService
 from app.telegram.handlers import handle_update
 
@@ -38,6 +39,55 @@ def health():
         "app": settings.app_name,
         "webhook_enabled": settings.enable_webhook,
     })
+
+
+@app.route("/api/v1/auth/send-otp", methods=["POST", "OPTIONS"])
+def send_otp():
+    """Send SMS OTP via SMS.ir to the provided mobile number"""
+    if request.method == "OPTIONS":
+        return "", 204
+    body = request.get_json(force=True, silent=True) or {}
+    phone_number = body.get("phone_number")
+    if not phone_number:
+        return jsonify({"detail": "شماره موبایل الزامی است."}), 400
+    try:
+        result = SMSService.send_otp_sync(phone_number)
+        return jsonify(result), 200
+    except Exception as exc:
+        msg = getattr(exc, "detail", str(exc))
+        code = getattr(exc, "status_code", 400)
+        return jsonify({"detail": msg}), code
+
+
+@app.route("/api/v1/auth/verify-otp", methods=["POST", "OPTIONS"])
+def verify_otp():
+    """Verify SMS OTP code and create/log in user"""
+    if request.method == "OPTIONS":
+        return "", 204
+    body = request.get_json(force=True, silent=True) or {}
+    phone_number = body.get("phone_number")
+    code = body.get("code")
+    if not phone_number or not code:
+        return jsonify({"detail": "شماره موبایل و کد تایید الزامی است."}), 400
+    try:
+        SMSService.verify_otp(phone_number, str(code))
+        user = UserService().upsert_from_phone(phone_number=phone_number)
+        token = create_access_token(user.telegram_id)
+
+        response = make_response(jsonify({"access_token": token, "user": user.model_dump()}))
+        response.set_cookie(
+            key="subix_session",
+            value=token,
+            max_age=30 * 24 * 60 * 60,  # 30 days
+            httponly=True,
+            secure=True,
+            samesite="none",
+        )
+        return response, 200
+    except Exception as exc:
+        msg = getattr(exc, "detail", str(exc))
+        code = getattr(exc, "status_code", 400)
+        return jsonify({"detail": msg}), code
 
 
 @app.route("/api/v1/auth/telegram", methods=["POST", "OPTIONS"])
@@ -172,7 +222,7 @@ def get_profile():
     tid, err = get_current_user_id_from_token(get_token_from_header())
     if err:
         return err
-    user = UserService().get_by_telegram_id(tid)
+    user = UserService().get_by_identifier(tid)
     if not user:
         return jsonify({"detail": "User not found"}), 404
     return jsonify(user.model_dump())

@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+from typing import Optional, List
 from app.db.client import execute
 from app.schemas.schemas import OrderOut
 from app.services.user import UserService

@@ -45,7 +45,8 @@ class SMSService:
         return str(random.randint(10000, 99999))
 
     @classmethod
-    async def send_otp(cls, raw_phone: str) -> dict:
+    def send_otp_sync(cls, raw_phone: str) -> dict:
+        """Synchronous version for Flask WSGI on PythonAnywhere"""
         phone = normalize_iranian_phone(raw_phone)
         now = time.time()
 
@@ -62,7 +63,6 @@ class SMSService:
 
         code = cls.generate_code()
         
-        # Prepare SMS.ir payload
         headers = {
             "Content-Type": "application/json",
             "Accept": "application/json",
@@ -80,21 +80,15 @@ class SMSService:
             ],
         }
 
-        # Dispatch HTTP request to SMS.ir
         try:
-            async with httpx.AsyncClient(timeout=10.0) as client:
-                resp = await client.post(cls.SMS_IR_VERIFY_URL, json=payload, headers=headers)
+            with httpx.Client(timeout=10.0) as client:
+                resp = client.post(cls.SMS_IR_VERIFY_URL, json=payload, headers=headers)
                 logger.info(f"SMS.ir response for {phone}: status={resp.status_code} text={resp.text}")
                 
                 resp_json = resp.json() if resp.status_code == 200 else {}
-                
-                # Check status
                 if resp.status_code != 200 or resp_json.get("status") != 1:
                     error_msg = resp_json.get("message", "خطا در ارسال پیامک از طریق سامانه")
                     logger.error(f"SMS.ir API Error for {phone}: {resp.status_code} - {resp.text}")
-                    # If template is not yet verified or rejected, provide descriptive feedback
-                    if "قالب" in error_msg or "template" in error_msg.lower() or resp.status_code == 400:
-                        logger.warning("SMS.ir template error. Ensure Template ID is created and approved in app.sms.ir")
         except httpx.RequestError as exc:
             logger.error(f"SMS.ir Network Error: {exc}")
             raise HTTPException(
@@ -113,9 +107,12 @@ class SMSService:
             "message": f"کد تایید به شماره {phone} ارسال شد.",
             "phone_number": phone,
             "expires_in": cls.OTP_TTL_SECONDS,
-            # In development/debug mode, include code for testing ease
             "debug_code": code if settings.debug else None,
         }
+
+    @classmethod
+    async def send_otp(cls, raw_phone: str) -> dict:
+        return cls.send_otp_sync(raw_phone)
 
     @classmethod
     def verify_otp(cls, raw_phone: str, code: str) -> bool:
