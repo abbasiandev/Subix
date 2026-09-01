@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Float, Sparkles } from '@react-three/drei'
@@ -50,8 +50,23 @@ function ProductIconScene({ product }: { product: Product }) {
 export const Product3DCard: React.FC<Product3DCardProps> = ({ product, onPurchase }) => {
   const [hovered, setHovered] = useState(false)
   const [tilt, setTilt] = useState({ x: 0, y: 0 })
+  const [isInView, setIsInView] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const accent = getCategoryColor(product.category)
+
+  useEffect(() => {
+    setMounted(true)
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting)
+      },
+      { rootMargin: '120px' }
+    )
+    if (ref.current) observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [])
+
   const handleMove = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!ref.current) return
     const rect = ref.current.getBoundingClientRect()
@@ -67,10 +82,12 @@ export const Product3DCard: React.FC<Product3DCardProps> = ({ product, onPurchas
           <div className="product-icon-preview">
             <img src={asset(product.brandLogoPath)} alt={product.name} className="product-brand-icon" />
           </div>
-        ) : (
+        ) : mounted && isInView ? (
           <Canvas camera={{ position: [0, 0, 3.8], fov: 42 }} dpr={[0.6, 1.25]} gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}>
             <ProductIconScene product={product} />
           </Canvas>
+        ) : (
+          <div className="product-icon-preview" />
         )}
         <div className="product-icon-halo" />
         <div className="product-icon-caption">{hovered ? 'REVEALED / ACTIVE' : '3D / ORBITAL'}</div>
