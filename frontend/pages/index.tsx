@@ -11,7 +11,7 @@ export default function HomePage() {
     <NavigationBar />
     <main>
       <WebGLHero />
-      <section id="products" className="market-section"><div className="section-container"><div className="section-header"><span className="section-index">01 / STORE</span><h2>فروشگاه انواع اکانت و لایسنس‌های اورجینال</h2><p>از لایسنس نرم‌افزارهای تخصصی و ادیتورها تا اکانت‌های پریمیوم هوش مصنوعی و استریم؛ با تحویل آنی.</p></div><ProductGrid products={products} /></div></section>
+      <section id="products" className="market-section"><div className="section-container"><div className="section-header"><span className="section-index">01 / STORE</span></div><ProductGrid products={products} /></div></section>
       <section id="articles" className="articles-section"><div className="section-container"><div className="section-header"><span className="section-index">02 / GUIDES</span><h2>راهنماها و آموزش‌های تخصصی خرید و فعال‌سازی</h2></div><ArticleGrid showFilters /></div></section>
     </main><Footer />
   </>;
