@@ -63,11 +63,17 @@ export const Product3DCard: React.FC<Product3DCardProps> = ({ product, onPurchas
       {product.hasDiscount && <DiscountBadge />}
       <div className="product-orbit-label"><span className="status-dot" /> ACCESS NODE / {String(product.id).padStart(2, '0')}</div>
       <div className="product-icon-stage" style={{ '--product-accent': accent } as React.CSSProperties}>
-        <div className="product-icon-preview">
-          <img src={asset(product.brandLogoPath)} alt={product.name} className="product-brand-icon" />
-        </div>
+        {hovered ? (
+          <div className="product-icon-preview">
+            <img src={asset(product.brandLogoPath)} alt={product.name} className="product-brand-icon" />
+          </div>
+        ) : (
+          <Canvas camera={{ position: [0, 0, 3.8], fov: 42 }} dpr={[0.6, 1.25]} gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}>
+            <ProductIconScene product={product} />
+          </Canvas>
+        )}
         <div className="product-icon-halo" />
-        <div className="product-icon-caption">{hovered ? 'INSTANT ACCESS' : product.category}</div>
+        <div className="product-icon-caption">{hovered ? 'REVEALED / ACTIVE' : '3D / ORBITAL'}</div>
       </div>
       <div className="product-constellation-info">
         <div className="product-meta-row"><span>{product.category}</span><span>فعالسازی آنی</span></div>
