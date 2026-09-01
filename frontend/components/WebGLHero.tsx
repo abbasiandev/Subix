@@ -63,10 +63,11 @@ export default function WebGLHero() {
       <div className="flash-canvas" aria-hidden="true"><Canvas camera={{ position: [0, 0, 10], fov: 42 }} dpr={[1, 1.5]} gl={{ antialias: true, alpha: true }}><color attach="background" args={['#070314']} /><ambientLight intensity={0.35} /><OrbitalCore /></Canvas></div>
       <div className="flash-hero-content">
         <motion.div className="flash-kicker" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>SUBIX / مرجع خرید اکانت و لایسنس‌های اورجینال</motion.div>
-        <motion.h1 initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>خرید انواع اکانت و لایسنس اورجینال<br /><span>با تحویل آنی و ضمانت اصالت</span></motion.h1>
+        <motion.h1 initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>خرید انواع اکانت و لایسنس اورجینال<br /><span>با تحویل آنی</span></motion.h1>
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}>دسترسی مستقیم و قانونی به انواع اکانت‌های پریمیوم و لایسنس‌های اختصاصی هوش مصنوعی، برنامه‌نویسی، طراحی و استریم.</motion.p>
-        <motion.div className="flash-actions" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}><a href="#products" className="flash-button primary">مشاهده اکانت‌ها و لایسنس‌ها <span>↙</span></a><a href="#how-it-works" className="flash-button ghost">مراحل خرید و فعال‌سازی</a></motion.div>
-        <div className="flash-metrics"><div><strong>۱۵K+</strong><small>سفارش موفق</small></div><div><strong>۵۰+</strong><small>اکانت و لایسنس</small></div><div><strong>۲۴/۷</strong><small>پشتیبانی و گارانتی</small></div></div>
+        <motion.div className="flash-actions" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
+          <a href="#products" className="flash-button primary">مشاهده اکانت‌ها و لایسنس‌ها <span>↙</span></a>
+        </motion.div>
       </div>
       <div className="flash-corner top">LIVE / 02:37:11</div><div className="flash-corner bottom">SCROLL TO EXPLORE <span>↓</span></div>
     </section>
