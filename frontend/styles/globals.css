@@ -332,7 +332,11 @@ button, a, input, select, textarea { font: inherit; }
 .article-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)) !important; }
 .article-card:focus-within { box-shadow: var(--focus-ring), var(--shadow-soft); }
 .product-constellation-link:focus-visible { box-shadow: var(--focus-ring); }
-.product-card-bottom button, .category-button, .mobile-menu-button { min-height: 44px; }
+.product-card-action, .category-button, .mobile-menu-button { min-height: 44px; }
+.article-card-link { display: flex; height: 100%; color: inherit; text-decoration: none; }
+.article-card-link:focus-visible { box-shadow: var(--focus-ring); }
+.product-card-action { display: inline-flex; align-items: center; gap: .45rem; padding: 12px 14px; border: 1px solid rgba(0,245,255,.36); background: rgba(0,245,255,.1); color: #dfffff; font-weight: 700; }
+.product-card-action:hover { background: #00f5ff; color: #08031a; }
 
 :root[data-theme='light'] body { background: var(--color-canvas); color: var(--color-text); }
 :root[data-theme='light'] .flash-hero, :root[data-theme='light'] .market-section, :root[data-theme='light'] .articles-section { background: var(--color-canvas) !important; }

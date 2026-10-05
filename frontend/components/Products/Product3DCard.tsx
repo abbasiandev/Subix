@@ -36,7 +36,7 @@ export const Product3DCard: React.FC<Product3DCardProps> = ({ product, onPurchas
         {product.description && <p>{product.description}</p>}
         <div className="product-card-bottom">
           <div><small>دسترسی {product.duration}</small><strong>{product.price.toLocaleString('fa-IR')} <em>تومان</em></strong></div>
-          <button type="button" onClick={(event) => { event.preventDefault(); event.stopPropagation(); onPurchase?.(product) }}>دریافت دسترسی <span>↗</span></button>
+          <span className="product-card-action">دریافت دسترسی <span aria-hidden="true">↗</span></span>
         </div>
       </div>
       {hovered && <div className="product-scanline" />}

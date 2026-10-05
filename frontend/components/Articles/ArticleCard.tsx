@@ -16,7 +16,7 @@ interface ArticleCardProps {
 export const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
   return (
     <>
-      <Link href={`/blog/${article.slug}`}>
+      <Link href={`/blog/${article.slug}`} className="article-card-link">
         <div className="article-card">
           {/* Article Image */}
           <div className="article-image-container">
