@@ -15,7 +15,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         
@@ -47,7 +47,8 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="icon" type="image/svg+xml" href={asset('/favicon.svg')} />
       </Head>
 
-      {!isHome && <WebGLRouteStage />}
+       <a className="skip-link" href="#main-content">رفتن به محتوای اصلی</a>
+       {!isHome && <WebGLRouteStage />}
       <div className="route-content-layer">
         <Component {...pageProps} />
       </div>

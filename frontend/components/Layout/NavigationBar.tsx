@@ -5,6 +5,7 @@ import { designSystem } from '@/styles/apple-design-system';
 import { useScrollDirection, useSmoothScroll } from '@/hooks/useScrollProgress';
 
 import { useAuth } from '@/context/AuthContext';
+import { asset } from '@/lib/assets';
 
 /**
  * Navigation Bar Component
@@ -18,6 +19,21 @@ export const NavigationBar: React.FC = () => {
   const { scrollToElement } = useSmoothScroll();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLightTheme, setIsLightTheme] = useState(false);
+
+  useEffect(() => {
+    const savedTheme = window.localStorage.getItem('subix-theme');
+    const light = savedTheme === 'light';
+    setIsLightTheme(light);
+    document.documentElement.dataset.theme = light ? 'light' : 'dark';
+  }, []);
+
+  const toggleTheme = () => {
+    const nextIsLight = !isLightTheme;
+    setIsLightTheme(nextIsLight);
+    document.documentElement.dataset.theme = nextIsLight ? 'light' : 'dark';
+    window.localStorage.setItem('subix-theme', nextIsLight ? 'light' : 'dark');
+  };
 
   // Track scroll position for backdrop blur effect
   useEffect(() => {
@@ -31,10 +47,10 @@ export const NavigationBar: React.FC = () => {
 
   // Navigation items
   const navItems = [
-    { label: 'خانه', href: '/', section: null },
-    { label: 'محصولات', href: '/#products', section: 'products' },
-    { label: 'مقالات', href: '/#articles', section: 'articles' },
-    { label: 'درباره ما', href: '/#footer', section: 'footer' },
+    { label: 'خانه', href: asset('/'), section: null },
+    { label: 'محصولات', href: asset('/#products'), section: 'products' },
+    { label: 'مقالات', href: asset('/#articles'), section: 'articles' },
+    { label: 'درباره ما', href: asset('/#footer'), section: 'footer' },
   ];
 
   const handleNavClick = (e: React.MouseEvent, section: string | null) => {
@@ -60,7 +76,7 @@ export const NavigationBar: React.FC = () => {
 
   return (
     <>
-      <nav
+      <nav aria-label="ناوبری اصلی"
         className={`navigation-bar ${isScrolled ? 'scrolled' : ''} ${
           scrollDirection === 'down' ? 'hidden' : ''
         }`}
@@ -141,6 +157,8 @@ export const NavigationBar: React.FC = () => {
               className="mobile-menu-button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="منوی موبایل"
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-navigation"
             >
               <span className={`hamburger ${isMobileMenuOpen ? 'open' : ''}`}>
                 <span></span>
@@ -148,11 +166,14 @@ export const NavigationBar: React.FC = () => {
                 <span></span>
               </span>
             </button>
+            <button className="theme-toggle" type="button" onClick={toggleTheme} aria-label={isLightTheme ? 'فعال‌کردن پوسته تاریک' : 'فعال‌کردن پوسته روشن'}>
+              <span aria-hidden="true">{isLightTheme ? '☾' : '☼'}</span>
+            </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
-        <div className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}>
+        <div id="mobile-navigation" className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}>
           <ul className="mobile-nav-links">
             {navItems.map((item) => (
               <li key={item.href}>
