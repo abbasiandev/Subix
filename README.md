@@ -135,6 +135,31 @@ cp .env.local.example .env.local
 npm run dev
 ```
 
+Open `http://localhost:3000` while developing. The frontend is a Next.js static export; GitHub Pages publishes the generated `frontend/out` directory under `/Subix/`.
+
+### WebGL hero
+
+The homepage hero is split into three layers:
+
+1. A semantic text layer that renders immediately and remains usable without JavaScript or WebGL.
+2. A CSS grid and gradient fallback that supplies the visual atmosphere on unsupported or low-power devices.
+3. A lazily initialized Three.js scene with a fresnel/noise shader shell, orbital geometry, and a pointer-reactive particle field.
+
+The scene caps device pixel ratio at 2, pauses when the tab is hidden or the hero is off screen, follows scroll and pointer position, and disposes its geometries and materials on teardown. Reduced-motion preferences slow the scene and remove CSS motion effects.
+
+To intentionally use the static fallback during local development:
+
+```bash
+cd frontend
+NEXT_PUBLIC_DISABLE_WEBGL=1 npm run dev
+```
+
+The same flag can be supplied to the production build when a deployment should omit the WebGL renderer:
+
+```bash
+NEXT_PUBLIC_DISABLE_WEBGL=1 npm run build
+```
+
 ## Folder Structure
 ```
 subix/

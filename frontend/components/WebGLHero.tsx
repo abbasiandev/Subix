@@ -75,7 +75,7 @@ function OrbitalScene({ onStateChange }: { onStateChange: (state: SceneState) =>
     let disposeScene: (() => void) | undefined;
 
     const start = async () => {
-      if (!mountRef.current || !supportsWebGL() || isLowPowerDevice()) {
+      if (!mountRef.current || process.env.NEXT_PUBLIC_DISABLE_WEBGL === '1' || !supportsWebGL() || isLowPowerDevice()) {
         onStateChange({ active: false, supported: false, ready: true });
         return;
       }
