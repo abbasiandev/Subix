@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
+@font-face { font-family: 'Vazirmatn'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('../public/fonts/vazirmatn-arabic.woff2') format('woff2'); }
+@font-face { font-family: 'Lalezar'; font-style: normal; font-weight: 400; font-display: swap; src: url('../public/fonts/lalezar-arabic.woff2') format('woff2'); }
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -285,7 +286,7 @@ button { transition: transform .2s, box-shadow .2s, background .2s; } button:hov
   --color-accent: #00f5ff;
   --color-accent-strong: #8b5cf6;
   --color-border: rgba(198, 255, 242, .18);
-  --font-display: 'Vazirmatn', system-ui, sans-serif;
+  --font-display: 'Lalezar', 'Vazirmatn', system-ui, sans-serif;
   --font-body: 'Vazirmatn', system-ui, sans-serif;
   --type-display: clamp(2.4rem, 6vw, 5.9rem);
   --type-section: clamp(2rem, 4vw, 3.7rem);
@@ -319,13 +320,13 @@ button, a, input, select, textarea { font: inherit; }
 .flash-fallback { position: absolute; inset: 0; z-index: 0; background: radial-gradient(circle at 64% 43%, rgba(139, 92, 246, .3), transparent 28%), radial-gradient(circle at 18% 72%, rgba(0, 245, 255, .12), transparent 30%), var(--color-canvas); transition: opacity .8s ease; }
 .flash-canvas { z-index: 1; opacity: .9; }
 .flash-hero-content { z-index: 2; padding-top: clamp(130px, 21vh, 210px); }
-.flash-hero h1 { max-width: 760px; font-family: var(--font-display); font-size: var(--type-display); line-height: 1.16; text-shadow: 0 10px 60px rgba(0,0,0,.28); }
+.flash-hero h1 { max-width: 760px; font-family: var(--font-display); font-size: var(--type-display); font-weight: 400; line-height: 1.16; text-shadow: 0 10px 60px rgba(0,0,0,.28); }
 .flash-hero p { color: var(--color-text-muted); max-width: 550px; font-size: clamp(1rem, 1.5vw, 1.2rem); }
 .flash-button { min-height: 48px; border-radius: var(--radius-sm); }
 .flash-button:active { transform: translateY(0) scale(.98); }
 .webgl-ready .flash-fallback { opacity: .38; }
 .market-section, .articles-section { padding-block: clamp(76px, 10vw, 150px); }
-.section-header h2 { font-family: var(--font-display); font-size: var(--type-section); line-height: 1.22; color: var(--color-text); }
+.section-header h2 { font-family: var(--font-display); font-size: var(--type-section); font-weight: 400; line-height: 1.22; color: var(--color-text); }
 .product-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)) !important; }
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
 .reveal.is-visible { opacity: 1; transform: none; }
@@ -337,6 +338,15 @@ button, a, input, select, textarea { font: inherit; }
 .article-card-link:focus-visible { box-shadow: var(--focus-ring); }
 .product-card-action { display: inline-flex; align-items: center; gap: .45rem; padding: 12px 14px; border: 1px solid rgba(0,245,255,.36); background: rgba(0,245,255,.1); color: #dfffff; font-weight: 700; }
 .product-card-action:hover { background: #00f5ff; color: #08031a; }
+/* Legacy component styles use light-system values; these explicit tokens keep both themes AA-friendly. */
+.navigation-bar .nav-links a, .navigation-bar .mobile-nav-links a { color: var(--color-text-muted) !important; }
+.navigation-bar .nav-links a:hover, .navigation-bar .mobile-nav-links a:hover { color: var(--color-text) !important; }
+.article-card { background: var(--color-surface) !important; }
+.article-card .article-excerpt { color: var(--color-text-muted) !important; }
+.article-card .article-meta { color: var(--color-text-subtle) !important; border-color: var(--color-border) !important; }
+.category-filters { background: var(--color-surface) !important; }
+.category-button { color: var(--color-text-muted) !important; }
+.category-button:hover { color: var(--color-text) !important; background: var(--color-surface-raised) !important; }
 
 :root[data-theme='light'] body { background: var(--color-canvas); color: var(--color-text); }
 :root[data-theme='light'] .flash-hero, :root[data-theme='light'] .market-section, :root[data-theme='light'] .articles-section { background: var(--color-canvas) !important; }
