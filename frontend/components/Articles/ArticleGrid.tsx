@@ -33,10 +33,12 @@ export const ArticleGrid: React.FC<ArticleGridProps> = ({ showFilters = true }) 
         {/* Category Filters */}
         {showFilters && (
           <div className="filters-container">
-            <div className="category-filters">
+            <div className="category-filters" role="group" aria-label="دسته‌بندی مقالات">
               {categories.map((category) => (
                 <button
+                  type="button"
                   key={category.value}
+                  aria-pressed={selectedCategory === category.value}
                   onClick={() => setSelectedCategory(category.value)}
                   className={`category-button ${selectedCategory === category.value ? 'active' : ''}`}
                 >
@@ -48,7 +50,7 @@ export const ArticleGrid: React.FC<ArticleGridProps> = ({ showFilters = true }) 
         )}
 
         {/* Article Grid */}
-        <div className="article-grid">
+        <div className="article-grid" id="article-grid">
           {filteredArticles.map((article) => (
             <ArticleCard key={article.id} article={article} />
           ))}

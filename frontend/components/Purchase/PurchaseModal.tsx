@@ -11,7 +11,7 @@ interface PurchaseModalProps {
   onClose: () => void;
 }
 
-type PurchaseStep = 'auth' | 'payment' | 'processing' | 'success';
+type PurchaseStep = 'auth' | 'payment' | 'demo';
 
 /**
  * Purchase Modal Component
@@ -28,17 +28,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
     setStep('payment');
   };
 
-  const handlePayment = async () => {
-    setStep('processing');
-    
-    // Simulate payment processing
-    setTimeout(() => {
-      setStep('success');
-    }, 2000);
-  };
-
   const handleClose = () => {
-    if (step === 'processing') return; // Prevent closing during payment
     onClose();
   };
 
@@ -47,7 +37,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
       <div className="modal-overlay" onClick={handleClose}>
         <div className="modal-container" onClick={(e) => e.stopPropagation()}>
           {/* Close Button */}
-          {step !== 'processing' && (
+           {
             <button className="close-button" onClick={handleClose} aria-label="بستن">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path
@@ -58,7 +48,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
                 />
               </svg>
             </button>
-          )}
+           }
 
           {/* Product Header */}
           <div className="modal-header">
@@ -87,7 +77,8 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
 
             {step === 'payment' && (
               <div className="payment-step">
-                <h3 className="step-title">انتخاب درگاه پرداخت</h3>
+                 <h3 className="step-title">پیش‌نمایش مسیر دریافت</h3>
+                <p className="demo-note">اتصال پرداخت در این نسخه فعال نیست؛ این پنجره فقط مسیر تجربه خرید را نشان می‌دهد.</p>
                 
                 <div className="gateway-options">
                   <button
@@ -148,13 +139,13 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
                   </div>
                 </div>
 
-                <button className="pay-button" onClick={handlePayment}>
+                 <button className="pay-button" onClick={() => setStep('demo')}>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" strokeWidth="2"/>
                     <path d="M3 10h18" stroke="currentColor" strokeWidth="2"/>
                     <circle cx="7" cy="14" r="1" fill="currentColor"/>
                   </svg>
-                  پرداخت و دریافت اشتراک
+                   نمایش وضعیت ادامه مسیر
                 </button>
 
                 <p className="security-note">
@@ -166,69 +157,18 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
                       fill="none"
                     />
                   </svg>
-                  پرداخت از طریق درگاه امن بانکی انجام می‌شود
+                   درگاه‌ها پس از اتصال backend در همین مرحله فعال می‌شوند
                 </p>
               </div>
             )}
 
-            {step === 'processing' && (
-              <div className="processing-step">
-                <div className="spinner">
-                  <svg width="80" height="80" viewBox="0 0 80 80">
-                    <circle
-                      cx="40"
-                      cy="40"
-                      r="30"
-                      fill="none"
-                      stroke={designSystem.colors.primary.DEFAULT}
-                      strokeWidth="6"
-                      strokeDasharray="90, 150"
-                      strokeLinecap="round"
-                    >
-                      <animateTransform
-                        attributeName="transform"
-                        type="rotate"
-                        from="0 40 40"
-                        to="360 40 40"
-                        dur="1s"
-                        repeatCount="indefinite"
-                      />
-                    </circle>
-                  </svg>
-                </div>
-                <h3 className="processing-title">در حال پردازش...</h3>
-                <p className="processing-text">
-                  لطفاً صبر کنید، در حال انتقال به درگاه پرداخت هستیم
-                </p>
-              </div>
-            )}
-
-            {step === 'success' && (
-              <div className="success-step">
-                <div className="success-icon">
-                  <svg width="80" height="80" viewBox="0 0 80 80">
-                    <circle cx="40" cy="40" r="38" fill="#22c55e" opacity="0.1"/>
-                    <circle cx="40" cy="40" r="30" fill="#22c55e"/>
-                    <path
-                      d="M25 40L35 50L55 30"
-                      stroke="white"
-                      strokeWidth="4"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-                <h3 className="success-title">خرید موفق!</h3>
-                <p className="success-text">
-                  اشتراک شما با موفقیت فعال شد و به حساب کاربری شما اضافه گردید
-                </p>
+            {step === 'demo' && (
+              <div className="demo-step">
+                <div className="demo-icon" aria-hidden="true">i</div>
+                <h3 className="success-title">این مسیر هنوز نمایشی است</h3>
+                <p className="success-text">جزئیات انتخاب شما آماده است، اما پرداخت و فعال‌سازی تا زمان اتصال backend انجام نمی‌شود.</p>
                 <div className="success-actions">
-                  <button className="primary-action" onClick={() => window.location.href = '/account'}>
-                    مشاهده اشتراک‌های من
-                  </button>
-                  <button className="secondary-action" onClick={onClose}>
-                    بازگشت به صفحه اصلی
-                  </button>
+                  <button className="primary-action" onClick={onClose}>بازگشت به جزئیات محصول</button>
                 </div>
               </div>
             )}
@@ -320,9 +260,31 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
           margin: 0;
         }
 
-        .modal-content {
-          padding: ${designSystem.spacing.scale['6']};
-        }
+         .modal-content {
+           padding: ${designSystem.spacing.scale['6']};
+         }
+
+         .demo-note {
+           margin: -12px 0 0;
+           padding: 12px 14px;
+           border-radius: 12px;
+           background: #fff8e1;
+           color: #7a5b00;
+           font-size: ${designSystem.typography.fontSize.sm};
+           line-height: 1.8;
+         }
+
+         .demo-icon {
+           width: 64px;
+           height: 64px;
+           display: grid;
+           place-items: center;
+           border-radius: 50%;
+           background: #fff8e1;
+           color: #9a7400;
+           font-size: 2rem;
+           font-weight: 800;
+         }
 
         /* Payment Step */
         .payment-step {
