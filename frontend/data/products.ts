@@ -26,6 +26,15 @@ export interface Product {
   popular?: boolean;
 }
 
+// The catalog contains related digital services as well as AI accounts. Keep the
+// AI-first storefront explicit so visitors can start with the products Subix is
+// positioned around without losing access to the wider inventory.
+const AI_PRODUCT_IDS = new Set([1, 2, 3, 4, 7, 11, 12, 15, 19, 25, 28, 29, 30, 31, 32, 43, 49, 52, 53, 55, 58, 60, 64, 65, 68, 71, 74, 76]);
+
+export function isAiProduct(product: Product): boolean {
+  return AI_PRODUCT_IDS.has(product.id);
+}
+
 export const products: Product[] = [
   {
     "id": 1,
