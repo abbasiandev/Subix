@@ -1,10 +1,8 @@
-import { useRouter } from 'next/router';
 import { GetStaticProps, GetStaticPaths } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import DesktopContainer from '../../components/layouts/DesktopContainer';
-import BottomNav from '../../components/BottomNav';
 import GlassContainer from '../../components/GlassContainer';
+import { NavigationBar, Footer } from '@/components/Layout';
 import { blogPosts, blogCategories, type BlogPost } from '../../data/blog-posts';
 import { articles, type Article } from '../../data/articles';
 import { asset } from '@/lib/assets';
@@ -29,7 +27,8 @@ function getUnifiedPosts(): BlogPost[] {
 
   const postSlugs = new Set(blogPosts.map(p => p.slug));
   const uniqueArticles = mappedArticles.filter(a => !postSlugs.has(a.slug));
-  return [...blogPosts, ...uniqueArticles];
+  const excludedFromDecisionGuides = new Set(['spotify-premium-benefits', 'apple-music-vs-spotify-2026', 'google-drive-unlimited-storage']);
+  return [...blogPosts, ...uniqueArticles].filter((post) => !excludedFromDecisionGuides.has(post.slug));
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -62,11 +61,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export default function BlogPost({ post: initialPost }: { post: typeof blogPosts[0] }) {
-  const router = useRouter();
-  const isTelegram = typeof window !== 'undefined' && window.Telegram?.WebApp;
-
   const post = initialPost;
   const relatedPosts = blogPosts
+    .filter(p => !['spotify-premium-benefits', 'apple-music-vs-spotify-2026', 'google-drive-unlimited-storage'].includes(p.slug))
     .filter(p => p.slug !== post.slug && p.category === post.category)
     .slice(0, 3);
 
@@ -79,20 +76,11 @@ export default function BlogPost({ post: initialPost }: { post: typeof blogPosts
     }).format(date);
   };
 
-  if (isTelegram) {
-    return (
-      <>
-        <BlogPostContent post={post} relatedPosts={relatedPosts} formatDate={formatDate} />
-        <BottomNav />
-      </>
-    );
-  }
-
-  return (
-    <DesktopContainer sidebar={null}>
+  return <div className="rive-page blog-article-page" dir="rtl">
+    <NavigationBar />
       <BlogPostContent post={post} relatedPosts={relatedPosts} formatDate={formatDate} />
-    </DesktopContainer>
-  );
+    <Footer />
+  </div>;
 }
 
 function BlogPostContent({ 
@@ -125,8 +113,8 @@ function BlogPostContent({
         <meta name="twitter:title" content={post.title} />
         <meta name="twitter:description" content={post.excerpt} />
       </Head>
-      <div className="min-h-screen" dir="rtl">
-      <div className="relative container mx-auto px-4 py-8 pb-32 max-w-4xl">
+      <main id="main-content" tabIndex={-1} className="blog-article-content site-container">
+      <div className="relative py-8 pb-32 max-w-4xl">
         {/* Back Button */}
         <Link href="/blog">
           <button className="glass-light hover:glass-hover rounded-xl px-4 py-2 mb-6 flex items-center gap-2 text-gray-300 hover:text-white transition-all">
@@ -267,7 +255,7 @@ function BlogPostContent({
           </div>
         )}
       </div>
-      </div>
+      </main>
     </>
   );
 }

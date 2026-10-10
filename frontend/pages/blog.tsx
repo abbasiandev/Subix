@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import DesktopContainer from '../components/layouts/DesktopContainer';
-import BottomNav from '../components/BottomNav';
 import GlassContainer from '../components/GlassContainer';
+import { NavigationBar, Footer } from '@/components/Layout';
+import { SUPPORT_URL } from '@/lib/constants';
 import { blogPosts, blogCategories, type BlogPost } from '../data/blog-posts';
 import { articles, type Article } from '../data/articles';
 
@@ -28,14 +27,13 @@ function getUnifiedPosts(): BlogPost[] {
 
   const postSlugs = new Set(blogPosts.map(p => p.slug));
   const uniqueArticles = mappedArticles.filter(a => !postSlugs.has(a.slug));
-  return [...blogPosts, ...uniqueArticles];
+  const excludedFromDecisionGuides = new Set(['spotify-premium-benefits', 'apple-music-vs-spotify-2026', 'google-drive-unlimited-storage']);
+  return [...blogPosts, ...uniqueArticles].filter((post) => !excludedFromDecisionGuides.has(post.slug));
 }
 
 export default function Blog() {
-  const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const isTelegram = typeof window !== 'undefined' && window.Telegram?.WebApp;
   const allPosts = getUnifiedPosts();
 
   const filteredPosts = allPosts.filter(post => {
@@ -54,25 +52,10 @@ export default function Blog() {
     }).format(date);
   };
 
-  if (isTelegram) {
-    return (
-      <>
-        <BlogContent 
-          filteredPosts={filteredPosts}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          formatDate={formatDate}
-        />
-        <BottomNav />
-      </>
-    );
-  }
-
-  return (
-    <DesktopContainer sidebar={null}>
-      <BlogContent 
+  return <div className="rive-page blog-page" dir="rtl">
+    <NavigationBar />
+    <main id="main-content" tabIndex={-1}>
+      <BlogContent
         filteredPosts={filteredPosts}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
@@ -80,8 +63,9 @@ export default function Blog() {
         setSearchQuery={setSearchQuery}
         formatDate={formatDate}
       />
-    </DesktopContainer>
-  );
+    </main>
+    <Footer />
+  </div>;
 }
 
 function BlogContent({ 
@@ -102,31 +86,33 @@ function BlogContent({
   return (
     <>
       <Head>
-        <title>بلاگ سابیکس - مقالات و راهنمای هوش مصنوعی</title>
-        <meta name="description" content="آخرین مقالات، راهنماها و اخبار دنیای هوش مصنوعی. راهنمای خرید و استفاده از ChatGPT، Claude، Gemini، Cursor و Spotify" />
+         <title>راهنمای انتخاب اکانت هوش مصنوعی | سابیکس</title>
+         <meta name="description" content="راهنماها و مقایسه‌های سابیکس برای انتخاب سریع‌تر اکانت هوش مصنوعی مناسب کار شما." />
         <meta name="keywords" content="بلاگ هوش مصنوعی, راهنمای ChatGPT, آموزش AI, مقایسه هوش مصنوعی, راهنمای Cursor, نکات AI" />
         <link rel="canonical" href="https://abbasiandev.github.io/Subix/blog" />
-        <meta property="og:title" content="بلاگ سابیکس - مقالات و راهنمای هوش مصنوعی" />
-        <meta property="og:description" content="آخرین مقالات، راهنماها و اخبار دنیای هوش مصنوعی" />
+         <meta property="og:title" content="راهنمای انتخاب اکانت هوش مصنوعی | سابیکس" />
+         <meta property="og:description" content="راهنماها و مقایسه‌های سابیکس برای انتخاب سریع‌تر اکانت هوش مصنوعی مناسب کار شما." />
         <meta property="og:url" content="https://abbasiandev.github.io/Subix/blog" />
         <meta property="og:type" content="website" />
       </Head>
-      <div className="min-h-screen" dir="rtl">
-      <div className="relative container mx-auto px-4 py-8 pb-32 max-w-7xl">
+       <div className="blog-page-content site-container">
+      <div className="relative py-8 pb-32">
         {/* Header */}
         <div className="mb-12 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 animate-fade-up">
-            📝 بلاگ سابیکس
+             راهنمای انتخاب سابیکس
           </h1>
           <p className="text-gray-300 text-lg max-w-2xl mx-auto animate-fade-up stagger-1">
-            آخرین مقالات، راهنماها و اخبار دنیای هوش مصنوعی
+             قبل از خرید، تفاوت ابزارها و کاربرد هر اکانت را سریع‌تر بفهمید.
           </p>
         </div>
 
         {/* Search Bar */}
         <GlassContainer elevation="light" className="rounded-2xl p-4 mb-8 max-w-2xl mx-auto animate-fade-up stagger-2">
           <div className="relative">
+            <label htmlFor="blog-search" className="sr-only">جستجو در مقالات</label>
             <input
+              id="blog-search"
               type="text"
               placeholder="جستجو در مقالات..."
               value={searchQuery}
@@ -143,6 +129,8 @@ function BlogContent({
         <div className="mb-10 animate-fade-up stagger-3">
           <div className="flex flex-wrap gap-3 justify-center">
             <button
+              type="button"
+              aria-pressed={selectedCategory === 'all'}
               onClick={() => setSelectedCategory('all')}
               className={`px-6 py-3 rounded-xl font-medium transition-all ${
                 selectedCategory === 'all'
@@ -154,7 +142,9 @@ function BlogContent({
             </button>
             {blogCategories.map((cat) => (
               <button
+                type="button"
                 key={cat.id}
+                aria-pressed={selectedCategory === cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`px-6 py-3 rounded-xl font-medium transition-all ${
                   selectedCategory === cat.id
@@ -195,9 +185,9 @@ function BlogContent({
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-xl font-bold text-white mb-3 line-clamp-2">
+                    <h2 className="text-xl font-bold text-white mb-3 line-clamp-2">
                       {post.title}
-                    </h3>
+                    </h2>
 
                     {/* Excerpt */}
                     <p className="text-gray-300 text-sm mb-4 line-clamp-3 flex-1">
@@ -231,7 +221,7 @@ function BlogContent({
         ) : (
           <GlassContainer elevation="light" className="rounded-2xl p-12 text-center">
             <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-2xl font-bold text-white mb-2">نتیجه‌ای یافت نشد</h3>
+             <h2 className="text-2xl font-bold text-white mb-2">نتیجه‌ای یافت نشد</h2>
             <p className="text-gray-400">لطفاً کلمات کلیدی دیگری را امتحان کنید</p>
           </GlassContainer>
         )}
@@ -239,27 +229,18 @@ function BlogContent({
         {/* Newsletter Section */}
         <GlassContainer elevation="medium" className="rounded-3xl p-8 md:p-12 mt-16 text-center animate-fade-up">
           <div className="max-w-2xl mx-auto">
-            <div className="text-5xl mb-4">📬</div>
+             <div className="text-5xl mb-4" aria-hidden="true">↗</div>
             <h2 className="text-3xl font-bold text-white mb-4">
-              عضویت در خبرنامه سابیکس
+               پرسش بیشتری دارید؟
             </h2>
             <p className="text-gray-300 mb-8">
-              آخرین مقالات، راهنماها و تخفیف‌های ویژه را مستقیماً در تلگرام دریافت کنید
+               برای راهنمایی درباره انتخاب اکانت، مستقیماً با پشتیبانی تلگرام گفت‌وگو کنید.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="آیدی تلگرام شما"
-                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-6 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50"
-              />
-              <button className="bg-teal-500 hover:bg-teal-600 text-white font-medium px-8 py-3 rounded-xl transition-all shadow-lg shadow-teal-500/30 hover:shadow-teal-500/50">
-                عضویت
-              </button>
-            </div>
-          </div>
-        </GlassContainer>
-      </div>
-      </div>
+             <a className="site-button" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">گفت‌وگو در تلگرام <span aria-hidden="true">↗</span></a>
+           </div>
+         </GlassContainer>
+       </div>
+       </div>
     </>
   );
 }

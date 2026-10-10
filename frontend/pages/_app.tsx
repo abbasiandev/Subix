@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { asset } from "@/lib/assets";
 import "@/styles/globals.css";
+import "@/styles/rive-redesign.css";
 
 const WebGLRouteStage = dynamic(() => import("@/components/WebGLRouteStage"), { ssr: false });
 
@@ -19,15 +20,15 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         
-        <title>سابیکس - خرید انواع اکانت و لایسنس اورجینال</title>
-        <meta name="description" content="خرید قانونی انواع اکانت و لایسنس اورجینال هوش مصنوعی، برنامه‌نویسی، طراحی و سرگرمی با تحویل آنی و پشتیبانی ۲۴ ساعته" />
-        <meta name="keywords" content="خرید اکانت هوش مصنوعی, خرید لایسنس, خرید اشتراک ChatGPT, خرید لایسنس Cursor, خرید اکانت Claude, خرید اکانت Spotify, خرید اکانت یوتیوب" />
+         <title>سابیکس - انتخاب اکانت هوش مصنوعی</title>
+         <meta name="description" content="مقایسه و انتخاب اکانت‌های هوش مصنوعی برای متن، تصویر، ویدیو، صدا و توسعه در سابیکس." />
+         <meta name="keywords" content="خرید اکانت هوش مصنوعی, مقایسه اکانت AI, ChatGPT, Claude, Gemini, Cursor, Leonardo AI" />
         <meta name="author" content="سابیکس" />
         <link rel="canonical" href="https://abbasiandev.github.io/Subix/" />
         
         {/* Open Graph tags */}
-        <meta property="og:title" content="سابیکس - خرید انواع اکانت و لایسنس اورجینال" />
-        <meta property="og:description" content="مرجع خرید قانونی انواع اکانت و لایسنس هوش مصنوعی، نرم‌افزار، توسعه و سرگرمی با تحویل آنی و ضمانت اصالت" />
+         <meta property="og:title" content="سابیکس - انتخاب اکانت هوش مصنوعی" />
+         <meta property="og:description" content="ابزارهای هوش مصنوعی را بر اساس کاربرد، قابلیت، مدت و قیمت مقایسه کنید." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://abbasiandev.github.io/Subix/" />
         <meta property="og:locale" content="fa_IR" />
@@ -35,8 +36,8 @@ export default function App({ Component, pageProps }: AppProps) {
         
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="سابیکس - خرید انواع اکانت و لایسنس اورجینال" />
-        <meta name="twitter:description" content="خرید قانونی انواع اکانت و لایسنس اورجینال با فعال‌سازی آنی" />
+         <meta name="twitter:title" content="سابیکس - انتخاب اکانت هوش مصنوعی" />
+         <meta name="twitter:description" content="راهنمای مقایسه و انتخاب اکانت‌های هوش مصنوعی" />
         
         {/* Theme Color for mobile browsers */}
         <meta name="theme-color" content="#070a0d" />

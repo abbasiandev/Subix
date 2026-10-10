@@ -42,7 +42,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
 
       <NavigationBar />
 
-      <main className="product-detail-page">
+         <main id="main-content" tabIndex={-1} className="product-detail-page rive-product-page">
         {/* Hero Section */}
         <section className="product-hero">
           <div className="hero-container">
@@ -50,7 +50,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
               {/* Back Button */}
               <ScrollReveal direction="left">
                 <button
-                  onClick={() => router.push('/#products')}
+                  onClick={() => router.push('/products')}
                   className="back-button"
                 >
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -62,7 +62,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  بازگشت به محصولات
+                   بازگشت به کاتالوگ
                 </button>
               </ScrollReveal>
 
@@ -127,7 +127,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
                           strokeLinejoin="round"
                         />
                       </svg>
-                      خرید و دریافت فوری
+                       بررسی مسیر دریافت
                     </button>
 
                     {/* Trust Indicators */}
@@ -139,7 +139,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
                             fill="currentColor"
                           />
                         </svg>
-                        <span>تحویل فوری</span>
+                         <span>جزئیات شفاف</span>
                       </div>
                       <div className="trust-item">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -151,7 +151,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
                           />
                           <circle cx="10" cy="9" r="2" fill="currentColor" />
                         </svg>
-                        <span>پرداخت امن</span>
+                         <span>مدت مشخص</span>
                       </div>
                       <div className="trust-item">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -162,7 +162,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
                           />
                           <path d="M7 10L9 12L13 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                         </svg>
-                        <span>گارانتی بازگشت وجه</span>
+                         <span>پشتیبانی تلگرام</span>
                       </div>
                     </div>
                   </div>
@@ -215,7 +215,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
                   <div className="step-number">1</div>
                   <h3 className="step-title">انتخاب محصول</h3>
                   <p className="step-description">
-                    محصول مورد نظر خود را انتخاب کنید
+                     قابلیت‌ها و مدت اکانت را بررسی کنید
                   </p>
                 </div>
               </ScrollReveal>
@@ -225,7 +225,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
                   <div className="step-number">2</div>
                   <h3 className="step-title">ورود شماره موبایل</h3>
                   <p className="step-description">
-                    با شماره موبایل خود وارد شوید
+                     اطلاعات لازم برای ادامه را تکمیل کنید
                   </p>
                 </div>
               </ScrollReveal>
@@ -233,9 +233,9 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
               <ScrollReveal direction="up" delay={200}>
                 <div className="step-card">
                   <div className="step-number">3</div>
-                  <h3 className="step-title">پرداخت امن</h3>
+                   <h3 className="step-title">ادامه در مسیر دریافت</h3>
                   <p className="step-description">
-                    از طریق درگاه امن پرداخت کنید
+                     در نسخه عملیاتی، مرحله دریافت از همین مسیر ادامه پیدا می‌کند
                   </p>
                 </div>
               </ScrollReveal>
@@ -243,9 +243,9 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
               <ScrollReveal direction="up" delay={300}>
                 <div className="step-card">
                   <div className="step-number">4</div>
-                  <h3 className="step-title">دریافت فوری</h3>
+                   <h3 className="step-title">دریافت پس از تأیید</h3>
                   <p className="step-description">
-                    اشتراک را بلافاصله دریافت کنید
+                     وضعیت اکانت را از حساب کاربری پیگیری کنید
                   </p>
                 </div>
               </ScrollReveal>

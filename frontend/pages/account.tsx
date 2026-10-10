@@ -262,10 +262,10 @@ export default function AccountPage() {
                     </div>
                     <h3>هنوز اشتراک فعالی ندارید</h3>
                     <p>
-                      شما تاکنون اشتراکی خریداری نکرده‌اید. با خرید هر یک از سرویس‌های هوش مصنوعی یا توسعه، مشخصات اکانت بلافاصله در این بخش قرار می‌گیرد.
+                       هنوز سفارشی در حساب شما ثبت نشده است. پس از فعال شدن مسیر واقعی سفارش، وضعیت اکانت‌های خریداری‌شده در این بخش نمایش داده می‌شود.
                     </p>
-                    <Link href="/#products" className="browse-button">
-                      مشاهده کاتالوگ محصولات سابیکس
+                     <Link href="/products" className="browse-button">
+                       مشاهده کاتالوگ اکانت‌ها
                     </Link>
                   </div>
                 ) : (
@@ -327,7 +327,7 @@ export default function AccountPage() {
                             <span className="label">تاریخ انقضا:</span>
                             <span className="value">{sub.expiryDate}</span>
                           </div>
-                          <Link href="/#products" className="renew-button">
+                           <Link href="/products" className="renew-button">
                             تمدید اشتراک
                           </Link>
                         </div>
