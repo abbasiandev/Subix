@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 465" role="img" aria-labelledby="title desc">
+  <title id="title">Research and writing</title><desc id="desc">Abstract blue research workspace composition</desc>
+  <defs><linearGradient id="bg" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#07152b"/><stop offset=".6" stop-color="#182f68"/><stop offset="1" stop-color="#7b61ff"/></linearGradient></defs>
+  <rect width="800" height="465" fill="url(#bg)"/><circle cx="640" cy="85" r="150" fill="#00f5ff" opacity=".18"/><path d="M105 115h400v270H105z" fill="#081125" stroke="#00f5ff" stroke-opacity=".55" stroke-width="3"/><path d="M150 175h250M150 220h310M150 265h215M150 310h270" stroke="#dff" stroke-opacity=".6" stroke-width="10" stroke-linecap="round"/><path d="M555 155l105 105-105 105-45-45 60-60-60-60z" fill="none" stroke="#ff8a66" stroke-width="14" stroke-linejoin="round"/><text x="48" y="72" fill="#00f5ff" font-family="monospace" font-size="18" letter-spacing="4">PATH / 02</text><text x="48" y="410" fill="#fff" font-family="Arial,sans-serif" font-size="34" font-weight="700">RESEARCH / WRITE</text>
+</svg>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 465" role="img" aria-labelledby="title desc">
+  <title id="title">Developer workbench</title><desc id="desc">Abstract cyan developer terminal composition</desc>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#031722"/><stop offset=".6" stop-color="#0c4c66"/><stop offset="1" stop-color="#00d9d2"/></linearGradient></defs>
+  <rect width="800" height="465" fill="url(#bg)"/><rect x="100" y="112" width="590" height="255" rx="8" fill="#03121c" stroke="#00f5ff" stroke-opacity=".65" stroke-width="3"/><circle cx="130" cy="140" r="7" fill="#ff795e"/><circle cx="155" cy="140" r="7" fill="#c2ef75"/><circle cx="180" cy="140" r="7" fill="#00f5ff"/><path d="m175 230 62 48-62 48M300 326h180" fill="none" stroke="#fff" stroke-opacity=".82" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><text x="48" y="72" fill="#00f5ff" font-family="monospace" font-size="18" letter-spacing="4">PATH / 06</text><text x="48" y="410" fill="#fff" font-family="Arial,sans-serif" font-size="34" font-weight="700">DEV WORKBENCH</text>
+</svg>

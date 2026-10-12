@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 465" role="img" aria-labelledby="title desc">
+  <title id="title">Music and audio</title><desc id="desc">Abstract coral audio waveform composition</desc>
+  <defs><linearGradient id="bg" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#260912"/><stop offset=".5" stop-color="#6b1d40"/><stop offset="1" stop-color="#ff795e"/></linearGradient></defs>
+  <rect width="800" height="465" fill="url(#bg)"/><path d="M90 250h28v-42h28v84h28V155h28v190h28V112h28v275h28V165h28v175h28V135h28v235h28V185h28v130h28v-75h28v10h28" fill="none" stroke="#ffe7de" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="650" cy="115" r="52" fill="none" stroke="#00f5ff" stroke-opacity=".55" stroke-width="3"/><text x="48" y="72" fill="#ffb09e" font-family="monospace" font-size="18" letter-spacing="4">PATH / 05</text><text x="48" y="410" fill="#fff" font-family="Arial,sans-serif" font-size="34" font-weight="700">MUSIC / AUDIO</text>
+</svg>
