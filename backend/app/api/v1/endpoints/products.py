@@ -8,6 +8,12 @@ from app.services.product import ProductService
 router = APIRouter(prefix="/products", tags=["products"])
 
 
+@router.get("/catalog-prices")
+def catalog_prices():
+    prices, updated_at = ProductService().list_catalog_price_overrides()
+    return {"prices": prices, "updated_at": updated_at}
+
+
 @router.get("", response_model=List[ProductOut])
 def list_products(category: Optional[str] = Query(None)):
     return ProductService().list_active(category=category)

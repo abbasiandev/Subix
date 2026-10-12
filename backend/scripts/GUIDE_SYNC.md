@@ -8,6 +8,9 @@ source URLs, hostnames, or source branding.
 
 ## Recommended workflow: one private source file, one mergeable public file
 
+The private reference host is configured only on the server. It is never sent
+to the browser and is not written into the public guide catalog.
+
 ### 1. Export all private guide data
 
 With `GUIDE_SOURCE_URL` configured in `backend/.env.guide-sync`, run:

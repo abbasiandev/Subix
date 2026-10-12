@@ -17,6 +17,16 @@ def _row_to_product(row) -> ProductOut:
 
 class ProductService:
 
+    def list_catalog_price_overrides(self) -> tuple[dict[str, float], str | None]:
+        rs = execute(
+            "SELECT slug, price, MAX(updated_at) OVER () FROM catalog_price_overrides"
+        )
+        if not rs.rows:
+            return {}, None
+        prices = {str(row.values[0]): float(row.values[1]) for row in rs.rows}
+        updated_at = str(rs.rows[0].values[2]) if rs.rows[0].values[2] else None
+        return prices, updated_at
+
     def list_active(self, category: Optional[str] = None) -> List[ProductOut]:
         if category:
             rs = execute(

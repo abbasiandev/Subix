@@ -154,6 +154,12 @@ export async function getProducts(category?: string) {
     return request<Product[]>(`/api/v1/products${qs}`);
 }
 
+export async function getCatalogPriceOverrides() {
+    return request<{ prices: Record<string, number>; updated_at: string | null }>(
+        "/api/v1/products/catalog-prices"
+    );
+}
+
 export async function getCategories() {
     return request<string[]>("/api/v1/products/categories");
 }
@@ -171,6 +177,16 @@ export async function updateProductPrice(id: number, price: number) {
         method: "PATCH",
         body: JSON.stringify({price}),
     });
+}
+
+export async function syncCatalogPrices() {
+    return adminRequest<{
+        matched: number;
+        catalog_products: number;
+        source_products: number;
+        backend_products_updated: number;
+        updated_at: string;
+    }>("/api/v1/admin/prices/sync", {method: "POST", body: JSON.stringify({})});
 }
 
 export async function createOrder(product_id: number) {
