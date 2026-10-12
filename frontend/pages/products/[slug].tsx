@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { GetStaticProps, GetStaticPaths } from 'next';
 import Image from 'next/image';
@@ -9,6 +9,7 @@ import { ScrollReveal } from '@/components/Animations/ScrollReveal';
 import { products, Product, getProductBySlug } from '@/data/products';
 import { asset } from '@/lib/assets';
 import { designSystem } from '@/styles/apple-design-system';
+import { loadLiveCatalog } from '@/lib/live-prices';
 
 interface ProductDetailPageProps {
   product: Product;
@@ -21,23 +22,32 @@ interface ProductDetailPageProps {
 const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
   const router = useRouter();
   const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
+  const [liveProduct, setLiveProduct] = useState(product);
+
+  useEffect(() => {
+    loadLiveCatalog([product]).then(([updated]) => {
+      if (updated) setLiveProduct(updated);
+    }).catch(() => undefined);
+  }, [product]);
+
+  const displayedProduct = liveProduct;
 
   if (router.isFallback) {
     return <div>در حال بارگذاری...</div>;
   }
 
-  const discountPercentage = product.originalPrice 
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+  const discountPercentage = displayedProduct.originalPrice
+    ? Math.round(((displayedProduct.originalPrice - displayedProduct.price) / displayedProduct.originalPrice) * 100)
     : 0;
 
   return (
     <>
       <Head>
-        <title>{product.name} - سابیکس</title>
-        <meta name="description" content={product.description} />
-        <meta property="og:title" content={`${product.name} - سابیکس`} />
-        <meta property="og:description" content={product.description} />
-        <meta property="og:image" content={asset(product.brandLogoPath)} />
+        <title>{displayedProduct.name} - سابیکس</title>
+        <meta name="description" content={displayedProduct.description} />
+        <meta property="og:title" content={`${displayedProduct.name} - سابیکس`} />
+        <meta property="og:description" content={displayedProduct.description} />
+        <meta property="og:image" content={asset(displayedProduct.brandLogoPath)} />
       </Head>
 
       <NavigationBar />
@@ -72,14 +82,14 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
                   <div className="product-image-container">
                     <div className="product-icon-large">
                       <Image
-                        src={asset(product.brandLogoPath)}
-                        alt={product.name}
+                         src={asset(displayedProduct.brandLogoPath)}
+                         alt={displayedProduct.name}
                         width={200}
                         height={200}
                         className="brand-icon"
                       />
                     </div>
-                    {product.hasDiscount && (
+                    {displayedProduct.hasDiscount && (
                       <div className="discount-badge-large">
                         <span>{discountPercentage}%</span>
                         <span>تخفیف</span>
@@ -91,25 +101,25 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
                 {/* Product Info */}
                 <ScrollReveal direction="left">
                   <div className="product-info">
-                    <div className="category-badge">{getCategoryLabel(product.category)}</div>
+                    <div className="category-badge">{getCategoryLabel(displayedProduct.category)}</div>
                     
-                    <h1 className="product-title">{product.name}</h1>
+                    <h1 className="product-title">{displayedProduct.name}</h1>
                     
-                    <p className="product-description">{product.description}</p>
+                    <p className="product-description">{displayedProduct.description}</p>
 
                     {/* Pricing */}
                     <div className="pricing-section">
-                      {product.hasDiscount && product.originalPrice && (
+                      {displayedProduct.hasDiscount && displayedProduct.originalPrice && (
                         <span className="original-price">
-                          {product.originalPrice.toLocaleString('fa-IR')} تومان
+                          {displayedProduct.originalPrice.toLocaleString('fa-IR')} تومان
                         </span>
                       )}
                       <div className="current-price">
                         <span className="price-amount">
-                          {product.price.toLocaleString('fa-IR')}
+                           {displayedProduct.price.toLocaleString('fa-IR')}
                         </span>
                         <span className="price-currency">تومان</span>
-                        <span className="price-period">/ {product.duration}</span>
+                         <span className="price-period">/ {displayedProduct.duration}</span>
                       </div>
                     </div>
 
@@ -180,7 +190,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
             </ScrollReveal>
 
             <div className="features-grid">
-              {product.features.map((feature, index) => (
+              {displayedProduct.features.map((feature, index) => (
                 <ScrollReveal key={index} direction="up" delay={index * 50}>
                   <div className="feature-item">
                     <div className="feature-icon">
@@ -259,7 +269,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
       {/* Purchase Modal */}
       {isPurchaseModalOpen && (
         <PurchaseModal
-          product={product}
+          product={displayedProduct}
           onClose={() => setIsPurchaseModalOpen(false)}
         />
       )}

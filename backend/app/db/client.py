@@ -179,6 +179,13 @@ MIGRATIONS = [
         created_at    TEXT    NOT NULL DEFAULT (datetime('now'))
     )
     """,
+    """
+    CREATE TABLE IF NOT EXISTS catalog_price_overrides (
+        slug       TEXT PRIMARY KEY,
+        price      REAL NOT NULL,
+        updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    )
+    """,
 ]
 
 

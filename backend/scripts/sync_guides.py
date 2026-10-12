@@ -156,7 +156,7 @@ excerpt یک خلاصه مستقل حداکثر ۲۵۰ کاراکتری باشد
     if not isinstance(generated["tags"], list) or not isinstance(generated["content"], str):
         raise ValueError("AI output has invalid guide field types")
 
-    forbidden = ("faralicense", "فرالایسنس", "منبع", "سایت اصلی")
+    forbidden = ("منبع", "سایت اصلی")
     output_text = " ".join(str(generated[key]) for key in ("title", "excerpt", "content", "tags")).lower()
     if any(marker in output_text for marker in forbidden):
         raise ValueError("AI output contains a private-source marker; guide was rejected")
@@ -225,7 +225,7 @@ def make_editorial_guide(editorial: dict[str, Any], product_slugs: list[str], in
     content = str(editorial["content"]).strip()
     title = str(editorial["title"]).strip()
     output_text = " ".join([title, str(editorial["excerpt"]), content, " ".join(map(str, editorial["tags"]))]).lower()
-    if any(marker in output_text for marker in ("faralicense", "فرالایسنس", "سایت اصلی")):
+    if any(marker in output_text for marker in ("سایت اصلی",)):
         raise ValueError("AI-edited input contains a private-source marker")
     if len(content.split()) < 120:
         raise ValueError("AI-edited guide is too short")

@@ -131,6 +131,12 @@ def list_categories():
     return jsonify(ProductService().categories())
 
 
+@app.route("/api/v1/products/catalog-prices", methods=["GET"])
+def catalog_prices():
+    prices, updated_at = ProductService().list_catalog_price_overrides()
+    return jsonify({"prices": prices, "updated_at": updated_at})
+
+
 @app.route("/api/v1/products/<int:product_id>", methods=["GET"])
 def get_product(product_id: int):
     product = ProductService().get(product_id)
@@ -256,6 +262,30 @@ def admin_update_price(product_id: int):
         return jsonify({"detail": "Product not found"}), 404
     
     return jsonify(product.model_dump(mode="json"))
+
+
+@app.route("/api/v1/admin/prices/sync", methods=["POST", "OPTIONS"])
+def admin_sync_prices():
+    if request.method == "OPTIONS":
+        return "", 204
+
+    auth_err = verify_admin_key_flask()
+    if auth_err:
+        return auth_err
+
+    try:
+        from scripts.sync_prices import sync_catalog_prices
+
+        result = sync_catalog_prices(
+            source_url=settings.price_source_url,
+            paths=[part.strip() for part in settings.price_source_paths.split(",") if part.strip()],
+            minimum_score=settings.price_sync_min_score,
+            minimum_matches=settings.price_sync_min_matches,
+        )
+        return jsonify(result)
+    except (OSError, ValueError, RuntimeError) as exc:
+        app.logger.exception("Catalog price synchronization failed")
+        return jsonify({"detail": str(exc)}), 502
 
 
 if settings.enable_webhook:

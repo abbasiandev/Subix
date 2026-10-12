@@ -22,8 +22,10 @@ import json
 import os
 import re
 import sys
+import threading
 import unicodedata
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any, Iterable, Sequence
@@ -39,6 +41,7 @@ ROOT_DIR = BACKEND_DIR.parent
 FRONTEND_PRODUCTS = ROOT_DIR / "frontend/data/products.ts"
 PRICE_OVERRIDES = ROOT_DIR / "frontend/data/price-overrides.json"
 PRIVATE_ENV_FILE = BACKEND_DIR / ".env.price-sync"
+SYNC_LOCK = threading.Lock()
 
 PERSIAN_DIGITS = str.maketrans("۰۱۲۳۴۵۶۷۸۹", "0123456789")
 ARABIC_DIGITS = str.maketrans("٠١٢٣٤٥٦٧٨٩", "0123456789")
@@ -362,6 +365,71 @@ def write_overrides(matches: Sequence[ProductMatch], path: Path = PRICE_OVERRIDE
         json.dumps(dict(sorted(overrides.items())), ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+
+
+def write_database_overrides(matches: Sequence[ProductMatch]) -> None:
+    """Persist the public catalog price map without persisting source metadata."""
+
+    from app.db.client import execute
+
+    for match in matches:
+        execute(
+            """
+            INSERT INTO catalog_price_overrides (slug, price, updated_at)
+            VALUES (?, ?, datetime('now'))
+            ON CONFLICT(slug) DO UPDATE SET
+                price=excluded.price,
+                updated_at=excluded.updated_at
+            """,
+            [match.catalog.slug, match.source.price],
+        )
+
+
+def sync_catalog_prices(
+    source_url: str,
+    paths: Sequence[str],
+    minimum_score: float = 0.62,
+    minimum_matches: int = 1,
+) -> dict[str, Any]:
+    """Fetch, match and persist prices for the one-click admin action.
+
+    The source URL is read only at runtime. Only slug/price pairs and a server
+    timestamp are persisted; source HTML, URLs and names are discarded.
+    """
+
+    if not source_url:
+        raise ValueError("Private price source is not configured on the server")
+    normalized_paths = [path for path in paths if path] or ["/"]
+    with SYNC_LOCK:
+        catalog = load_catalog()
+        source = fetch_source_records(source_url, normalized_paths)
+        matches = match_products(catalog, source, minimum_score=minimum_score)
+        if len(matches) < minimum_matches:
+            raise RuntimeError(
+                f"Only {len(matches)} catalog prices matched; refusing to publish the result"
+            )
+        write_database_overrides(matches)
+
+        # Keep the transactional backend catalog in sync when a matching
+        # product exists there. The public static catalog may contain more
+        # products than the purchase database, so unmatched rows are expected.
+        database_matches = match_products(
+            [
+                PriceRecord(name=record.name, name_en=record.name, slug=str(product_id))
+                for product_id, record in load_database_records()
+            ],
+            source,
+            minimum_score=minimum_score,
+        )
+        updated_backend = apply_database_matches(database_matches)
+
+    return {
+        "matched": len(matches),
+        "catalog_products": len(catalog),
+        "source_products": len(source),
+        "backend_products_updated": updated_backend,
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+    }
 
 
 def print_report(matches: Sequence[ProductMatch], catalog_count: int, source_count: int) -> None:

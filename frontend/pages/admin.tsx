@@ -3,6 +3,7 @@ import {
   getAdminProducts,
   Product,
   setAdminKey,
+  syncCatalogPrices,
   updateProductPrice,
 } from "@/lib/api";
 import GlassContainer from "@/components/GlassContainer";
@@ -32,6 +33,8 @@ export default function AdminPage() {
     Record<number, { type: "ok" | "err"; msg: string }>
   >({});
   const [savingId, setSavingId] = useState<number | null>(null);
+  const [syncingPrices, setSyncingPrices] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = sessionStorage.getItem(ADMIN_KEY_STORAGE);
@@ -130,6 +133,25 @@ export default function AdminPage() {
     }
   }
 
+  async function handleSyncPrices() {
+    setSyncingPrices(true);
+    setSyncStatus(null);
+    setFetchError(null);
+    try {
+      const result = await syncCatalogPrices();
+      const items = await getAdminProducts();
+      setProducts(items);
+      const nextDrafts: Record<number, string> = {};
+      for (const item of items) nextDrafts[item.id] = String(item.price);
+      setDrafts(nextDrafts);
+      setSyncStatus(`به‌روزرسانی انجام شد: ${result.matched} قیمت تطبیق داده شد`);
+    } catch (e) {
+      setSyncStatus(e instanceof Error ? e.message : "به‌روزرسانی قیمت‌ها ناموفق بود");
+    } finally {
+      setSyncingPrices(false);
+    }
+  }
+
   if (!authenticated) {
     return (
       <div className="min-h-screen gradient-mesh flex items-center justify-center p-4">
@@ -192,17 +214,33 @@ export default function AdminPage() {
           <div>
             <h1 className="text-3xl font-black text-white mb-1">مدیریت قیمت‌ها</h1>
             <p className="text-white/70 text-sm">
-              تغییرات بلافاصله در فروشگاه اعمال می‌شود
+              تغییرات دستی و به‌روزرسانی اینترنتی بلافاصله در فروشگاه اعمال می‌شود
             </p>
           </div>
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="glass-subtle px-5 py-3 rounded-xl text-white font-bold hover:bg-white/10 transition-all"
-          >
-            خروج
-          </button>
+          <div className="flex flex-wrap gap-3 justify-end">
+            <button
+              type="button"
+              onClick={handleSyncPrices}
+              disabled={syncingPrices}
+              className="bg-teal-400 text-slate-950 px-5 py-3 rounded-xl font-bold hover:bg-teal-300 disabled:opacity-50 transition-all"
+            >
+              {syncingPrices ? "در حال دریافت..." : "به‌روزرسانی قیمت‌ها"}
+            </button>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="glass-subtle px-5 py-3 rounded-xl text-white font-bold hover:bg-white/10 transition-all"
+            >
+              خروج
+            </button>
+          </div>
         </GlassContainer>
+
+        {syncStatus && (
+          <GlassContainer elevation="light" className="rounded-2xl p-4 mb-6">
+            <p className="text-white text-center">{syncStatus}</p>
+          </GlassContainer>
+        )}
 
         <main className="space-y-4">
           {loading && (
