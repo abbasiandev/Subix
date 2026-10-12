@@ -14,19 +14,25 @@ interface ArticleCardProps {
  * Displays article preview with real image and metadata
  */
 export const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
+  const imageSource = asset(article.imagePath);
+
   return (
     <>
       <Link href={`/blog/${article.slug}`}>
         <div className="article-card">
           {/* Article Image */}
           <div className="article-image-container">
-            <Image
-              src={asset(article.imagePath)}
-              alt={article.title}
-              fill
-              className="article-image"
-              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            />
+            {imageSource.startsWith('data:') ? (
+              <img src={imageSource} alt={article.title} className="article-image" />
+            ) : (
+              <Image
+                src={imageSource}
+                alt={article.title}
+                fill
+                className="article-image"
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              />
+            )}
             
             {/* Category Badge */}
             <span className="category-badge">
@@ -82,6 +88,9 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
         }
 
         .article-image-container :global(.article-image) {
+          width: 100%;
+          height: 100%;
+          display: block;
           object-fit: cover;
           transition: transform ${designSystem.animation.duration.slow} ${designSystem.animation.easing.default};
         }

@@ -5,32 +5,9 @@ import Link from 'next/link';
 import DesktopContainer from '../../components/layouts/DesktopContainer';
 import BottomNav from '../../components/BottomNav';
 import GlassContainer from '../../components/GlassContainer';
-import { blogPosts, blogCategories, type BlogPost } from '../../data/blog-posts';
-import { articles, type Article } from '../../data/articles';
+import { blogCategories, type BlogPost } from '../../data/blog-posts';
+import { getUnifiedPosts } from '../../data/unified-posts';
 import { asset } from '@/lib/assets';
-
-function getUnifiedPosts(): BlogPost[] {
-  const mappedArticles: BlogPost[] = articles.map((a: Article) => ({
-    slug: a.slug,
-    title: a.title,
-    excerpt: a.excerpt,
-    content: a.content,
-    coverImage: a.imagePath,
-    category: a.category === 'guide' ? 'guides' : a.category === 'comparison' ? 'comparison' : 'tips',
-    tags: a.tags || [],
-    author: {
-      name: a.author || 'تیم سابیکس',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
-    },
-    publishedAt: a.publishDate,
-    readTime: a.readTime,
-    views: 150,
-  }));
-
-  const postSlugs = new Set(blogPosts.map(p => p.slug));
-  const uniqueArticles = mappedArticles.filter(a => !postSlugs.has(a.slug));
-  return [...blogPosts, ...uniqueArticles];
-}
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const allPosts = getUnifiedPosts();
@@ -61,12 +38,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   };
 };
 
-export default function BlogPost({ post: initialPost }: { post: typeof blogPosts[0] }) {
+export default function BlogPost({ post: initialPost }: { post: BlogPost }) {
   const router = useRouter();
   const isTelegram = typeof window !== 'undefined' && window.Telegram?.WebApp;
 
   const post = initialPost;
-  const relatedPosts = blogPosts
+  const relatedPosts = getUnifiedPosts()
     .filter(p => p.slug !== post.slug && p.category === post.category)
     .slice(0, 3);
 
@@ -100,8 +77,8 @@ function BlogPostContent({
   relatedPosts, 
   formatDate 
 }: { 
-  post: typeof blogPosts[0]; 
-  relatedPosts: typeof blogPosts;
+  post: BlogPost;
+  relatedPosts: BlogPost[];
   formatDate: (date: string) => string;
 }) {
   return (

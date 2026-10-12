@@ -74,10 +74,10 @@ def generate_comparison_report(current_products: List[Dict], scraped_products: L
     """Generate price comparison report"""
     report = []
     report.append("=" * 80)
-    report.append("PRICE COMPARISON REPORT - SUBIX VS FARALICENSE.IR")
+    report.append("PRICE COMPARISON REPORT - SUBIX VS REFERENCE CATALOG")
     report.append("=" * 80)
     report.append(f"Subix Products: {len(current_products)}")
-    report.append(f"Faralicense Products: {len(scraped_products)}")
+    report.append(f"Reference Products: {len(scraped_products)}")
     report.append("")
     
     # Find matches
@@ -87,7 +87,7 @@ def generate_comparison_report(current_products: List[Dict], scraped_products: L
         if best_match and score > 0.5:  # Minimum 50% similarity
             matches.append({
                 'subix': current,
-                'faralicense': best_match,
+                'reference': best_match,
                 'similarity': score
             })
     
@@ -97,26 +97,26 @@ def generate_comparison_report(current_products: List[Dict], scraped_products: L
     
     # Detailed comparison
     total_subix_price = 0
-    total_faralicense_price = 0
+    total_reference_price = 0
     
     for i, match in enumerate(matches, 1):
         subix = match['subix']
-        faralicense = match['faralicense']
+        reference = match['reference']
         similarity = match['similarity']
         
-        price_diff = subix['price'] - faralicense['price']
-        price_diff_pct = (price_diff / faralicense['price'] * 100) if faralicense['price'] > 0 else 0
+        price_diff = subix['price'] - reference['price']
+        price_diff_pct = (price_diff / reference['price'] * 100) if reference['price'] > 0 else 0
         
         total_subix_price += subix['price']
-        total_faralicense_price += faralicense['price']
+        total_reference_price += reference['price']
         
         report.append(f"\n{i}. MATCH (Similarity: {similarity*100:.1f}%)")
         report.append(f"   Subix:        {subix['name']}")
-        report.append(f"   Faralicense:  {faralicense['name']}")
+        report.append(f"   Reference:   {reference['name']}")
         report.append(f"   Category:     {subix['category']}")
         report.append(f"   ")
         report.append(f"   Subix Price:       {subix['price']:>15,.0f} تومان")
-        report.append(f"   Faralicense Price: {faralicense['price']:>15,.0f} تومان")
+        report.append(f"   Reference Price:   {reference['price']:>15,.0f} تومان")
         report.append(f"   Difference:        {price_diff:>15,.0f} تومان ({price_diff_pct:+.1f}%)")
         
         if price_diff > 0:
@@ -134,16 +134,16 @@ def generate_comparison_report(current_products: List[Dict], scraped_products: L
     report.append("=" * 80)
     if matches:
         avg_subix = total_subix_price / len(matches)
-        avg_faralicense = total_faralicense_price / len(matches)
-        avg_diff = avg_subix - avg_faralicense
-        avg_diff_pct = (avg_diff / avg_faralicense * 100) if avg_faralicense > 0 else 0
+        avg_reference = total_reference_price / len(matches)
+        avg_diff = avg_subix - avg_reference
+        avg_diff_pct = (avg_diff / avg_reference * 100) if avg_reference > 0 else 0
         
         report.append(f"Average Subix Price:       {avg_subix:,.0f} تومان")
-        report.append(f"Average Faralicense Price: {avg_faralicense:,.0f} تومان")
+        report.append(f"Average Reference Price:   {avg_reference:,.0f} تومان")
         report.append(f"Average Difference:        {avg_diff:+,.0f} تومان ({avg_diff_pct:+.1f}%)")
         
-        cheaper_count = sum(1 for m in matches if m['subix']['price'] < m['faralicense']['price'])
-        same_count = sum(1 for m in matches if m['subix']['price'] == m['faralicense']['price'])
+        cheaper_count = sum(1 for m in matches if m['subix']['price'] < m['reference']['price'])
+        same_count = sum(1 for m in matches if m['subix']['price'] == m['reference']['price'])
         expensive_count = len(matches) - cheaper_count - same_count
         
         report.append("")
@@ -186,7 +186,7 @@ def main():
         
     except FileNotFoundError:
         print(f"✗ Error: Scraped products file not found")
-        print(f"Hint: Run 'python -m scripts.scrape_faralicense' first")
+        print("Hint: Run the private price sync command first")
     except Exception as e:
         print(f"✗ Error: {e}")
 

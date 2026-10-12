@@ -1,4 +1,5 @@
 import { asset } from '@/lib/assets';
+import priceOverrides from './price-overrides.json';
 
 /**
  * Subix Official Products Catalog
@@ -26,7 +27,7 @@ export interface Product {
   popular?: boolean;
 }
 
-export const products: Product[] = [
+const catalogProducts: Product[] = [
   {
     "id": 1,
     "name": "اکانت لئوناردو هوش مصنوعی Leonardo AI Pro",
@@ -3068,6 +3069,31 @@ export const products: Product[] = [
     "popular": false
   }
 ];
+
+type PriceOverrides = Record<string, number>;
+
+/**
+ * Prices are kept as a small generated overlay so the private price update
+ * process never has to rewrite product copy or ship its source metadata.
+ */
+const normalizedPriceOverrides = priceOverrides as PriceOverrides;
+
+export const products: Product[] = catalogProducts.map((product) => {
+  const updatedPrice = normalizedPriceOverrides[product.slug];
+  if (!Number.isFinite(updatedPrice) || updatedPrice <= 0) return product;
+
+  const originalPrice =
+    product.originalPrice && product.originalPrice > updatedPrice
+      ? product.originalPrice
+      : null;
+
+  return {
+    ...product,
+    price: updatedPrice,
+    originalPrice,
+    hasDiscount: originalPrice !== null,
+  };
+});
 
 export const getProductsByCategory = (category: Product['category']): Product[] => {
   return products.filter(p => p.category === category);

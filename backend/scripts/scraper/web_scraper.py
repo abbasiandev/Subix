@@ -1,4 +1,5 @@
 import asyncio
+import os
 from playwright.async_api import async_playwright, Browser, Page, TimeoutError as PlaywrightTimeout
 
 
@@ -17,13 +18,17 @@ class WebScraper:
         )
         return self.browser
     
-    async def navigate_to_products(self, page: Page) -> None:
+    async def navigate_to_products(self, page: Page, source_url: str | None = None) -> None:
         await page.set_extra_http_headers({
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         })
         
+        target_url = source_url or os.getenv('PRICE_SOURCE_URL')
+        if not target_url:
+            raise Exception('Set PRICE_SOURCE_URL before running the scraper')
+
         try:
-            await page.goto('https://faralicense.ir/', timeout=self.timeout)
+            await page.goto(target_url, timeout=self.timeout)
             print("✓ Navigated to target website")
         except PlaywrightTimeout:
             raise Exception("Timeout while loading target website")
