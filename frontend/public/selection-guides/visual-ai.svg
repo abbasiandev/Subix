@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 465" role="img" aria-labelledby="title desc">
+  <title id="title">Visual AI</title><desc id="desc">Abstract iridescent orb for visual AI tools</desc>
+  <defs><radialGradient id="orb"><stop stop-color="#fff"/><stop offset=".24" stop-color="#ffb5f4"/><stop offset=".65" stop-color="#8b5cf6"/><stop offset="1" stop-color="#14052b"/></radialGradient><linearGradient id="bg"><stop stop-color="#15052a"/><stop offset="1" stop-color="#3d0c48"/></linearGradient></defs>
+  <rect width="800" height="465" fill="url(#bg)"/><circle cx="420" cy="225" r="148" fill="url(#orb)"/><ellipse cx="420" cy="225" rx="220" ry="55" fill="none" stroke="#00f5ff" stroke-opacity=".55" stroke-width="3" transform="rotate(-24 420 225)"/><ellipse cx="420" cy="225" rx="200" ry="80" fill="none" stroke="#ff4ecd" stroke-opacity=".5" stroke-width="2" transform="rotate(38 420 225)"/><text x="48" y="72" fill="#ffb3f0" font-family="monospace" font-size="18" letter-spacing="4">PATH / 03</text><text x="48" y="410" fill="#fff" font-family="Arial,sans-serif" font-size="34" font-weight="700">VISUAL AI</text>
+</svg>
