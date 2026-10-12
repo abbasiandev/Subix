@@ -34,6 +34,6 @@ export default function HomePage() {
        <section id="articles" className="guides-section site-container" aria-labelledby="guides-title"><div className="editorial-heading story-reveal"><span className="eyebrow">۰۴ · راهنمای انتخاب</span><h2 id="guides-title">کمتر جست‌وجو کنید.<br/><span className="accent-text">بهتر انتخاب کنید.</span></h2><p>راهنماها و مقایسه‌هایی برای فهمیدن تفاوت ابزارها قبل از خرید.</p></div><ArticleGrid showFilters /></section>
        <section className="closing-section site-container story-reveal" aria-labelledby="closing-title"><span className="eyebrow">سابیکس، مسیر کوتاه‌تر انتخاب</span><h2 id="closing-title">اکانت مناسب را<br/><span className="accent-text">پیدا کنید.</span></h2><p>از کاتالوگ شروع کنید یا برای راهنمایی در تلگرام با ما در تماس باشید.</p><a className="site-button" href="/products">مشاهده کاتالوگ اکانت‌ها <span aria-hidden="true">←</span></a></section>
     </main>
-    <Footer />
-  </div>;
+     <Footer />
+   </div>;
 }

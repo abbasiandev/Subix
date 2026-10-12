@@ -13,6 +13,7 @@ export interface BlogPost {
   publishedAt: string;
   readTime: number;
   views?: number;
+  productSlugs?: string[];
 }
 
 export interface BlogCategory {

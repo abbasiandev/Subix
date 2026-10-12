@@ -2,13 +2,14 @@ import asyncio
 import json
 import re
 import math
+import os
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Optional
 import requests
 from bs4 import BeautifulSoup
 
-BASE_URL = "https://faralicense.ir"
+BASE_URL = os.getenv("PRICE_SOURCE_URL", "").rstrip("/")
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
@@ -105,7 +106,9 @@ def generate_slug(name: str, fallback_id: int) -> str:
 
 
 def scrape_products() -> List[Dict]:
-    print("\n🔍 [1/3] Scraping live products from faralicense.ir...")
+    if not BASE_URL:
+        raise RuntimeError("Set PRICE_SOURCE_URL before running the scraper")
+    print("\n🔍 [1/3] Scraping live products from the configured reference catalog...")
     urls_to_scrape = [
         f"{BASE_URL}/",
         f"{BASE_URL}/category/ai",
@@ -213,7 +216,9 @@ def scrape_products() -> List[Dict]:
 
 
 def scrape_articles() -> List[Dict]:
-    print("\n📚 [2/3] Scraping live blog articles from faralicense.ir/blog...")
+    if not BASE_URL:
+        raise RuntimeError("Set PRICE_SOURCE_URL before running the scraper")
+    print("\n📚 [2/3] Scraping live blog articles from the configured reference catalog...")
     blog_index_url = f"{BASE_URL}/blog"
     r = requests.get(blog_index_url, headers=HEADERS, timeout=15)
     if r.status_code != 200:
@@ -224,7 +229,7 @@ def scrape_articles() -> List[Dict]:
     
     # Find all post links
     post_links = set()
-    for a in soup.select('a[href^="/blog/"], a[href*="faralicense.ir/blog/"]'):
+    for a in soup.select('a[href^="/blog/"], a[href*="/blog/"]'):
         href = a.get('href', '')
         slug = href.split('/blog/')[-1].strip('/')
         if slug and slug != 'blog':
@@ -528,14 +533,13 @@ def main():
         json.dump({'articles': articles, 'metadata': {'scraped_at': datetime.now().isoformat(), 'total': len(articles)}}, f, ensure_ascii=False, indent=2)
     print(f"✓ Saved scraped articles to: {articles_json_path}")
     
-    # 3. Update Frontend TS Files
-    write_frontend_products_ts(products, frontend_dir / "data/products.ts")
-    write_frontend_articles_ts(articles, frontend_dir / "data/articles.ts")
-    
+    # 3. Keep article publishing separate. The public guide feed is updated
+    # by scripts.sync_guides after a review of transformed content.
     print("\n" + "=" * 60)
-    print(f"🎉 SCRAPING & WEBSITE SYNC COMPLETE!")
+    print(f"🎉 PRIVATE REFERENCE EXPORT COMPLETE!")
     print(f"  - Products: {len(products)}")
     print(f"  - Articles: {len(articles)}")
+    print("  - No frontend files were changed; use the reviewed sync commands to publish prices and guides.")
     print("=" * 60)
 
 

@@ -57,3 +57,6 @@ pnpm-debug.log*
 # Scraped data (sensitive - benchmark only)
 backend/scripts/scraper/scraped_products.json
 backend/scripts/scraper/price_comparison.txt
+backend/.env.price-sync
+backend/.env.guide-sync
+backend/private/
