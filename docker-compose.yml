@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  subix-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: subix-backend
+    restart: unless-stopped
+    env_file: backend/.env
+    ports:
+      - "127.0.0.1:8002:8000"
+    environment:
+      - PORT=8000
+      - PYTHONUNBUFFERED=1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

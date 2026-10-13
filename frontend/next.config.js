@@ -1,9 +1,12 @@
 /** @type {import('next').NextConfig} */
+const isGhPages = process.env.DEPLOY_TARGET === 'gh-pages';
+const basePath = isGhPages ? '/Subix' : (process.env.NEXT_PUBLIC_BASE_PATH || '');
+
 const nextConfig = {
   output: 'export',
   trailingSlash: true,
-  basePath: process.env.NODE_ENV === 'production' ? '/Subix' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/Subix' : '',
+  basePath: basePath,
+  assetPrefix: basePath,
   reactStrictMode: true,
   swcMinify: true,
   compiler: { removeConsole: process.env.NODE_ENV === 'production' },

@@ -1,4 +1,5 @@
-const BASE = process.env.NODE_ENV === 'production' ? '/Subix' : '';
+const isGhPages = process.env.DEPLOY_TARGET === 'gh-pages';
+const BASE = isGhPages ? '/Subix' : (process.env.NEXT_PUBLIC_BASE_PATH || '');
 
 export function asset(path: string): string {
   if (!path) return '';
