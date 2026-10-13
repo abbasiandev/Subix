@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { designSystem } from '@/styles/apple-design-system';
-import { sendOtp, verifyOtp, setToken } from '@/lib/api';
+import { ApiError, sendOtp } from '@/lib/api';
+import { useAuth } from '@/context/AuthContext';
+import { normalizeIranianPhone, normalizeOtp } from '@/lib/phone';
 
 interface PhoneAuthProps {
   onSuccess: (phoneNumber: string) => void;
@@ -15,12 +17,16 @@ type AuthStep = 'phone' | 'otp';
 export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
   const [step, setStep] = useState<AuthStep>('phone');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [canonicalPhone, setCanonicalPhone] = useState('');
   const [otp, setOtp] = useState(['', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [countdown, setCountdown] = useState(0);
 
   const otpInputs = useRef<(HTMLInputElement | null)[]>([]);
+  const sendInFlight = useRef(false);
+  const verifyInFlight = useRef(false);
+  const { loginWithPhone } = useAuth();
 
   // Countdown timer for resend OTP
   useEffect(() => {
@@ -30,47 +36,61 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
     }
   }, [countdown]);
 
-  const validatePhone = (phone: string): boolean => {
-    const phoneRegex = /^09[0-9]{9}$/;
-    return phoneRegex.test(phone.trim());
-  };
-
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (sendInFlight.current) return;
     setError('');
 
-    const cleanPhone = phoneNumber.trim();
-    if (!validatePhone(cleanPhone)) {
-      setError('شماره موبایل معتبر نیست (مثال: 09123456789)');
+    const cleanPhone = normalizeIranianPhone(phoneNumber);
+    if (!cleanPhone) {
+      setError('شماره موبایل معتبر نیست (مثال: 09123456789 یا +989123456789)');
       return;
     }
 
+    sendInFlight.current = true;
     setIsLoading(true);
 
     try {
       const res = await sendOtp(cleanPhone);
+      setCanonicalPhone(normalizeIranianPhone(res.phone_number) ?? cleanPhone);
       setStep('otp');
-      setCountdown(res.expires_in || 120);
+      setCountdown(res.resend_after ?? 60);
       setTimeout(() => otpInputs.current[0]?.focus(), 100);
-    } catch (err: any) {
-      setError(err.message || 'خطا در ارسال کد تایید');
+    } catch (err: unknown) {
+      const apiError = err instanceof ApiError ? err : null;
+      if (apiError?.status === 429 && apiError.retryAfter !== null) {
+        setCountdown(apiError.retryAfter);
+        setError(`لطفاً ${formatCountdown(apiError.retryAfter)} دیگر برای ارسال کد صبر کنید.`);
+      } else {
+        setError(err instanceof Error ? err.message : 'خطا در ارسال کد تایید');
+      }
     } finally {
+      sendInFlight.current = false;
       setIsLoading(false);
     }
   };
 
   const handleOtpChange = (index: number, value: string) => {
-    if (value && !/^\d$/.test(value)) return;
+    if (isLoading || verifyInFlight.current) return;
+    const digits = normalizeOtp(value);
 
     const newOtp = [...otp];
-    newOtp[index] = value;
+    if (digits.length > 1) {
+      const startIndex = digits.length === 5 ? 0 : index;
+      digits.split('').forEach((digit, offset) => {
+        if (startIndex + offset < 5) newOtp[startIndex + offset] = digit;
+      });
+    } else {
+      newOtp[index] = digits;
+    }
+    setError('');
     setOtp(newOtp);
 
-    if (value && index < 4) {
-      otpInputs.current[index + 1]?.focus();
+    if (digits && index < 4) {
+      otpInputs.current[Math.min(index + digits.length, 4)]?.focus();
     }
 
-    if (newOtp.every(digit => digit !== '')) {
+    if (newOtp.every(digit => digit !== '') && digits) {
       handleOtpSubmit(newOtp.join(''));
     }
   };
@@ -83,9 +103,11 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
 
   const handleOtpPaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 5);
+    if (isLoading || verifyInFlight.current) return;
+    const pastedData = normalizeOtp(e.clipboardData.getData('text'));
     if (!pastedData) return;
 
+    setError('');
     const newOtp = pastedData.split('').concat(Array(5 - pastedData.length).fill(''));
     setOtp(newOtp);
 
@@ -98,39 +120,64 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
   };
 
   const handleOtpSubmit = async (otpCode: string) => {
+    if (verifyInFlight.current || !canonicalPhone) return;
+    verifyInFlight.current = true;
     setError('');
     setIsLoading(true);
 
     try {
-      const res = await verifyOtp(phoneNumber.trim(), otpCode);
-      setToken(res.access_token);
-      localStorage.setItem('subix_token', res.access_token);
-      onSuccess(phoneNumber.trim());
-    } catch (err: any) {
-      setError(err.message || 'کد وارد شده نادرست است');
+      await loginWithPhone(canonicalPhone, otpCode);
+      onSuccess(canonicalPhone);
+    } catch (err: unknown) {
+      const apiError = err instanceof ApiError ? err : null;
+      if (apiError?.status === 429 && apiError.retryAfter !== null) {
+        setCountdown(apiError.retryAfter);
+        setError(`لطفاً ${formatCountdown(apiError.retryAfter)} دیگر صبر کنید.`);
+      } else {
+        setError(err instanceof Error ? err.message : 'کد وارد شده نادرست است');
+      }
       setOtp(['', '', '', '', '']);
       otpInputs.current[0]?.focus();
     } finally {
+      verifyInFlight.current = false;
       setIsLoading(false);
     }
   };
 
   const handleResendOtp = async () => {
-    if (countdown > 0 || isLoading) return;
+    if (countdown > 0 || isLoading || sendInFlight.current || !canonicalPhone) return;
 
+    sendInFlight.current = true;
     setOtp(['', '', '', '', '']);
     setError('');
     setIsLoading(true);
 
     try {
-      const res = await sendOtp(phoneNumber.trim());
-      setCountdown(res.expires_in || 120);
+      const res = await sendOtp(canonicalPhone);
+      setCanonicalPhone(normalizeIranianPhone(res.phone_number) ?? canonicalPhone);
+      setCountdown(res.resend_after ?? 60);
       otpInputs.current[0]?.focus();
-    } catch (err: any) {
-      setError(err.message || 'خطا در ارسال مجدد کد');
+    } catch (err: unknown) {
+      const apiError = err instanceof ApiError ? err : null;
+      if (apiError?.status === 429 && apiError.retryAfter !== null) {
+        setCountdown(apiError.retryAfter);
+        setError(`لطفاً ${formatCountdown(apiError.retryAfter)} دیگر برای ارسال مجدد صبر کنید.`);
+      } else {
+        setError(err instanceof Error ? err.message : 'خطا در ارسال مجدد کد');
+      }
     } finally {
+      sendInFlight.current = false;
       setIsLoading(false);
     }
+  };
+
+  const handleEditPhone = () => {
+    if (isLoading) return;
+    setStep('phone');
+    setCanonicalPhone('');
+    setOtp(['', '', '', '', '']);
+    setCountdown(0);
+    setError('');
   };
 
   const formatCountdown = (seconds: number): string => {
@@ -158,10 +205,16 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
                   id="phone"
                   type="tel"
                   value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  onChange={(e) => {
+                    setPhoneNumber(e.target.value);
+                    setCanonicalPhone('');
+                    setError('');
+                  }}
                   placeholder="09123456789"
                   className={`phone-input ${error ? 'error' : ''}`}
-                  maxLength={11}
+                  maxLength={16}
+                  inputMode="tel"
+                  autoComplete="tel"
                   disabled={isLoading}
                   autoFocus
                 />
@@ -173,7 +226,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
             <button
               type="submit"
               className="submit-button"
-              disabled={isLoading || phoneNumber.length !== 11}
+               disabled={isLoading || !normalizeIranianPhone(phoneNumber)}
             >
               {isLoading ? (
                 <span className="loading-spinner"></span>
@@ -203,7 +256,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
 
         {step === 'otp' && (
           <div className="otp-form">
-            <button className="back-link" onClick={() => setStep('phone')}>
+              <button className="back-link" type="button" onClick={handleEditPhone} disabled={isLoading}>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path
                   d="M12 4L6 10L12 16"
@@ -219,7 +272,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
             <h3 className="auth-title">کد تأیید را وارد کنید</h3>
             <p className="auth-description">
               کد تأیید ۵ رقمی به شماره{' '}
-              <strong>{phoneNumber}</strong> ارسال شد
+              <strong>{canonicalPhone || phoneNumber}</strong> ارسال شد
             </p>
 
             <div className="otp-inputs" onPaste={handleOtpPaste}>
@@ -236,6 +289,8 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
                   onKeyDown={(e) => handleOtpKeyDown(index, e)}
                   className="otp-input"
                   maxLength={1}
+                  autoComplete={index === 0 ? 'one-time-code' : 'off'}
+                  aria-label={`رقم ${index + 1} کد تایید`}
                   disabled={isLoading}
                 />
               ))}

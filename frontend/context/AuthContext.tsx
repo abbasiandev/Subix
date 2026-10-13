@@ -11,6 +11,7 @@ import {
   loginWithTelegram,
   verifyOtp,
   setToken,
+  getToken,
   getMe,
   logout as apiLogout,
   User,
@@ -41,10 +42,30 @@ const Ctx = createContext<AuthCtx>({
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState(typeof window === 'undefined' ? false : true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isTelegram, setIsTelegram] = useState(false);
   const router = useRouter();
+
+  const readSavedToken = () => {
+    if (typeof window === "undefined") return null;
+    try {
+      return window.localStorage.getItem("subix_token");
+    } catch {
+      return null;
+    }
+  };
+
+  const saveToken = (token: string) => {
+    setToken(token);
+    if (typeof window === "undefined") return;
+    try {
+      if (token) window.localStorage.setItem("subix_token", token);
+      else window.localStorage.removeItem("subix_token");
+    } catch {
+      // Storage can be unavailable in privacy-restricted browser contexts.
+    }
+  };
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -53,7 +74,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     // Restore token from localStorage if present
-    const savedToken = localStorage.getItem("subix_token");
+    let mounted = true;
+    const savedToken = readSavedToken();
     if (savedToken) {
       setToken(savedToken);
     }
@@ -63,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsTelegram(hasTelegramContext);
 
     const timeoutId = setTimeout(() => {
-      setLoading(false);
+      if (mounted) setLoading(false);
     }, 6000);
 
     if (hasTelegramContext) {
@@ -83,54 +105,60 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      loginWithTelegram(initData)
+        loginWithTelegram(initData)
         .then((res) => {
-          setToken(res.access_token);
-          localStorage.setItem("subix_token", res.access_token);
+          if (!mounted) return;
+          saveToken(res.access_token);
           setUser(res.user);
         })
         .catch((e) => {
           console.error('Telegram login failed:', e);
-          setError(e.message);
+          if (mounted) setError(e.message);
         })
         .finally(() => {
           clearTimeout(timeoutId);
-          setLoading(false);
+          if (mounted) setLoading(false);
         });
-    } else {
+    } else if (savedToken) {
       // Desktop / Phone browser flow
       getMe()
         .then((userData) => {
-          setUser(userData);
+          if (mounted && getToken() === savedToken) setUser(userData);
         })
         .catch(() => {
-          // If token was invalid, clear it
-          if (savedToken) {
-            localStorage.removeItem("subix_token");
-            setToken("");
+          // Do not clear a token issued by a completed login while this restore is in flight.
+          if (mounted && getToken() === savedToken) {
+            saveToken("");
+            setUser(null);
           }
         })
         .finally(() => {
           clearTimeout(timeoutId);
-          setLoading(false);
+          if (mounted) setLoading(false);
         });
+    } else {
+      // Anonymous visits do not need a network request.
+      clearTimeout(timeoutId);
+      setLoading(false);
     }
 
-    return () => clearTimeout(timeoutId);
+    return () => {
+      mounted = false;
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   const loginWithPhone = async (phoneNumber: string, code: string): Promise<User> => {
     setError(null);
     try {
       const res = await verifyOtp(phoneNumber, code);
-      setToken(res.access_token);
-      localStorage.setItem("subix_token", res.access_token);
+      saveToken(res.access_token);
       setUser(res.user);
       return res.user;
     } catch (err: any) {
       const msg = err.message || "کد تایید وارد شده نادرست است.";
       setError(msg);
-      throw new Error(msg);
+      throw err instanceof Error ? err : new Error(msg);
     }
   };
 
@@ -140,8 +168,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (e) {
       // Silent error
     } finally {
-      localStorage.removeItem("subix_token");
-      setToken("");
+      saveToken("");
       setUser(null);
       router.push("/login");
     }

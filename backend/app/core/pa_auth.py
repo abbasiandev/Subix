@@ -10,7 +10,7 @@ def get_token_from_header() -> Optional[str]:
     auth = request.headers.get("Authorization", "")
     if auth.startswith("Bearer "):
         return auth[7:]
-    return None
+    return request.cookies.get("subix_session")
 
 
 def get_current_user_id_from_token(token: Optional[str]):

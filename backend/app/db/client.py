@@ -125,6 +125,25 @@ def _query(sql: str, args: Optional[List] = None) -> ResultSet:
             raise RuntimeError(f"Turso v2: {v2_err}; Turso v1: {v1_err}") from v1_err
 
 
+def _query_once(sql: str, args: Optional[List] = None) -> ResultSet:
+    """Execute exactly once through Turso v2, without protocol fallback."""
+    client = _client()
+    args = args or []
+    stmt: dict = {"sql": sql}
+    if args:
+        stmt["args"] = [_to_arg(a) for a in args]
+
+    resp = client.post(
+        f"{_db_base()}/v2/pipeline",
+        json={"requests": [{"type": "execute", "stmt": stmt}, {"type": "close"}]},
+    )
+    resp.raise_for_status()
+    result = _first_result(resp.json())
+    if isinstance(result, dict) and result.get("error"):
+        raise RuntimeError("Turso statement failed")
+    return ResultSet(rows=_parse_rows(result))
+
+
 MIGRATIONS = [
     """
     CREATE TABLE IF NOT EXISTS users (
@@ -186,6 +205,26 @@ MIGRATIONS = [
         updated_at TEXT NOT NULL DEFAULT (datetime('now'))
     )
     """,
+    """
+    CREATE TABLE IF NOT EXISTS otp_challenges (
+        challenge_id TEXT PRIMARY KEY,
+        phone_number TEXT NOT NULL,
+        client_ip TEXT,
+        code_hmac TEXT NOT NULL,
+        status TEXT NOT NULL,
+        created_at INTEGER NOT NULL,
+        expires_at INTEGER NOT NULL,
+        failed_attempts INTEGER NOT NULL DEFAULT 0
+    )
+    """,
+    """
+    CREATE INDEX IF NOT EXISTS idx_otp_phone_created
+        ON otp_challenges(phone_number, created_at DESC)
+    """,
+    """
+    CREATE INDEX IF NOT EXISTS idx_otp_ip_created
+        ON otp_challenges(client_ip, created_at DESC)
+    """,
 ]
 
 
@@ -201,6 +240,17 @@ def ensure_migrated() -> None:
 def execute(sql: str, args: Optional[List] = None) -> ResultSet:
     ensure_migrated()
     return _query(sql, args)
+
+
+def execute_once(sql: str, args: Optional[List] = None) -> ResultSet:
+    """Run a statement once without protocol fallback or automatic replay."""
+    ensure_migrated()
+    return _query_once(sql, args)
+
+
+def execute_atomic(sql: str, args: Optional[List] = None) -> ResultSet:
+    """Reliable single-statement path for concurrency-sensitive mutations."""
+    return execute_once(sql, args)
 
 
 def run_migrations() -> None:

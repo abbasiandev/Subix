@@ -3,6 +3,7 @@ import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { asset } from "@/lib/assets";
+import { AuthProvider } from "@/context/AuthContext";
 import "@/styles/globals.css";
 import "@/styles/rive-redesign.css";
 
@@ -50,9 +51,11 @@ export default function App({ Component, pageProps }: AppProps) {
 
        <a className="skip-link" href="#main-content">رفتن به محتوای اصلی</a>
        {!isHome && <WebGLRouteStage />}
-      <div className="route-content-layer">
-        <Component {...pageProps} />
-      </div>
+       <AuthProvider>
+         <div className="route-content-layer">
+           <Component {...pageProps} />
+         </div>
+       </AuthProvider>
     </>
   );
 }

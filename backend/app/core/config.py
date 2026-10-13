@@ -41,8 +41,9 @@ class Settings(BaseSettings):
     price_sync_min_matches: int = 1
 
     # SMS.ir
-    sms_ir_api_key: str = "aLVO1vrblneOnxGCEmaXt6znbMcT776wv3XIMAVZHwe9h1d8"
-    sms_ir_template_id: int = 100000
+    sms_ir_api_key: str = ""
+    sms_ir_template_id: int = 0
+    sms_ir_parameter_name: str = "Code"
 
     @property
     def cors_origins(self) -> list[str]:

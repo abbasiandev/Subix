@@ -32,7 +32,16 @@ TURSO_AUTH_TOKEN=...
 FRONTEND_URL=https://abbasiandev.github.io/Subix
 ENABLE_WEBHOOK=false
 DEBUG=false
+SMS_IR_API_KEY=...
+SMS_IR_TEMPLATE_ID=123456
+SMS_IR_PARAMETER_NAME=Code
 ```
+
+`SMS_IR_TEMPLATE_ID` must be an approved SMS.ir verification template, and
+`SMS_IR_PARAMETER_NAME` must exactly match its placeholder name (for example,
+`Code` for `#Code#`). Keep the API key only in the backend environment; never
+put it in `frontend/.env.local` or a client bundle. The phone login page is
+available at `/Subix/login-phone/`.
 
 **WSGI** file `/var/www/subix_pythonanywhere_com_wsgi.py` — copy from `backend/deploy/pythonanywhere_wsgi.py`
 

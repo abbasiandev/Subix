@@ -51,12 +51,18 @@ def send_otp():
     if not phone_number:
         return jsonify({"detail": "شماره موبایل الزامی است."}), 400
     try:
-        result = SMSService.send_otp_sync(phone_number)
+        result = SMSService.send_otp_sync(
+            phone_number, client_ip=request.remote_addr
+        )
         return jsonify(result), 200
     except Exception as exc:
         msg = getattr(exc, "detail", str(exc))
         code = getattr(exc, "status_code", 400)
-        return jsonify({"detail": msg}), code
+        response = make_response(jsonify({"detail": msg}), code)
+        headers = getattr(exc, "headers", None) or {}
+        for name, value in headers.items():
+            response.headers[name] = value
+        return response
 
 
 @app.route("/api/v1/auth/verify-otp", methods=["POST", "OPTIONS"])
@@ -87,7 +93,11 @@ def verify_otp():
     except Exception as exc:
         msg = getattr(exc, "detail", str(exc))
         code = getattr(exc, "status_code", 400)
-        return jsonify({"detail": msg}), code
+        response = make_response(jsonify({"detail": msg}), code)
+        headers = getattr(exc, "headers", None) or {}
+        for name, value in headers.items():
+            response.headers[name] = value
+        return response
 
 
 @app.route("/api/v1/auth/telegram", methods=["POST", "OPTIONS"])

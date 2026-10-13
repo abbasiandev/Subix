@@ -1,19 +1,21 @@
 import secrets
 
-from fastapi import Depends, Header, HTTPException, status
+from fastapi import Cookie, Depends, Header, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from app.core.config import settings
 from app.core.security import decode_access_token
 from app.services.user import UserService
 
-bearer = HTTPBearer()
+bearer = HTTPBearer(auto_error=False)
 
 
 def get_current_user_id(
-    credentials: HTTPAuthorizationCredentials = Depends(bearer),
+    credentials: HTTPAuthorizationCredentials | None = Depends(bearer),
+    session_token: str | None = Cookie(default=None, alias="subix_session"),
 ) -> int:
-    telegram_id = decode_access_token(credentials.credentials)
+    token = credentials.credentials if credentials else session_token
+    telegram_id = decode_access_token(token) if token else None
     if telegram_id is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

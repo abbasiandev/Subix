@@ -37,14 +37,14 @@ class SendOtpIn(BaseModel):
 
 class VerifyOtpIn(BaseModel):
     phone_number: str = Field(...)
-    code: str = Field(..., min_length=4, max_length=6)
+    code: str = Field(..., min_length=5, max_length=5)
 
 
 class OtpSentOut(BaseModel):
     message: str
     phone_number: str
     expires_in: int
-    debug_code: Optional[str] = None
+    resend_after: int
 
 
 class TokenOut(BaseModel):

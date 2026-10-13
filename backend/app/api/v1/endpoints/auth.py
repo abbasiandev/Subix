@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Response, status
+from fastapi import APIRouter, HTTPException, Request, Response, status
 
 from app.core.security import create_access_token, verify_telegram_init_data, verify_telegram_widget_auth
 from app.schemas.schemas import (
@@ -16,9 +16,10 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post("/send-otp", response_model=OtpSentOut)
-async def send_otp(body: SendOtpIn):
+async def send_otp(body: SendOtpIn, request: Request):
     """Send SMS OTP via SMS.ir to the given Iranian mobile number"""
-    result = await SMSService.send_otp(body.phone_number)
+    client_ip = request.client.host if request.client else None
+    result = await SMSService.send_otp(body.phone_number, client_ip=client_ip)
     return OtpSentOut(**result)
 
 

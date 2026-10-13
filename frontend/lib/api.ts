@@ -1,6 +1,5 @@
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "";
 const DEFAULT_API = "https://subix.pythonanywhere.com";
-const APP_BASE = "/Subix";
 
 function isLocalDev(): boolean {
     return (
@@ -13,7 +12,7 @@ function isLocalDev(): boolean {
 function resolveUrl(path: string): string {
     if (BASE) return `${BASE}${path}`;
     if (process.env.NODE_ENV === "development" && isLocalDev()) {
-        return `${APP_BASE}/api${path.replace(/^\/api/, "")}`;
+        return path;
     }
     return `${DEFAULT_API}${path}`;
 }
@@ -38,9 +37,62 @@ export function getAdminKey() {
     return _adminKey;
 }
 
+export class ApiError extends Error {
+    readonly status: number | null;
+    readonly retryAfter: number | null;
+
+    constructor(message: string, status: number | null = null, retryAfter: number | null = null) {
+        super(message);
+        this.name = "ApiError";
+        this.status = status;
+        this.retryAfter = retryAfter;
+    }
+}
+
+function formatValidationError(value: unknown): string | null {
+    if (typeof value === "string" && value.trim()) return value;
+
+    if (Array.isArray(value)) {
+        const messages = value
+            .map((item) => {
+                if (typeof item === "string") return item;
+                if (item && typeof item === "object" && "msg" in item) {
+                    const message = (item as { msg?: unknown }).msg;
+                    const location = (item as { loc?: unknown }).loc;
+                    if (typeof message === "string") {
+                        const field = Array.isArray(location) ? location.filter((part) => part !== "body").join(".") : "";
+                        return field ? `${field}: ${message}` : message;
+                    }
+                }
+                return null;
+            })
+            .filter((message): message is string => Boolean(message));
+        if (messages.length) return messages.join("، ");
+    }
+
+    if (value && typeof value === "object") {
+        const payload = value as { detail?: unknown; message?: unknown; error?: unknown };
+        return formatValidationError(payload.detail)
+            ?? formatValidationError(payload.message)
+            ?? formatValidationError(payload.error);
+    }
+
+    return null;
+}
+
+function parseRetryAfter(value: string | null): number | null {
+    if (!value) return null;
+    const seconds = Number(value);
+    if (Number.isFinite(seconds)) return Math.max(0, Math.ceil(seconds));
+
+    const date = Date.parse(value);
+    return Number.isNaN(date) ? null : Math.max(0, Math.ceil((date - Date.now()) / 1000));
+}
+
 async function request<T>(
     path: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
+    timeoutMs = 8000,
 ): Promise<T> {
     const headers: Record<string, string> = {
         "Content-Type": "application/json",
@@ -57,7 +109,7 @@ async function request<T>(
 
     // Add timeout to prevent hanging
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
         const res = await fetch(resolveUrl(path), {
@@ -68,16 +120,19 @@ async function request<T>(
         clearTimeout(timeoutId);
 
         if (!res.ok) {
-            const err = await res.json().catch(() => ({detail: res.statusText}));
-            throw new Error(err.detail ?? "خطا در ارتباط با سرور");
+            const body = await res.json().catch(() => null);
+            const message = formatValidationError(body) ?? res.statusText ?? "خطا در ارتباط با سرور";
+            throw new ApiError(message, res.status, parseRetryAfter(res.headers.get("Retry-After")));
         }
+        if (res.status === 204) return undefined as T;
         return res.json();
-    } catch (error: any) {
+    } catch (error: unknown) {
         clearTimeout(timeoutId);
-        if (error.name === 'AbortError') {
-            throw new Error('زمان اتصال به سرور به پایان رسید');
+        if (error instanceof ApiError) throw error;
+        if (error instanceof DOMException && error.name === 'AbortError') {
+            throw new ApiError('زمان اتصال به سرور به پایان رسید');
         }
-        throw error;
+        throw new ApiError(error instanceof Error ? error.message : 'خطا در ارتباط با سرور');
     }
 }
 
@@ -103,12 +158,13 @@ export async function loginWithTelegram(initData: string) {
 }
 
 export async function sendOtp(phoneNumber: string) {
-    return request<{ message: string; phone_number: string; expires_in: number; debug_code?: string }>(
+    return request<{ message: string; phone_number: string; expires_in: number; resend_after: number }>(
         "/api/v1/auth/send-otp",
         {
             method: "POST",
             body: JSON.stringify({ phone_number: phoneNumber }),
-        }
+        },
+        35000,
     );
 }
 
