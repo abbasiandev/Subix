@@ -1,13 +1,13 @@
-# Subix UI/UX audit
+# Fluxo UI/UX audit
 
 Audit date: 2026-10-05  
-Reference: `https://abbasiandev.github.io/Subix/` and the static export served locally from `frontend/out`.
+Reference: `https://fluxo.ir/` and the static export served locally from `frontend/out`.
 
 ## Findings and resolution
 
 | Area | Finding | Resolution | Status |
 | --- | --- | --- | --- |
-| Hosting paths | Raw anchor links used `/` and `/#...`, which can leave the GitHub Pages `/Subix` base path. | Navigation anchors now use the shared `asset()` helper and preserve the deployment base path. | Resolved |
+| Hosting paths | Raw anchor links used `/` and `/#...`, which can leave a deployment base path. | Navigation anchors now use the shared `asset()` helper and work from the root of `fluxo.ir`. | Resolved |
 | Responsive layout | Hero and grid sizing needed explicit constraints at 1440px, 768px, and 375px; article cards could request a minimum wider than a narrow viewport. | Added fluid type, bounded content columns, `min(100%, ...)` grid tracks, and mobile spacing rules. | Resolved |
 | Navigation | Mobile menu had no expanded state, no controlled target, and no accessible navigation landmark label. | Added `aria-label`, `aria-expanded`, `aria-controls`, keyboard-visible focus styles, and a 44px touch target. | Resolved |
 | Navigation | Viewport metadata disabled pinch zoom (`user-scalable=no`). | Removed zoom restriction. | Resolved |

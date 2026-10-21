@@ -1,4 +1,4 @@
-# Subix redesign — historical implementation plan
+# Fluxo redesign — historical implementation plan
 
 > **Canonical UI/UX documentation:** read [`docs/UI_UX/README.md`](docs/UI_UX/README.md) and the documents in `docs/UI_UX/` before implementing any new feature. This file records the original redesign direction and acceptance notes; it is not the current component contract.
 
@@ -8,11 +8,11 @@ Reference: https://rivedrive.com/ (visually inspected in Chrome on 2026-10-05).
 
 RiveDrive's defining characteristics are a black canvas, a fixed slim header, a cinematic full-viewport hero, oversized centered white/yellow headlines, and generous space between editorial sections. Small yellow labels establish hierarchy. Features are introduced through large statements and product demonstrations; the footer becomes quieter and denser.
 
-Subix will adopt that composition in Persian/RTL, with its own content and an original WebGL backdrop. The headline and shopping flow should be the dominant elements.
+Fluxo will adopt that composition in Persian/RTL, with its own content and an original WebGL backdrop. The headline and shopping flow should be the dominant elements.
 
 ## Information architecture
 
-1. **Header:** Subix wordmark, home/products/guides/about links, account access, theme control, accessible mobile menu.
+1. **Header:** Fluxo wordmark, home/products/guides/about links, account access, theme control, accessible mobile menu.
 2. **Hero:** two-line headline using existing account/license copy, short description, catalog CTA, static/3D warm-gold visual, bottom scroll cue.
 3. **Introduction:** centered editorial statement connecting AI, design, development, music, and streaming.
 4. **Feature story 01:** AI tools, existing logo composition, links to corresponding products.
@@ -57,7 +57,7 @@ Subix will adopt that composition in Persian/RTL, with its own content and an or
 ## Accessibility and progressive enhancement
 
 - `lang="fa"`, `dir="rtl"`, semantic main/nav/sections/footer, one h1, skip link.
-- Native links and buttons; menu closes with Escape, closed menu cannot receive focus, route links preserve `/Subix`.
+- Native links and buttons; menu closes with Escape, closed menu cannot receive focus, route links work from the root of `fluxo.ir`.
 - Filter/search labels, pressed states, result announcements, decorative SVG/canvas hidden from AT.
 - Body text contrast ≥4.5:1 in both themes; focus remains visible on dark/yellow/white backgrounds.
 - Content stays visible without reveal JavaScript. System reduced-motion disables animation.

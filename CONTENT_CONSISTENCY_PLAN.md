@@ -1,6 +1,6 @@
-# Subix content and marketplace consistency plan
+# Fluxo content and marketplace consistency plan
 
-**Target:** Subix  
+**Target:** Fluxo
 **Reference:** RiveDrive’s scroll pacing and visual discipline only  
 **Audience assumption:** visitors primarily looking to buy AI accounts and AI-related subscriptions  
 **Status:** UI/content consistency pass implemented; payment and fulfillment backend intentionally out of scope
@@ -9,7 +9,7 @@
 
 ## Approved direction
 
-- Subix sells **all kinds of AI accounts** and the public experience should make comparison and selection faster.
+- Fluxo sells **all kinds of AI accounts** and the public experience should make comparison and selection faster.
 - The catalog remains able to expose the wider existing inventory, but the default scope is **AI accounts**. Related non-AI inventory is separated under “سایر سرویس‌های دیجیتال”.
 - The blog is a decision-support surface: guides should help visitors understand use case, capabilities, term, price, and tradeoffs before opening a product.
 - Payment, order creation, fulfillment, and activation backend work are explicitly skipped in this pass.
@@ -90,7 +90,7 @@ The following audit was captured before the canonical UI/content pass. It explai
 **Observed:**
 
 - Leonardo AI is `hasDiscount: false` with `originalPrice: null` in the product registry.
-- The legacy Leonardo blog post claims a “91% discount”, `$49/month`, and a specific Subix price.
+- The legacy Leonardo blog post claims a “91% discount”, `$49/month`, and a specific Fluxo price.
 - Product cards calculate discount presentation from structured data, while blog content hard-codes a separate offer.
 
 **Resolution:** stale hard-coded price and discount claims were removed from the affected decision-guide content. Future prices and discounts must come from the product contract described in `docs/UI_UX/CONTENT_AND_DATA.md`.
@@ -108,7 +108,7 @@ The raw registry category contains 16 `ai` products, while the explicit AI-first
 - entertainment subscriptions
 - digital account marketplace
 
-**Correction decision:** Subix is positioned around all kinds of AI accounts. The default catalog scope is AI accounts, while the existing non-AI inventory remains available under an explicitly separate “سایر سرویس‌های دیجیتال” scope so it does not compete with the primary message.
+**Correction decision:** Fluxo is positioned around all kinds of AI accounts. The default catalog scope is AI accounts, while the existing non-AI inventory remains available under an explicitly separate “سایر سرویس‌های دیجیتال” scope so it does not compete with the primary message.
 
 #### 2.7 Category taxonomy is not unified
 
@@ -130,10 +130,10 @@ Map every existing product and article into this taxonomy. Store the internal ke
 
 | Surface | Current shell |
 |---|---|
-| Homepage/detail/account | `NavigationBar`, RiveDrive-inspired dark shell, Subix footer |
+| Homepage/detail/account | `NavigationBar`, RiveDrive-inspired dark shell, Fluxo footer |
 | `/products` | `NavigationNew`, blue/cyan buttons, no shared footer |
-| `/blog` | `DesktopContainer`, gradient orbs, no shared Subix header/footer |
-| `/login-phone` | standalone `SUBIX` auth card, blue/cyan styling |
+| `/blog` | `DesktopContainer`, gradient orbs, no shared Fluxo header/footer |
+| `/login-phone` | standalone `FLUXO` auth card, blue/cyan styling |
 | `/contact` | Telegram Mini App layout, auth-gated, no shared shell |
 
 **Resolution:** canonical public homepage, catalog, detail, blog, article, and contact pages use `NavigationBar` and `Footer`. Auth/account surfaces retain focused legacy markup where required, but new public features must use the canonical shell.
@@ -189,7 +189,7 @@ Articles without a current product relationship should be labeled editorial cont
 - Auth: blue/cyan gradient CTA.
 - Contact: cyan/blue/purple glass cards.
 
-**Correction:** use the shared Subix token layer everywhere:
+**Correction:** use the shared Fluxo token layer everywhere:
 
 - dark canvas
 - raised dark surface
@@ -231,11 +231,11 @@ Do not hard-code “instant”, “24/7”, refund, guarantee, or support claims
 #### 2.14 Brand and imagery treatment changes
 
 - Homepage uses an `S.` wordmark treatment.
-- `/products` uses the `SUBIX` Logo component.
+- `/products` uses the `FLUXO` Logo component.
 - Blog uses emoji visual placeholders and legacy image treatment.
 - Product cards use brand logos with empty alt text.
 
-**Correction:** use one Subix wordmark component, preserve actual third-party brand logos as decorative only when the product title already provides the accessible name, and give every meaningful article/product image an accurate alt strategy.
+**Correction:** use one Fluxo wordmark component, preserve actual third-party brand logos as decorative only when the product title already provides the accessible name, and give every meaningful article/product image an accurate alt strategy.
 
 ## 3. Content correction model
 
@@ -300,7 +300,7 @@ Before editing copy, create a content contract for every product:
 5. Add a product link and current factual buying summary to every commercial guide.
 6. Remove stale, duplicated, or unsupported price/discount claims.
 
-**Definition of done:** a visitor can understand within the first screen that Subix sells AI accounts, find an AI category, compare AI products, read a relevant guide, and purchase without encountering unrelated or contradictory positioning.
+**Definition of done:** a visitor can understand within the first screen that Fluxo sells AI accounts, find an AI category, compare AI products, read a relevant guide, and purchase without encountering unrelated or contradictory positioning.
 
 ### Phase E — responsive and accessibility consistency
 
@@ -314,10 +314,10 @@ Before editing copy, create a content contract for every product:
 
 ### Phase F — performance and release verification
 
-1. Run a production Lighthouse test against the actual `/Subix` deployment path, not the dev server.
+1. Run a production Lighthouse test against `https://fluxo.ir/`, not the dev server.
 2. Lazy-load below-fold product/article imagery and the WebGL/scroll visuals.
 3. Measure CLS, LCP, and long-task impact from 80 cards and the pinned scroll story.
-4. Verify static export asset paths under `/Subix`.
+4. Verify static export asset paths from the root of `https://fluxo.ir/`.
 5. Run link checks for every catalog, article, auth, support, account, and footer destination.
 
 **Definition of done:** production preview is reachable at the deployment base path, no critical route returns 404, product/catalog data is available, and Lighthouse results are recorded honestly.

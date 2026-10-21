@@ -1,8 +1,8 @@
-# Subix — AI Account Marketplace Telegram Mini App
+# Fluxo — AI Account Marketplace Telegram Mini App
 
 ## Launch online — free, no credit card
 
-Use **PythonAnywhere** (you already have `subix.pythonanywhere.com`).
+Use **PythonAnywhere** for the backend and expose it through `https://fluxo.ir`.
 
 ### A. Backend (PythonAnywhere)
 
@@ -29,7 +29,7 @@ BOT_TOKEN=...
 SECRET_KEY=...
 TURSO_URL=https://subixdb-lumaticgroup.aws-eu-west-1.turso.io
 TURSO_AUTH_TOKEN=...
-FRONTEND_URL=https://abbasiandev.github.io/Subix
+FRONTEND_URL=https://fluxo.ir
 ENABLE_WEBHOOK=false
 DEBUG=false
 SMS_IR_API_KEY=...
@@ -41,25 +41,25 @@ SMS_IR_PARAMETER_NAME=Code
 `SMS_IR_PARAMETER_NAME` must exactly match its placeholder name (for example,
 `Code` for `#Code#`). Keep the API key only in the backend environment; never
 put it in `frontend/.env.local` or a client bundle. The phone login page is
-available at `/Subix/login-phone/`.
+available at `https://fluxo.ir/login-phone/`.
 
 **WSGI** file `/var/www/subix_pythonanywhere_com_wsgi.py` — copy from `backend/deploy/pythonanywhere_wsgi.py`
 
-Click **Reload** → test: `https://subix.pythonanywhere.com/health`
+Click **Reload** → test: `https://fluxo.ir/health`
 
 Seed products once from your PC: `cd backend && python -m scripts.seed`
 
 ### B. Frontend (GitHub Pages)
 
-1. GitHub **Secrets** → `API_URL` = `https://subix.pythonanywhere.com`
+1. Hosting environment → `API_URL` = `https://fluxo.ir`
 2. **Actions** → **Deploy Frontend → GitHub Pages** → **Run workflow**
-3. Site: `https://abbasiandev.github.io/Subix/`
+3. Site: `https://fluxo.ir/`
 
 ### C. Telegram
 
 **BotFather (manual):**
-- Menu Button → URL: `https://abbasiandev.github.io/Subix/`
-- Menu Button text: `🛒 فروشگاه سابیکس`
+- Menu Button → URL: `https://fluxo.ir/`
+- Menu Button text: `فروشگاه فلوکسو`
 
 **`/start` message and inline buttons** come from the backend (`backend/app/telegram/handlers.py`). They only work if the webhook is enabled.
 
@@ -67,7 +67,7 @@ On PythonAnywhere, in `/home/subix/mybot/backend/.env`:
 
 ```env
 ENABLE_WEBHOOK=true
-WEBHOOK_URL=https://subix.pythonanywhere.com/webhook
+WEBHOOK_URL=https://fluxo.ir/webhook
 ```
 
 Reload the web app, then register the webhook once:
@@ -82,7 +82,7 @@ If you get `httpx.ProxyError` on PythonAnywhere, set the webhook **from your Mac
 
 ```bash
 curl -sS "https://api.telegram.org/botTOKEN/setWebhook" \
-  -d "url=https://subix.pythonanywhere.com/webhook" \
+  -d "url=https://fluxo.ir/webhook" \
   -d "drop_pending_updates=true"
 ```
 
@@ -144,7 +144,7 @@ cp .env.local.example .env.local
 npm run dev
 ```
 
-Open `http://localhost:3000` while developing. The frontend is a Next.js static export; GitHub Pages publishes the generated `frontend/out` directory under `/Subix/`.
+Open `http://localhost:3000` while developing. The frontend is a Next.js static export served from the root of `https://fluxo.ir/`.
 
 ### WebGL hero
 
