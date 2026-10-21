@@ -1,10 +1,10 @@
-# Subix content and data rules
+# Fluxo content and data rules
 
 ## 1. Positioning
 
 Canonical positioning:
 
-> Subix helps visitors compare and choose AI accounts faster.
+> Fluxo helps visitors compare and choose AI accounts faster.
 
 The catalog supports all kinds of AI accounts: text/research, image, video, audio, coding, development, and related creative AI tools. Existing non-AI inventory may be exposed, but it is secondary and must appear under `سایر سرویس‌های دیجیتال`.
 
@@ -127,7 +127,7 @@ Every commercial guide should answer:
 1. What does the tool do?
 2. Who should consider it?
 3. What job or output is it best suited for?
-4. Which product/account does Subix list?
+4. Which product/account does Fluxo list?
 5. What should the visitor compare before choosing?
 6. What limitations or unknowns matter?
 7. What is the current product link?

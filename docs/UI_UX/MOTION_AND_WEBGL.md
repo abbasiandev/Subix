@@ -1,4 +1,4 @@
-# Subix motion and WebGL system
+# Fluxo motion and WebGL system
 
 ## 1. Motion philosophy
 

@@ -1,4 +1,4 @@
-# Subix accessibility, RTL, and responsive rules
+# Fluxo accessibility, RTL, and responsive rules
 
 ## 1. Document baseline
 
@@ -109,7 +109,7 @@ For mixed text:
 
 - Meaningful product/article images need useful alt text.
 - Decorative brand logos may use `alt=""` when the nearby title already names the product.
-- Use `asset()` for local assets so production `/Subix` paths work.
+- Use `asset()` for local assets so production `https://fluxo.ir/` paths work.
 - Keep explicit width and height where possible to reduce layout shift.
 - WebGL canvases are decorative and `aria-hidden`.
 

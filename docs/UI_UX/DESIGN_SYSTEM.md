@@ -1,8 +1,8 @@
-# Subix canonical design system
+# Fluxo canonical design system
 
 ## 1. Visual character
 
-Subix is a quiet cinematic marketplace. The page should feel like an editorial product film: a nearly black canvas, a controlled field of light, oversized Persian display statements, small indexed labels, thin structural lines, and a single warm action color.
+Fluxo is a quiet cinematic marketplace. The page should feel like an editorial product film: a nearly black canvas, a controlled field of light, oversized Persian display statements, small indexed labels, thin structural lines, and a single warm action color.
 
 The design is intentionally not a generic dashboard, SaaS gradient template, or glass-heavy crypto interface.
 
@@ -93,7 +93,7 @@ They exist because login/account/legacy components still use them or because old
 - Body text is readable, muted, and line-height approximately `2` for Persian editorial copy.
 - Use `text-wrap: balance` for display headings when supported.
 - Use `dir="ltr"` for English product names, usernames, URLs, phone values, and machine-readable identifiers.
-- Never use letter-spacing to force Persian text into a Latin rhythm. Letter spacing is reserved for Latin/system labels such as `SUBIX` and index marks.
+- Never use letter-spacing to force Persian text into a Latin rhythm. Letter spacing is reserved for Latin/system labels such as `FLUXO` and index marks.
 
 ### Canonical hierarchy
 

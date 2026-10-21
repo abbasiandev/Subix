@@ -1,4 +1,4 @@
-# Subix pages, routes, and state contracts
+# Fluxo pages, routes, and state contracts
 
 ## 1. Canonical route map
 
@@ -80,7 +80,7 @@ Requirements:
 
 Order:
 
-1. Page hero: `۰۱ · کاتالوگ سابیکس`
+1. Page hero: `۰۱ · کاتالوگ فلوکسو`
 2. H1 and short decision-support description
 3. Search and result status
 4. AI/non-AI scope controls
@@ -181,7 +181,7 @@ Every canonical page must have:
 - one useful title
 - one page-specific description
 - one H1
-- a canonical URL that respects the production `/Subix` deployment path
+- a canonical URL rooted at `https://fluxo.ir/`
 - meaningful Open Graph values where relevant
 
 Do not let `_app.tsx` generic metadata override a page-specific title/description unintentionally.

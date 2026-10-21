@@ -1,4 +1,4 @@
-# Agent implementation guide for Subix UI/UX
+# Agent implementation guide for Fluxo UI/UX
 
 ## 1. Before writing code
 

@@ -1,4 +1,4 @@
-# Subix component contracts
+# Fluxo component contracts
 
 This document defines what each canonical component means, what it must contain, and how a new feature should compose it.
 
@@ -11,7 +11,7 @@ Source: `frontend/components/Layout/NavigationBar.tsx`
 #### Responsibilities
 
 - Fixed public header.
-- Subix wordmark link to `/`.
+- Fluxo wordmark link to `/`.
 - Canonical navigation links:
   - `خانه` → `/`
   - `کاتالوگ اکانت‌ها` → `/products`
@@ -29,7 +29,7 @@ Source: `frontend/components/Layout/NavigationBar.tsx`
 - Escape closes the menu and returns focus to the toggle.
 - Route changes close the menu.
 - Closed menu is `hidden` and cannot receive focus.
-- Theme preference is saved as `subix-theme` in local storage.
+- Theme preference is saved as `fluxo-theme` in local storage.
 
 #### Visual contract
 

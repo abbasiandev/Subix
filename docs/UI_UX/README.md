@@ -1,10 +1,10 @@
-# Subix UI/UX documentation
+# Fluxo UI/UX documentation
 
-This directory is the agent-facing source of truth for the Subix interface. Read it before adding a page, component, interaction, animation, or content surface.
+This directory is the agent-facing source of truth for the Fluxo interface. Read it before adding a page, component, interaction, animation, or content surface.
 
 ## Product and experience definition
 
-Subix is an RTL Persian marketplace and decision-support experience for AI accounts. The interface helps people compare tools by use case, capabilities, duration, price, and product details before they continue through the purchase path.
+Fluxo is an RTL Persian marketplace and decision-support experience for AI accounts. The interface helps people compare tools by use case, capabilities, duration, price, and product details before they continue through the purchase path.
 
 The visual direction is inspired by RiveDrive’s editorial pacing and cinematic scroll composition. RiveDrive is a reference for composition and rhythm only. Do not copy its brand, text, assets, layout markup, or visual identity.
 
