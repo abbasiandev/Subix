@@ -69,16 +69,16 @@ function BlogPostContent({
   return (
     <>
       <Head>
-        <title>{post.title} - بلاگ سابیکس</title>
+         <title>{post.title} - راهنمای فلوکسو</title>
         <meta name="description" content={post.excerpt} />
         <meta name="keywords" content={post.tags.join(', ')} />
         <meta name="author" content={post.author.name} />
-        <link rel="canonical" href={`https://abbasiandev.github.io/Subix/blog/${post.slug}`} />
+         <link rel="canonical" href={`https://fluxo.ir/blog/${post.slug}`} />
         
         <meta property="og:title" content={post.title} />
         <meta property="og:description" content={post.excerpt} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={`https://abbasiandev.github.io/Subix/blog/${post.slug}`} />
+         <meta property="og:url" content={`https://fluxo.ir/blog/${post.slug}`} />
         <meta property="article:published_time" content={post.publishedAt} />
         <meta property="article:author" content={post.author.name} />
         <meta property="article:tag" content={post.tags.join(', ')} />
@@ -104,8 +104,7 @@ function BlogPostContent({
           {/* Category Badge */}
           <div className="mb-4">
             <span className="inline-block px-4 py-2 rounded-full text-sm font-medium bg-teal-500/20 text-teal-300 border border-teal-500/30">
-              {blogCategories.find(c => c.id === post.category)?.icon}{' '}
-              {blogCategories.find(c => c.id === post.category)?.name}
+               {blogCategories.find(c => c.id === post.category)?.name}
             </span>
           </div>
 
@@ -139,7 +138,7 @@ function BlogPostContent({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
               </svg>
-              {post.views?.toLocaleString('fa-IR')} بازدید
+               زمان مطالعه: {post.readTime} دقیقه
             </span>
           </div>
           {/* Tags */}
@@ -204,9 +203,7 @@ function BlogPostContent({
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="text-4xl">
-                          {blogCategories.find(c => c.id === relatedPost.category)?.icon || '📝'}
-                        </div>
+                         <div className="text-sm text-gray-300">{blogCategories.find(c => c.id === relatedPost.category)?.name || 'راهنما'}</div>
                       )}
                     </div>
                     <div className="p-4">
@@ -237,7 +234,10 @@ function BlogPostContent({
 function FormattedArticleContent({ content }: { content: string }) {
   if (!content) return null;
 
-  const sections = content.split('\n\n');
+  const presentationCopy = content
+    .replace(/[📚📰⚖️💡📝🔍📱📷🐦💼🌟✨🛍️⚡💳📞➕👇⚠️⏳✅❌✍️🎓📖🔄✏️🎯📊📧🌐📸🎥📄🎵👥🔐👨‍💼📁]/gu, '')
+    .replace(/[ \t]{2,}/g, ' ');
+  const sections = presentationCopy.split('\n\n');
   return (
     <div className="space-y-5 text-gray-200 leading-relaxed">
       {sections.map((section, idx) => {

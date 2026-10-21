@@ -28,25 +28,25 @@ export const blogCategories: BlogCategory[] = [
     id: 'guides',
     name: 'راهنمای استفاده',
     description: 'آموزش‌های گام به گام استفاده از ابزارهای هوش مصنوعی',
-    icon: '📚'
+     icon: ''
   },
   {
     id: 'news',
     name: 'اخبار و به‌روزرسانی',
     description: 'آخرین اخبار دنیای هوش مصنوعی',
-    icon: '📰'
+     icon: ''
   },
   {
     id: 'comparison',
     name: 'مقایسه محصولات',
     description: 'مقایسه جامع ابزارهای مختلف AI',
-    icon: '⚖️'
+     icon: ''
   },
   {
     id: 'tips',
     name: 'نکات و ترفندها',
     description: 'ترفندهای کاربردی برای بهره‌وری بیشتر',
-    icon: '💡'
+     icon: ''
   }
 ];
 
@@ -59,7 +59,7 @@ export const blogPosts: BlogPost[] = [
     tags: ['Leonardo AI', 'تولید تصویر', 'هوش مصنوعی', 'طراحی گرافیک'],
     coverImage: '/images/blog/leonardo-ai.jpg',
     author: {
-      name: 'تیم سابیکس',
+      name: 'تیم فلوکسو',
       avatar: '/images/avatar-default.png'
     },
     publishedAt: '2026-08-20',
@@ -127,7 +127,7 @@ neon lights, detailed architecture, 4k quality"
 
     ## قبل از انتخاب
 
-برای مقایسه قیمت و مدت اعتبار، صفحه محصول سابیکس را ببینید؛ اطلاعات خرید باید همیشه از کاتالوگ جاری خوانده شود، نه از یک مقاله قدیمی.
+برای مقایسه قیمت و مدت اعتبار، صفحه محصول فلوکسو را ببینید؛ اطلاعات خرید باید همیشه از کاتالوگ جاری خوانده شود، نه از یک مقاله قدیمی.
 
 ## نتیجه‌گیری
 
@@ -142,7 +142,7 @@ Leonardo AI برای کسانی که به دنبال ابزاری حرفه‌ا�
     tags: ['Suno AI', 'تولید موسیقی', 'AI', 'موسیقی'],
     coverImage: '/images/blog/suno-ai.jpg',
     author: {
-      name: 'تیم سابیکس',
+      name: 'تیم فلوکسو',
       avatar: '/images/avatar-default.png'
     },
     publishedAt: '2026-08-19',
@@ -214,7 +214,7 @@ upbeat tempo, female vocals, catchy chorus"
     tags: ['ChatGPT', 'Claude', 'مقایسه', 'هوش مصنوعی'],
     coverImage: '/images/blog/chatgpt-vs-claude.jpg',
     author: {
-      name: 'تیم سابیکس',
+      name: 'تیم فلوکسو',
       avatar: '/images/avatar-default.png'
     },
     publishedAt: '2026-08-15',
@@ -247,7 +247,7 @@ ChatGPT توسط OpenAI توسعه یافته و با مدل GPT-4 به یکی �
     tags: ['Spotify', 'موسیقی', 'پرمیوم'],
     coverImage: '/images/blog/spotify-premium.jpg',
     author: {
-      name: 'تیم سابیکس',
+      name: 'تیم فلوکسو',
       avatar: '/images/avatar-default.png'
     },
     publishedAt: '2026-08-10',
@@ -266,7 +266,7 @@ ChatGPT توسط OpenAI توسعه یافته و با مدل GPT-4 به یکی �
     tags: ['بهره‌وری', 'ترفندها', 'ChatGPT', 'Claude'],
     coverImage: '/images/blog/productivity-tips.jpg',
     author: {
-      name: 'تیم سابیکس',
+      name: 'تیم فلوکسو',
       avatar: '/images/avatar-default.png'
     },
     publishedAt: '2026-08-05',
@@ -285,7 +285,7 @@ ChatGPT توسط OpenAI توسعه یافته و با مدل GPT-4 به یکی �
     tags: ['Cursor', 'برنامه‌نویسی', 'AI', 'IDE'],
     coverImage: '/images/blog/cursor-guide.jpg',
     author: {
-      name: 'تیم سابیکس',
+      name: 'تیم فلوکسو',
       avatar: '/images/avatar-default.png'
     },
     publishedAt: '2026-07-28',
@@ -304,7 +304,7 @@ Cursor یک IDE مبتنی بر هوش مصنوعی است که تجربه بر�
     tags: ['Gemini', 'Google', 'هوش مصنوعی', 'اخبار'],
     coverImage: '/images/blog/gemini-features.jpg',
     author: {
-      name: 'تیم سابیکس',
+      name: 'تیم فلوکسو',
       avatar: '/images/avatar-default.png'
     },
     publishedAt: '2026-07-20',
@@ -323,7 +323,7 @@ Cursor یک IDE مبتنی بر هوش مصنوعی است که تجربه بر�
     tags: ['امنیت', 'خرید', 'راهنما'],
     coverImage: '/images/blog/secure-purchase.jpg',
     author: {
-      name: 'تیم سابیکس',
+      name: 'تیم فلوکسو',
       avatar: '/images/avatar-default.png'
     },
     publishedAt: '2026-07-15',
@@ -342,7 +342,7 @@ Cursor یک IDE مبتنی بر هوش مصنوعی است که تجربه بر�
     tags: ['Apple Music', 'Spotify', 'موسیقی', 'مقایسه'],
     coverImage: '/images/blog/apple-music-spotify.jpg',
     author: {
-      name: 'تیم سابیکس',
+      name: 'تیم فلوکسو',
       avatar: '/images/avatar-default.png'
     },
     publishedAt: '2026-08-18',
@@ -411,7 +411,7 @@ Cursor یک IDE مبتنی بر هوش مصنوعی است که تجربه بر�
 - ✅ استریمینگ روان‌تر
 - ✅ مصرف دیتای کمتر
 
-## قیمت در سابیکس
+## قیمت در فلوکسو
 
 ### Apple Music
 - قیمت: **799,000 تومان/ماه**
@@ -435,7 +435,7 @@ Cursor یک IDE مبتنی بر هوش مصنوعی است که تجربه بر�
 - پلی‌لیست‌های هوشمند می‌خواهید
 - پادکست گوش می‌دهید
 
-هر دو سرویس در سابیکس با بهترین قیمت موجود هستند!
+هر دو سرویس در فلوکسو با اطلاعات قیمت جاری کاتالوگ ارائه می‌شوند.
 `
   },
   {
@@ -446,7 +446,7 @@ Cursor یک IDE مبتنی بر هوش مصنوعی است که تجربه بر�
     tags: ['QuillBot', 'نوشتار', 'AI', 'تصحیح متن'],
     coverImage: '/images/blog/quillbot.jpg',
     author: {
-      name: 'تیم سابیکس',
+      name: 'تیم فلوکسو',
       avatar: '/images/avatar-default.png'
     },
     publishedAt: '2026-08-17',
@@ -539,7 +539,7 @@ Long Text → Shorten mode
 2. بازنویسی و بهبود با QuillBot
 3. تصحیح نهایی با Grammar Checker
 
-## قیمت در سابیکس
+## قیمت در فلوکسو
 
 QuillBot Premium: **فقط 499,000 تومان**
 - تمام حالت‌های بازنویسی
@@ -549,7 +549,7 @@ QuillBot Premium: **فقط 499,000 تومان**
 
 ## جمع‌بندی
 
-QuillBot ابزاری ضروری برای هر کسی که به زبان انگلیسی می‌نویسد. با امکانات پیشرفته و قیمت مناسب در سابیکس، این ابزار می‌تواند کیفیت نوشتار شما را به شکل چشمگیری بهبود دهد.
+QuillBot ابزاری برای کسانی است که به زبان انگلیسی می‌نویسند. قابلیت‌ها و شرایط دسترسی را در صفحه محصول فلوکسو بررسی کنید.
 `
   },
   {
@@ -560,7 +560,7 @@ QuillBot ابزاری ضروری برای هر کسی که به زبان انگ�
     tags: ['Google Drive', 'فضای ابری', 'ذخیره‌سازی', 'بکاپ'],
     coverImage: '/images/blog/google-drive.jpg',
     author: {
-      name: 'تیم سابیکس',
+      name: 'تیم فلوکسو',
       avatar: '/images/avatar-default.png'
     },
     publishedAt: '2026-08-16',

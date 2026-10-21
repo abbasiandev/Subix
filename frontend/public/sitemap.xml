@@ -2,35 +2,35 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Main Pages -->
   <url>
-    <loc>https://abbasiandev.github.io/Subix/</loc>
+    <loc>https://fluxo.ir/</loc>
     <lastmod>2026-08-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   
   <url>
-    <loc>https://abbasiandev.github.io/Subix/products</loc>
+    <loc>https://fluxo.ir/products</loc>
     <lastmod>2026-08-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   
   <url>
-    <loc>https://abbasiandev.github.io/Subix/blog</loc>
+    <loc>https://fluxo.ir/blog</loc>
     <lastmod>2026-08-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://abbasiandev.github.io/Subix/contact</loc>
+    <loc>https://fluxo.ir/contact</loc>
     <lastmod>2026-08-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://abbasiandev.github.io/Subix/login</loc>
+    <loc>https://fluxo.ir/login-phone</loc>
     <lastmod>2026-08-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -38,42 +38,42 @@
   
   <!-- Blog Posts -->
   <url>
-    <loc>https://abbasiandev.github.io/Subix/blog/chatgpt-vs-claude-comparison</loc>
+    <loc>https://fluxo.ir/blog/chatgpt-vs-claude-comparison</loc>
     <lastmod>2026-08-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://abbasiandev.github.io/Subix/blog/spotify-premium-benefits</loc>
+    <loc>https://fluxo.ir/blog/spotify-premium-benefits</loc>
     <lastmod>2026-08-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://abbasiandev.github.io/Subix/blog/ai-productivity-tips</loc>
+    <loc>https://fluxo.ir/blog/ai-productivity-tips</loc>
     <lastmod>2026-08-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://abbasiandev.github.io/Subix/blog/cursor-ide-complete-guide</loc>
+    <loc>https://fluxo.ir/blog/cursor-ide-complete-guide</loc>
     <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://abbasiandev.github.io/Subix/blog/gemini-advanced-new-features</loc>
+    <loc>https://fluxo.ir/blog/gemini-advanced-new-features</loc>
     <lastmod>2026-07-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://abbasiandev.github.io/Subix/blog/secure-ai-account-purchase</loc>
+    <loc>https://fluxo.ir/blog/secure-ai-account-purchase</loc>
     <lastmod>2026-07-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

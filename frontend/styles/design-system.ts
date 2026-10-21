@@ -1,5 +1,5 @@
 /**
- * Subix Design System
+ * Fluxo design system
  * Apple-inspired design tokens for consistent UI/UX
  */
 

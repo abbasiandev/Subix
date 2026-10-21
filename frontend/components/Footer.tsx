@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Logo from './Logo';
+import { SUPPORT_URL } from '@/lib/constants';
 
 const Footer: React.FC = () => {
   const footerLinks = {
@@ -32,10 +33,7 @@ const Footer: React.FC = () => {
   };
 
   const socialLinks = [
-    { name: 'Telegram', icon: '📱', href: 'https://t.me/subix', color: '#0088cc' },
-    { name: 'Instagram', icon: '📷', href: 'https://instagram.com/subix', color: '#E4405F' },
-    { name: 'Twitter', icon: '🐦', href: 'https://twitter.com/subix', color: '#1DA1F2' },
-    { name: 'LinkedIn', icon: '💼', href: 'https://linkedin.com/company/subix', color: '#0077b5' },
+    { name: 'Telegram', href: SUPPORT_URL },
   ];
 
   return (
@@ -51,8 +49,7 @@ const Footer: React.FC = () => {
               </div>
             </Link>
             <p className="text-gray-400 text-sm mb-6 leading-relaxed">
-              دسترسی آسان و مقرون‌به‌صرفه به قدرتمندترین ابزارهای هوش مصنوعی جهان. 
-              با بهترین قیمت و پشتیبانی ۲۴/۷
+              مقایسه روشن اکانت‌های هوش مصنوعی و سرویس‌های دیجیتال پیش از انتخاب.
             </p>
             
             {/* Social Links */}
@@ -68,7 +65,7 @@ const Footer: React.FC = () => {
                   className="w-10 h-10 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center border border-white/10 transition-all"
                   title={social.name}
                 >
-                  <span className="text-xl">{social.icon}</span>
+                  <span className="text-sm">{social.name}</span>
                 </motion.a>
               ))}
             </div>
@@ -134,7 +131,7 @@ const Footer: React.FC = () => {
         <div className="border-t border-white/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-sm text-gray-400 text-center md:text-right">
-              <p>© {new Date().getFullYear()} سابیکس. تمامی حقوق محفوظ است.</p>
+               <p>© {new Date().getFullYear()} فلوکسو. تمامی حقوق محفوظ است.</p>
             </div>
             
             <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-400">

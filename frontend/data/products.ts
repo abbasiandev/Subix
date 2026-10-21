@@ -2,7 +2,7 @@ import { asset } from '@/lib/assets';
 import priceOverrides from './price-overrides.json';
 
 /**
- * Subix Official Products Catalog
+ * Fluxo official products catalog
  * Contains authentic digital accounts, developer licenses, AI subscriptions, and entertainment services.
  * All prices in Iranian Toman (تومان)
  */
@@ -28,7 +28,7 @@ export interface Product {
 }
 
 // The catalog contains related digital services as well as AI accounts. Keep the
-// AI-first storefront explicit so visitors can start with the products Subix is
+// AI-first storefront explicit so visitors can start with the products Fluxo is
 // positioned around without losing access to the wider inventory.
 const AI_PRODUCT_IDS = new Set([1, 2, 3, 4, 7, 11, 12, 15, 19, 25, 28, 29, 30, 31, 32, 43, 49, 52, 53, 55, 58, 60, 64, 65, 68, 71, 74, 76]);
 
@@ -66,7 +66,7 @@ const catalogProducts: Product[] = [
       },
       {
         "label": "پشتیبانی",
-        "value": "۲۴ ساعته توسط کارشناسان سابیکس"
+        "value": "پشتیبانی در تلگرام"
       },
       {
         "label": "گارانتی",
@@ -3087,17 +3087,31 @@ type PriceOverrides = Record<string, number>;
  */
 const normalizedPriceOverrides = priceOverrides as PriceOverrides;
 
+const normalizeProductCopy = (product: Product): Product => ({
+  ...product,
+  specifications: product.specifications.map((specification) => {
+    if (specification.label === 'پشتیبانی') {
+      return { ...specification, value: 'پشتیبانی در تلگرام' };
+    }
+    if (specification.label === 'گارانتی') {
+      return { ...specification, value: 'شرایط دریافت در صفحه محصول توضیح داده شده است' };
+    }
+    return specification;
+  }),
+});
+
 export const products: Product[] = catalogProducts.map((product) => {
-  const updatedPrice = normalizedPriceOverrides[product.slug];
-  if (!Number.isFinite(updatedPrice) || updatedPrice <= 0) return product;
+  const normalizedProduct = normalizeProductCopy(product);
+  const updatedPrice = normalizedPriceOverrides[normalizedProduct.slug];
+  if (!Number.isFinite(updatedPrice) || updatedPrice <= 0) return normalizedProduct;
 
   const originalPrice =
-    product.originalPrice && product.originalPrice > updatedPrice
-      ? product.originalPrice
+    normalizedProduct.originalPrice && normalizedProduct.originalPrice > updatedPrice
+      ? normalizedProduct.originalPrice
       : null;
 
   return {
-    ...product,
+    ...normalizedProduct,
     price: updatedPrice,
     originalPrice,
     hasDiscount: originalPrice !== null,

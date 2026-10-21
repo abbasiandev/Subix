@@ -66,7 +66,7 @@ function ChapterVisual({ items, active }: { items: Product[]; active: number }) 
           </Link>
         ))}
       </div>
-      <div className="scroll-story-core" aria-hidden="true"><span>{String(active + 1).padStart(2, '0')}</span><strong>SUBIX</strong></div>
+      <div className="scroll-story-core" aria-hidden="true"><span>{String(active + 1).padStart(2, '0')}</span><strong>FLUXO</strong></div>
        <span className="scroll-story-fact" aria-hidden="true">ابزارهای منتخب · مقایسه روشن‌تر</span>
     </div>
   );
@@ -95,7 +95,7 @@ export default function ScrollStory() {
   }, []);
 
   return (
-    <section ref={storyRef} className="scroll-story" aria-label="داستان انتخاب ابزارهای سابیکس">
+    <section ref={storyRef} className="scroll-story" aria-label="داستان انتخاب ابزارهای فلوکسو">
       {chapters.map((chapter, chapterIndex) => (
         <div className="scroll-story-chapter" key={chapter.number}>
           <div className="scroll-story-sticky">

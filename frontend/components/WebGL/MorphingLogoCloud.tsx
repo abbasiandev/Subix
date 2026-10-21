@@ -19,7 +19,7 @@ interface MorphingLogoCloudProps {
 
 /**
  * Morphing logo cloud with 3D brand logos
- * Logos float randomly then morph into "Subix" formation
+ * Logos float randomly then morph into "Fluxo" formation
  */
 export const MorphingLogoCloud: React.FC<MorphingLogoCloudProps> = ({
   logoCount,
@@ -58,7 +58,7 @@ export const MorphingLogoCloud: React.FC<MorphingLogoCloudProps> = ({
       const initialY = radius * Math.sin(phi) * Math.sin(theta);
       const initialZ = radius * Math.cos(phi);
       
-      // Target position (forms "SUBIX" text shape)
+      // Target position (forms "FLUXO" text shape)
       const targetX = (i - logoCount / 2) * 0.6;
       const targetY = Math.sin(i * 0.5) * 0.3;
       const targetZ = 0;
@@ -81,7 +81,7 @@ export const MorphingLogoCloud: React.FC<MorphingLogoCloudProps> = ({
     
     const time = clock.getElapsedTime();
     
-    // Morph progress (0 = random positions, 1 = "SUBIX" formation)
+    // Morph progress (0 = random positions, 1 = "FLUXO" formation)
     // Oscillates slowly between states
     morphProgress.current = (Math.sin(time * 0.2) + 1) / 2;
     

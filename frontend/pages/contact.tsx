@@ -8,13 +8,13 @@ export default function ContactPage() {
   return (
     <div className="rive-page" dir="rtl">
       <Head>
-        <title>پشتیبانی تلگرام | سابیکس</title>
-        <meta name="description" content="برای پرسش درباره انتخاب اکانت‌های هوش مصنوعی، در تلگرام با پشتیبانی سابیکس گفت‌وگو کنید." />
+         <title>پشتیبانی تلگرام | فلوکسو</title>
+         <meta name="description" content="برای پرسش درباره انتخاب اکانت‌های هوش مصنوعی، در تلگرام با پشتیبانی فلوکسو گفت‌وگو کنید." />
       </Head>
       <NavigationBar />
       <main id="main-content" tabIndex={-1} className="support-page site-container">
         <section className="support-hero" aria-labelledby="support-title">
-          <span className="eyebrow">پشتیبانی سابیکس</span>
+           <span className="eyebrow">پشتیبانی فلوکسو</span>
           <h1 id="support-title">انتخاب سخت نیست؛<br /><span className="accent-text">سؤال درست را بپرسید.</span></h1>
           <p>اگر بین چند اکانت هوش مصنوعی مردد هستید یا درباره جزئیات یک محصول سؤال دارید، در تلگرام با ما در تماس باشید.</p>
         </section>

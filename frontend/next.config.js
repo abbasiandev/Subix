@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
-const isGhPages = process.env.DEPLOY_TARGET === 'gh-pages';
-const basePath = isGhPages ? '/Subix' : (process.env.NEXT_PUBLIC_BASE_PATH || '');
+// Fluxo is served from the root of its custom domain. A base path remains
+// configurable for preview deployments without leaking the old GitHub Pages path.
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 const nextConfig = {
   output: 'export',

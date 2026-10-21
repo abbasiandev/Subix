@@ -170,8 +170,8 @@ export default function BrandLogo({ brand, size = 24, className = "", color = "#
     const Logo = LOGOS[brand];
     if (!Logo) {
         return (
-            <span className={`inline-flex items-center justify-center text-white ${className}`}>
-        📦
+             <span className={`inline-flex items-center justify-center text-white ${className}`} aria-label="نشان محصول">
+         <span aria-hidden="true">•</span>
       </span>
         );
     }

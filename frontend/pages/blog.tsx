@@ -62,13 +62,13 @@ function BlogContent({
   return (
     <>
       <Head>
-         <title>راهنمای انتخاب اکانت هوش مصنوعی | سابیکس</title>
-         <meta name="description" content="راهنماها و مقایسه‌های سابیکس برای انتخاب سریع‌تر اکانت هوش مصنوعی مناسب کار شما." />
+          <title>راهنمای انتخاب اکانت هوش مصنوعی | فلوکسو</title>
+          <meta name="description" content="راهنماها و مقایسه‌های فلوکسو برای انتخاب سریع‌تر اکانت هوش مصنوعی مناسب کار شما." />
         <meta name="keywords" content="بلاگ هوش مصنوعی, راهنمای ChatGPT, آموزش AI, مقایسه هوش مصنوعی, راهنمای Cursor, نکات AI" />
-        <link rel="canonical" href="https://abbasiandev.github.io/Subix/blog" />
-         <meta property="og:title" content="راهنمای انتخاب اکانت هوش مصنوعی | سابیکس" />
-         <meta property="og:description" content="راهنماها و مقایسه‌های سابیکس برای انتخاب سریع‌تر اکانت هوش مصنوعی مناسب کار شما." />
-        <meta property="og:url" content="https://abbasiandev.github.io/Subix/blog" />
+         <link rel="canonical" href="https://fluxo.ir/blog" />
+          <meta property="og:title" content="راهنمای انتخاب اکانت هوش مصنوعی | فلوکسو" />
+          <meta property="og:description" content="راهنماها و مقایسه‌های فلوکسو برای انتخاب سریع‌تر اکانت هوش مصنوعی مناسب کار شما." />
+         <meta property="og:url" content="https://fluxo.ir/blog" />
         <meta property="og:type" content="website" />
       </Head>
        <div className="blog-page-content site-container">
@@ -76,7 +76,7 @@ function BlogContent({
         {/* Header */}
         <div className="mb-12 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 animate-fade-up">
-             راهنمای انتخاب سابیکس
+             راهنمای انتخاب فلوکسو
           </h1>
           <p className="text-gray-300 text-lg max-w-2xl mx-auto animate-fade-up stagger-1">
              قبل از خرید، تفاوت ابزارها و کاربرد هر اکانت را سریع‌تر بفهمید.
@@ -128,7 +128,7 @@ function BlogContent({
                     : 'bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10'
                 }`}
               >
-                {cat.icon} {cat.name}
+                {cat.name}
               </button>
             ))}
           </div>
@@ -145,10 +145,10 @@ function BlogContent({
                   className="rounded-2xl overflow-hidden cursor-pointer h-full flex flex-col animate-fade-up"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  {/* Cover Image Placeholder */}
+                   {/* Editorial cover */}
                   <div className="h-48 bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center">
                     <div className="text-6xl">
-                      {blogCategories.find(c => c.id === post.category)?.icon || '📝'}
+                       {blogCategories.find(c => c.id === post.category)?.name || 'راهنما'}
                     </div>
                   </div>
 
@@ -184,7 +184,7 @@ function BlogContent({
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                           </svg>
-                          {post.views?.toLocaleString('fa-IR')}
+                           {post.readTime} دقیقه مطالعه
                         </span>
                       </div>
                       <span>{formatDate(post.publishedAt)}</span>
@@ -196,7 +196,7 @@ function BlogContent({
           </div>
         ) : (
           <GlassContainer elevation="light" className="rounded-2xl p-12 text-center">
-            <div className="text-6xl mb-4">🔍</div>
+             <div className="text-6xl mb-4" aria-hidden="true">⌕</div>
              <h2 className="text-2xl font-bold text-white mb-2">نتیجه‌ای یافت نشد</h2>
             <p className="text-gray-400">لطفاً کلمات کلیدی دیگری را امتحان کنید</p>
           </GlassContainer>

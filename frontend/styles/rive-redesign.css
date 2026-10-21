@@ -1,4 +1,4 @@
-/* RiveDrive-led editorial direction, adapted for Persian/RTL Subix. */
+/* RiveDrive-led editorial direction, adapted for Persian/RTL Fluxo. */
 :root {
   color-scheme: dark;
   --site-bg: #050505;
@@ -116,7 +116,7 @@ a, button, input, summary { -webkit-tap-highlight-color: rgba(244,213,72,.12); }
 .story-reveal.reveal-pending { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
 .story-reveal.is-visible { opacity: 1; transform: none; }
 
-/* Scroll-driven Subix chapters: each viewport advances one visible idea. */
+/* Scroll-driven Fluxo chapters: each viewport advances one visible idea. */
 .scroll-story { background: var(--site-bg); }
 .scroll-story-chapter { position: relative; }
 .scroll-story-sticky { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: clamp(48px, 7vw, 110px); max-width: 1120px; margin-inline: auto; padding: 120px var(--site-gutter); }
@@ -331,7 +331,7 @@ a, button, input, summary { -webkit-tap-highlight-color: rgba(244,213,72,.12); }
   .catalog-card:hover, .rive-home .article-card:hover, .composition-tool:hover, .site-button:hover { transform: none; }
 }
 
-/* Canonical public routes: the same cinematic Subix surface outside the home story. */
+/* Canonical public routes: the same cinematic Fluxo surface outside the home story. */
 .rive-page { min-height: 100vh; background: var(--site-bg); color: var(--site-ink); }
 .rive-page main { min-height: calc(100vh - 76px); }
 .catalog-page { padding-top: 76px; }

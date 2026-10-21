@@ -85,7 +85,7 @@ export function TelegramIcon({ color = "white", size = 22 }: IconProps) {
   );
 }
 
-export function SubixLogoIcon({ size = 22 }: { size?: number }) {
+export function FluxoLogoIcon({ size = 22 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="white">
       <path d="M12 2L4 7v10l8 5 8-5V7L12 2zm0 3.2l5.5 3.4v6.8L12 18.8 6.5 15.4V8.6L12 5.2z" />
@@ -93,6 +93,7 @@ export function SubixLogoIcon({ size = 22 }: { size?: number }) {
     </svg>
   );
 }
+
 
 export function HeadsetIcon({ active = false, size = 24 }: { active?: boolean; size?: number }) {
   const color = active ? ACTIVE : INACTIVE;

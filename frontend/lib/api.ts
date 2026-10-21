@@ -1,5 +1,5 @@
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "";
-const DEFAULT_API = "https://subix.pythonanywhere.com";
+const DEFAULT_API = "https://fluxo.ir";
 
 function isLocalDev(): boolean {
     return (

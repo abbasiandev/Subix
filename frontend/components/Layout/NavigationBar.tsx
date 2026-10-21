@@ -41,15 +41,15 @@ export function NavigationBar() {
     const next = !light;
     setLight(next);
     document.documentElement.dataset.theme = next ? 'light' : 'dark';
-    try { localStorage.setItem('subix-theme', next ? 'light' : 'dark'); } catch { /* Theme still works without storage. */ }
+     try { localStorage.setItem('fluxo-theme', next ? 'light' : 'dark'); } catch { /* Theme still works without storage. */ }
   };
 
   return (
     <header className="site-header">
       <nav className="site-nav" aria-label="ناوبری اصلی">
-        <Link href="/" className="site-wordmark" aria-label="سابیکس، صفحه اصلی">
-          <span className="wordmark-symbol" aria-hidden="true">S<span>.</span></span>
-          <span>سابیکس</span>
+        <Link href="/" className="site-wordmark" aria-label="فلوکسو، صفحه اصلی">
+          <span className="wordmark-symbol" aria-hidden="true">F<span>.</span></span>
+          <span>فلوکسو</span>
         </Link>
         <div className="site-nav-links">
           {links.map((link) => <Link key={link.href} href={link.href}>{link.label}</Link>)}

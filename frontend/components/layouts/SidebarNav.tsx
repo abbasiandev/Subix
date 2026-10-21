@@ -7,7 +7,7 @@ import {
   ShoppingBagIcon,
   BlogIcon,
 } from "@/components/Icons";
-import { SubixLogoIcon } from "@/components/Icons";
+import { FluxoLogoIcon } from "@/components/Icons";
 import UserAvatar from "@/components/UserAvatar";
 import { useAuth } from "@/context/AuthContext";
 
@@ -34,9 +34,9 @@ export default function SidebarNav() {
         <div className="p-6 border-b border-white/20">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="transform group-hover:scale-110 transition-transform">
-              <SubixLogoIcon size={48} />
+              <FluxoLogoIcon size={48} />
             </div>
-            <span className="text-2xl font-black text-white">سابیکس</span>
+            <span className="text-2xl font-black text-white">فلوکسو</span>
           </Link>
         </div>
 
@@ -84,7 +84,7 @@ export default function SidebarNav() {
                 {displayName}
               </p>
               <p className="text-xs text-white/70 truncate">
-                {user?.username ? `@${user.username}` : "کاربر سابیکس"}
+                {user?.username ? `@${user.username}` : "کاربر فلوکسو"}
               </p>
             </div>
           </Link>

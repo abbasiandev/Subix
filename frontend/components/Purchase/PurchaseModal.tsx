@@ -78,7 +78,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
             {step === 'payment' && (
               <div className="payment-step">
                  <h3 className="step-title">پیش‌نمایش مسیر دریافت</h3>
-                <p className="demo-note">اتصال پرداخت در این نسخه فعال نیست؛ این پنجره فقط مسیر تجربه خرید را نشان می‌دهد.</p>
+                 <p className="demo-note">پرداخت آنلاین هنوز در دسترس نیست؛ این پنجره فقط جزئیات مسیر دریافت را نشان می‌دهد.</p>
                 
                 <div className="gateway-options">
                   <button
@@ -157,7 +157,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
                       fill="none"
                     />
                   </svg>
-                   درگاه‌ها پس از اتصال backend در همین مرحله فعال می‌شوند
+                    گزینه پرداخت پس از آماده‌شدن مسیر آنلاین فعال می‌شود
                 </p>
               </div>
             )}
@@ -165,8 +165,8 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({ product, onClose }
             {step === 'demo' && (
               <div className="demo-step">
                 <div className="demo-icon" aria-hidden="true">i</div>
-                <h3 className="success-title">این مسیر هنوز نمایشی است</h3>
-                <p className="success-text">جزئیات انتخاب شما آماده است، اما پرداخت و فعال‌سازی تا زمان اتصال backend انجام نمی‌شود.</p>
+                 <h3 className="success-title">ادامه مسیر در حال آماده‌سازی است</h3>
+                 <p className="success-text">جزئیات انتخاب شما مشخص است، اما پرداخت و فعال‌سازی آنلاین هنوز در دسترس نیست.</p>
                 <div className="success-actions">
                   <button className="primary-action" onClick={onClose}>بازگشت به جزئیات محصول</button>
                 </div>

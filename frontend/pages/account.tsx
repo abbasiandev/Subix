@@ -90,7 +90,7 @@ export default function AccountPage() {
     return (
       <>
         <Head>
-          <title>حساب کاربری | سابیکس</title>
+           <title>حساب کاربری | فلوکسو</title>
         </Head>
         <NavigationBar />
         <main className="min-h-screen bg-black flex items-center justify-center pt-24" dir="rtl">
@@ -109,7 +109,7 @@ export default function AccountPage() {
     return (
       <>
         <Head>
-          <title>ورود به حساب کاربری | سابیکس</title>
+           <title>ورود به حساب کاربری | فلوکسو</title>
           <meta name="description" content="ورود به حساب کاربری جهت مشاهده اشتراک‌ها، اطلاعات لایسنس و ارسال تیکت" />
         </Head>
 
@@ -140,7 +140,7 @@ export default function AccountPage() {
 
                 {/* Notice */}
                 <div className="mt-8 p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-xs text-gray-300 leading-relaxed">
-                  💡 <strong>نکته:</strong> خرید و فعال‌سازی سرویس‌ها بدون نیاز به ثبت‌نام قبلی امکان‌پذیر است؛ ورود به این صفحه صرفاً برای دسترسی به پنل مدیریت لایسنس‌ها و ثبت تیکت پشتیبانی است.
+                   <strong>نکته:</strong> خرید و فعال‌سازی سرویس‌ها بدون نیاز به ثبت‌نام قبلی امکان‌پذیر است؛ ورود به این صفحه صرفاً برای دسترسی به پنل مدیریت لایسنس‌ها و ثبت تیکت پشتیبانی است.
                 </div>
               </div>
             </ScrollReveal>
@@ -153,13 +153,13 @@ export default function AccountPage() {
   }
 
   // 3. Authenticated Dashboard
-  const displayName = user.first_name || user.username || (user.phone_number ? `کاربر ${user.phone_number.slice(-4)}` : 'کاربر سابیکس');
+   const displayName = user.first_name || user.username || (user.phone_number ? `کاربر ${user.phone_number.slice(-4)}` : 'کاربر فلوکسو');
   const displayPhone = user.phone_number || (user.username ? `@${user.username}` : 'ثبت‌نشده');
 
   return (
     <>
       <Head>
-        <title>حساب کاربری - {displayName} | سابیکس</title>
+         <title>حساب کاربری - {displayName} | فلوکسو</title>
         <meta name="description" content="مدیریت اشتراک‌ها، لایسنس‌ها و تیکت‌های پشتیبانی" />
       </Head>
 
@@ -262,7 +262,7 @@ export default function AccountPage() {
                     </div>
                     <h3>هنوز اشتراک فعالی ندارید</h3>
                     <p>
-                       هنوز سفارشی در حساب شما ثبت نشده است. پس از فعال شدن مسیر واقعی سفارش، وضعیت اکانت‌های خریداری‌شده در این بخش نمایش داده می‌شود.
+                        هنوز سفارشی در حساب شما ثبت نشده است. سفارش‌های ثبت‌شده در این بخش نمایش داده می‌شوند.
                     </p>
                      <Link href="/products" className="browse-button">
                        مشاهده کاتالوگ اکانت‌ها
@@ -363,7 +363,7 @@ export default function AccountPage() {
                       </svg>
                     </div>
                     <h3>هیچ تیکت پشتیبانی ثبت نشده است</h3>
-                    <p>در صورت بروز هرگونه سوال یا مشکل در فعال‌سازی، کارشناسان سابیکس ۲۴ ساعته پاسخگوی شما هستند.</p>
+                     <p>برای پرسش درباره انتخاب یا دریافت، از مسیر پشتیبانی تلگرام با ما در تماس باشید.</p>
                     <Link href="/tickets" className="browse-button">
                       ارسال تیکت پشتیبانی
                     </Link>

@@ -85,7 +85,7 @@ const Logo: React.FC<LogoProps> = ({
     </motion.svg>
   );
 
-  // Wordmark - "SUBIX" text
+  // Wordmark - "FLUXO" text
   const WordmarkSVG = () => (
     <motion.div
       style={{ fontSize, fontWeight: 700, letterSpacing: '-0.02em', color: fillColor }}
@@ -94,7 +94,7 @@ const Logo: React.FC<LogoProps> = ({
       animate={animated ? { opacity: 1, x: 0 } : false}
       transition={{ duration: 0.5, delay: 0.2 }}
     >
-      SUBIX
+       FLUXO
     </motion.div>
   );
 

@@ -1,7 +1,7 @@
 import type {NextApiRequest, NextApiResponse} from "next";
 
 const TARGET =
-    process.env.API_PROXY_TARGET ?? "https://subix.pythonanywhere.com";
+    process.env.API_PROXY_TARGET ?? "https://fluxo.ir";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const segments = req.query.path;

@@ -45,7 +45,7 @@ const NavigationNew: React.FC = () => {
               <div className="flex items-center gap-3 cursor-pointer group">
                 <Logo variant="icon" size="md" color="primary" animated={false} />
                 <span className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors duration-300">
-                  SUBIX
+                   FLUXO
                 </span>
               </div>
             </Link>

@@ -258,15 +258,15 @@ export default function WebGLHero() {
       <div className="flash-fallback" aria-hidden="true" />
       <OrbitalScene onStateChange={handleStateChange} />
       <div className="flash-hero-content">
-        <div className="flash-kicker">SUBIX / مرجع خرید اکانت و لایسنس‌های اورجینال</div>
-        <h1 id="hero-title">خرید انواع اکانت و لایسنس اورجینال</h1>
-        <p>دسترسی مستقیم و قانونی به انواع اکانت‌های پریمیوم و لایسنس‌های اختصاصی هوش مصنوعی، برنامه‌نویسی، طراحی و استریم.</p>
+         <div className="flash-kicker">FLUXO / مرجع انتخاب اکانت و لایسنس</div>
+         <h1 id="hero-title">خرید انواع اکانت و لایسنس اورجینال</h1>
+         <p>قابلیت‌ها، مدت و قیمت اکانت‌های هوش مصنوعی، برنامه‌نویسی، طراحی و استریم را شفاف مقایسه کنید.</p>
         <div className="flash-actions">
           <a href="#products" className="flash-button primary">مشاهده اکانت‌ها و لایسنس‌ها <span aria-hidden="true">↙</span></a>
         </div>
       </div>
-      <div className="flash-corner top">LIVE / 02:37:11</div>
-      <div className="flash-corner bottom">SCROLL TO EXPLORE <span aria-hidden="true">↓</span></div>
+       <div className="flash-corner top">FLUXO / ۰۱</div>
+       <div className="flash-corner bottom">برای دیدن انتخاب‌ها پایین بروید <span aria-hidden="true">↓</span></div>
       <span className="sr-only">{sceneState.supported && sceneState.ready ? 'نمایش سه‌بعدی فعال است' : 'نمایش سه‌بعدی در دسترس نیست؛ پس‌زمینه جایگزین فعال است'}</span>
     </section>
   );

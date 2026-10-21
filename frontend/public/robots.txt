@@ -1,4 +1,4 @@
-# robots.txt for Subix
+# robots.txt for Fluxo
 User-agent: *
 Allow: /
 Allow: /products
@@ -11,4 +11,4 @@ Disallow: /profile
 Disallow: /admin
 Disallow: /api/
 
-Sitemap: https://abbasiandev.github.io/Subix/sitemap.xml
+Sitemap: https://fluxo.ir/sitemap.xml

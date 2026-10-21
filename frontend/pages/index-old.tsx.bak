@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { SubixLogoIcon } from "@/components/Icons";
+import { FluxoLogoIcon } from "@/components/Icons";
 import { useAuth } from "@/context/AuthContext";
 import { useLayout } from "@/context/LayoutContext";
 import { useEffect, useState } from "react";
@@ -100,13 +100,13 @@ export default function LandingPage() {
               magnetic
               className="rounded-3xl p-8 border-gradient"
             >
-              <SubixLogoIcon size={120} />
+              <FluxoLogoIcon size={120} />
             </GlassContainer>
           </div>
 
           {/* Title with Gradient Effect */}
           <h1 className="text-6xl md:text-7xl font-black mb-4 tracking-tight animate-fade-up">
-            <span className="text-gradient-white">سابیکس</span>
+            <span className="text-gradient-white">فلوکسو</span>
           </h1>
           
           <p className="text-2xl md:text-3xl text-white/90 font-semibold mb-6 animate-fade-up stagger-1">
@@ -235,7 +235,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto mb-20">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-black text-white mb-4 animate-fade-up">
-              📝 بلاگ سابیکس
+              راهنمای فلوکسو
             </h2>
             <p className="text-xl text-white/80 animate-fade-up stagger-1">
               آخرین مقالات و راهنماهای کاربردی
@@ -301,14 +301,14 @@ export default function LandingPage() {
               آماده شروع هستید؟
             </h2>
             <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed">
-              با ورود به فروشگاه سابیکس، از بهترین اشتراک‌های هوش مصنوعی با قیمت مناسب بهره‌مند شوید
+              با ورود به فروشگاه فلوکسو، اکانت‌های هوش مصنوعی را بر اساس کاربرد و شرایط مقایسه کنید
             </p>
 
             {/* Premium CTA Button */}
             <button
               onClick={handleEnterStore}
               disabled={loading}
-              aria-label="ورود به فروشگاه سابیکس"
+              aria-label="ورود به فروشگاه فلوکسو"
               className="glass-magnetic inline-flex items-center gap-3 bg-white text-primary font-black text-xl px-14 py-5 rounded-2xl shadow-2xl hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] disabled:opacity-50 disabled:cursor-not-allowed group focus:outline-none focus:ring-4 focus:ring-white/40"
             >
               {loading ? (
@@ -344,7 +344,7 @@ export default function LandingPage() {
         <footer className="text-center pb-12">
           <GlassContainer elevation="subtle" className="rounded-3xl p-8 max-w-2xl mx-auto">
             <p className="text-white/70 mb-4">
-              © 2025 سابیکس. تمامی حقوق محفوظ است.
+              © 2025 فلوکسو. تمامی حقوق محفوظ است.
             </p>
             <div className="flex items-center justify-center gap-6">
               <a 

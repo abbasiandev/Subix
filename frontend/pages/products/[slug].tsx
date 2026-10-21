@@ -43,9 +43,9 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
   return (
     <>
       <Head>
-        <title>{displayedProduct.name} - سابیکس</title>
+         <title>{displayedProduct.name} - فلوکسو</title>
         <meta name="description" content={displayedProduct.description} />
-        <meta property="og:title" content={`${displayedProduct.name} - سابیکس`} />
+         <meta property="og:title" content={`${displayedProduct.name} - فلوکسو`} />
         <meta property="og:description" content={displayedProduct.description} />
         <meta property="og:image" content={asset(displayedProduct.brandLogoPath)} />
       </Head>
@@ -245,7 +245,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product }) => {
                   <div className="step-number">3</div>
                    <h3 className="step-title">ادامه در مسیر دریافت</h3>
                   <p className="step-description">
-                     در نسخه عملیاتی، مرحله دریافت از همین مسیر ادامه پیدا می‌کند
+                      جزئیات ادامه مسیر در همین صفحه و گفت‌وگوی پشتیبانی روشن می‌شود
                   </p>
                 </div>
               </ScrollReveal>

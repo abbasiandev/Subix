@@ -210,8 +210,8 @@ export default function LoginPhone() {
   return (
     <>
       <Head>
-        <title>ورود با شماره موبایل | سابیکس</title>
-        <meta name="description" content="ورود یا ثبت‌نام در سابیکس با شماره موبایل و کد یکبار مصرف پیامکی" />
+         <title>ورود با شماره موبایل | فلوکسو</title>
+         <meta name="description" content="ورود یا ثبت‌نام در فلوکسو با شماره موبایل و کد یکبار مصرف پیامکی" />
       </Head>
 
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4" dir="rtl">
@@ -294,7 +294,7 @@ export default function LoginPhone() {
                 </form>
 
                 <p className="text-center text-xs text-gray-400 mt-6 leading-relaxed">
-                  با ورود به سابیکس،{' '}
+                   با ورود به فلوکسو،{' '}
                   <Link href="/terms" className="text-blue-400 hover:text-blue-300">قوانین و مقررات</Link>
                   {' '}را می‌پذیرید
                 </p>

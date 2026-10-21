@@ -248,7 +248,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
 
             <p className="privacy-note">
               با ورود به سایت، شما{' '}
-              <a href="/terms">شرایط و قوانین</a> استفاده از سرویس‌های سابیکس و{' '}
+               <a href="/terms">شرایط و قوانین</a> استفاده از سرویس‌های فلوکسو و{' '}
               <a href="/privacy">قوانین حریم خصوصی</a> آن را می‌پذیرید
             </p>
           </form>
