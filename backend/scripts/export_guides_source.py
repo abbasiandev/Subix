@@ -101,7 +101,7 @@ def main() -> int:
     if not source_url:
         raise SystemExit("Set GUIDE_SOURCE_URL in backend/.env.guide-sync or pass --source-url")
 
-    headers = {"User-Agent": "Mozilla/5.0 (compatible; Subix private exporter)", "Accept-Language": "fa,en;q=0.8"}
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; Fluxo private exporter)", "Accept-Language": "fa,en;q=0.8"}
     urls: list[str] = []
     with httpx.Client(headers=headers, follow_redirects=True, timeout=45.0) as client:
         for path in [part.strip() for part in args.paths.split(",") if part.strip()]:

@@ -330,7 +330,7 @@ def fetch_source_records(source_url: str, paths: Sequence[str]) -> list[PriceRec
         raise ValueError("Set PRICE_SOURCE_URL or pass --source-url")
 
     headers = {
-        "User-Agent": "Mozilla/5.0 (compatible; Subix price updater)",
+        "User-Agent": "Mozilla/5.0 (compatible; Fluxo price updater)",
         "Accept-Language": "fa,en;q=0.8",
     }
     records: list[PriceRecord] = []

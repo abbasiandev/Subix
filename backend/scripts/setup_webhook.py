@@ -5,7 +5,7 @@ Usage (from backend/):
 
 If PythonAnywhere proxy fails, run from your Mac (or any machine with internet):
   curl -sS "https://api.telegram.org/bot<TOKEN>/setWebhook" \\
-    -d "url=https://subix.pythonanywhere.com/webhook" \\
+    -d "url=https://fluxo.ir/webhook" \\
     -d "drop_pending_updates=true"
 """
 import httpx
@@ -19,7 +19,7 @@ def main() -> None:
         raise SystemExit("BOT_TOKEN is missing in .env")
     if not settings.webhook_url:
         raise SystemExit(
-            "WEBHOOK_URL is missing in .env (e.g. https://subix.pythonanywhere.com/webhook)"
+            "WEBHOOK_URL is missing in .env (e.g. https://fluxo.ir/webhook)"
         )
     url = settings.webhook_url.rstrip("/")
     try:

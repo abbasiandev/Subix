@@ -74,9 +74,9 @@ def generate_comparison_report(current_products: List[Dict], scraped_products: L
     """Generate price comparison report"""
     report = []
     report.append("=" * 80)
-    report.append("PRICE COMPARISON REPORT - SUBIX VS REFERENCE CATALOG")
+    report.append("PRICE COMPARISON REPORT - FLUXO VS REFERENCE CATALOG")
     report.append("=" * 80)
-    report.append(f"Subix Products: {len(current_products)}")
+    report.append(f"Fluxo Products: {len(current_products)}")
     report.append(f"Reference Products: {len(scraped_products)}")
     report.append("")
     
@@ -86,7 +86,7 @@ def generate_comparison_report(current_products: List[Dict], scraped_products: L
         best_match, score = find_best_match(current, scraped_products)
         if best_match and score > 0.5:  # Minimum 50% similarity
             matches.append({
-                'subix': current,
+                'fluxo': current,
                 'reference': best_match,
                 'similarity': score
             })
@@ -96,33 +96,33 @@ def generate_comparison_report(current_products: List[Dict], scraped_products: L
     report.append("-" * 80)
     
     # Detailed comparison
-    total_subix_price = 0
+    total_fluxo_price = 0
     total_reference_price = 0
     
     for i, match in enumerate(matches, 1):
-        subix = match['subix']
+        fluxo = match['fluxo']
         reference = match['reference']
         similarity = match['similarity']
         
-        price_diff = subix['price'] - reference['price']
+        price_diff = fluxo['price'] - reference['price']
         price_diff_pct = (price_diff / reference['price'] * 100) if reference['price'] > 0 else 0
         
-        total_subix_price += subix['price']
+        total_fluxo_price += fluxo['price']
         total_reference_price += reference['price']
         
         report.append(f"\n{i}. MATCH (Similarity: {similarity*100:.1f}%)")
-        report.append(f"   Subix:        {subix['name']}")
+        report.append(f"   Fluxo:        {fluxo['name']}")
         report.append(f"   Reference:   {reference['name']}")
-        report.append(f"   Category:     {subix['category']}")
+        report.append(f"   Category:     {fluxo['category']}")
         report.append(f"   ")
-        report.append(f"   Subix Price:       {subix['price']:>15,.0f} تومان")
+        report.append(f"   Fluxo Price:       {fluxo['price']:>15,.0f} تومان")
         report.append(f"   Reference Price:   {reference['price']:>15,.0f} تومان")
         report.append(f"   Difference:        {price_diff:>15,.0f} تومان ({price_diff_pct:+.1f}%)")
         
         if price_diff > 0:
-            report.append(f"   ⚠️  Subix is MORE EXPENSIVE")
+            report.append(f"   Fluxo is MORE EXPENSIVE")
         elif price_diff < 0:
-            report.append(f"   ✓  Subix is CHEAPER")
+            report.append(f"   Fluxo is CHEAPER")
         else:
             report.append(f"   =  Same price")
         
@@ -133,23 +133,23 @@ def generate_comparison_report(current_products: List[Dict], scraped_products: L
     report.append("SUMMARY")
     report.append("=" * 80)
     if matches:
-        avg_subix = total_subix_price / len(matches)
+        avg_fluxo = total_fluxo_price / len(matches)
         avg_reference = total_reference_price / len(matches)
-        avg_diff = avg_subix - avg_reference
+        avg_diff = avg_fluxo - avg_reference
         avg_diff_pct = (avg_diff / avg_reference * 100) if avg_reference > 0 else 0
         
-        report.append(f"Average Subix Price:       {avg_subix:,.0f} تومان")
+        report.append(f"Average Fluxo Price:       {avg_fluxo:,.0f} تومان")
         report.append(f"Average Reference Price:   {avg_reference:,.0f} تومان")
         report.append(f"Average Difference:        {avg_diff:+,.0f} تومان ({avg_diff_pct:+.1f}%)")
         
-        cheaper_count = sum(1 for m in matches if m['subix']['price'] < m['reference']['price'])
-        same_count = sum(1 for m in matches if m['subix']['price'] == m['reference']['price'])
+        cheaper_count = sum(1 for m in matches if m['fluxo']['price'] < m['reference']['price'])
+        same_count = sum(1 for m in matches if m['fluxo']['price'] == m['reference']['price'])
         expensive_count = len(matches) - cheaper_count - same_count
         
         report.append("")
-        report.append(f"Subix is CHEAPER:  {cheaper_count} products ({cheaper_count/len(matches)*100:.1f}%)")
-        report.append(f"Subix is SAME:     {same_count} products ({same_count/len(matches)*100:.1f}%)")
-        report.append(f"Subix is PRICIER:  {expensive_count} products ({expensive_count/len(matches)*100:.1f}%)")
+        report.append(f"Fluxo is CHEAPER:  {cheaper_count} products ({cheaper_count/len(matches)*100:.1f}%)")
+        report.append(f"Fluxo is SAME:     {same_count} products ({same_count/len(matches)*100:.1f}%)")
+        report.append(f"Fluxo is PRICIER:  {expensive_count} products ({expensive_count/len(matches)*100:.1f}%)")
     
     report.append("=" * 80)
     

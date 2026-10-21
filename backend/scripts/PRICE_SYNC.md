@@ -75,7 +75,7 @@ After deploying the backend and frontend, open the public admin route on a
 phone:
 
 ```text
-https://your-frontend.example/Subix/admin
+https://fluxo.ir/admin
 ```
 
 Enter the admin secret once in that browser session, then tap

@@ -37,8 +37,8 @@ async def scrape_and_parse(headless: bool = True, timeout: int = 30) -> dict:
     raw_products = parser.parse_products(html)
     print()
     
-    # Step 3: Transform to Subix schema
-    print("[3/4] Transforming to Subix schema...")
+    # Step 3: Transform to Fluxo schema
+    print("[3/4] Transforming to Fluxo schema...")
     transformer = DataTransformer()
     transformed_products = transformer.transform_products(raw_products)
     print(f"✓ Transformed {len(transformed_products)} products")

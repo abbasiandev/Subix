@@ -174,7 +174,7 @@ def scrape_products() -> List[Dict]:
             
     print(f"✓ Total unique products scraped: {len(products_by_name)}")
     
-    # Transform to Subix product schema
+    # Transform to Fluxo product schema
     transformed = []
     for idx, (name, item) in enumerate(products_by_name.items(), 1):
         slug = generate_slug(name, idx)
@@ -207,7 +207,7 @@ def scrape_products() -> List[Dict]:
                 {'label': 'نوع اشتراک', 'value': 'اکانت اختصاصی / روی ایمیل شخصی'},
                 {'label': 'مدت اعتبار', 'value': '۳۰ روز (قابل تمدید)'},
                 {'label': 'گارانتی', 'value': 'ضمانت ۱۰۰٪ تا روز آخر اشتراک'},
-                {'label': 'پشتیبانی', 'value': '۲۴/۷ توسط تیم سابیکس'}
+                {'label': 'پشتیبانی', 'value': 'پشتیبانی در تلگرام'}
             ],
             'popular': idx <= 6
         })
@@ -267,8 +267,8 @@ def scrape_articles() -> List[Dict]:
                 full_content = "\n\n".join(paragraphs)
                 excerpt = paragraphs[0] if len(paragraphs[0]) < 200 else paragraphs[0][:190] + "..."
             else:
-                excerpt = f"راهنمای جامع و بررسی کامل {title} و نحوه خرید و فعال‌سازی قانونی با پشتیبانی کامل سابیکس."
-                full_content = f"{title}\n\nاین مقاله به بررسی کامل ویژگی‌ها، نکات مهم، مقایسه پلن‌ها و آموزش فعال‌سازی اختصاص دارد.\n\n### ویژگی‌ها و مزایا:\n- تحویل سریع و قانونی\n- بدون نیاز به کردیت کارت خارجی\n- پشتیبانی ۲۴ ساعته سابیکس"
+                excerpt = f"راهنمای جامع و بررسی کامل {title} و نکته‌های مهم پیش از انتخاب."
+                full_content = f"{title}\n\nاین مقاله به بررسی ویژگی‌ها، نکات مهم، مقایسه پلن‌ها و مسیر استفاده اختصاص دارد.\n\n### ویژگی‌ها و نکات:\n- قابلیت‌ها و محدودیت‌های سرویس\n- معیارهای مقایسه پیش از انتخاب\n- ارجاع به اطلاعات جاری کاتالوگ"
                 
             # Tags & Category
             cat = 'guide'
@@ -279,7 +279,7 @@ def scrape_articles() -> List[Dict]:
             elif 'review' in slug.lower() or 'بررسی' in title:
                 cat = 'news'
                 
-            tags = ['هوش مصنوعی', 'راهنمای خرید', 'سابیکس']
+            tags = ['هوش مصنوعی', 'راهنمای انتخاب', 'فلوکسو']
             if 'chatgpt' in slug.lower():
                 tags.extend(['ChatGPT', 'OpenAI'])
             if 'gemini' in slug.lower():
@@ -307,7 +307,7 @@ def scrape_articles() -> List[Dict]:
                 'imageBlurDataURL': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAIAAAA7ljmRAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAMklEQVQImQEnANj/AHQ8zv/R//+k//981f9sMsL/0//+m//+ct3/YS63/9L//5f//3DZ/607MgrCIyUAAAAASUVORK5CYII=',
                 'readTime': read_time,
                 'publishDate': '2026-08-28',
-                'author': 'تیم تحریریه سابیکس',
+                'author': 'تیم تحریریه فلوکسو',
                 'content': full_content,
                 'tags': list(dict.fromkeys(tags))
             })
@@ -349,7 +349,7 @@ export interface Product {
 }
 
 /**
- * Product catalog - Live market & Subix products
+ * Product catalog - Live market & Fluxo products
  * Prices in Iranian Toman
  */
 export const products: Product[] = """

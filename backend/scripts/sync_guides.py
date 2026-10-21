@@ -116,7 +116,7 @@ def generate_with_ai(
     """Ask an AI provider for an independent guide, never for a translation."""
 
     product_names = [product.name for product in catalog if product.slug in product_slugs]
-    system_prompt = """تو ویراستار ارشد محتوای فارسی برای فروشگاه سابیکس هستی.
+    system_prompt = """تو ویراستار ارشد محتوای فارسی برای فروشگاه فلوکسو هستی.
 یک راهنمای کاملاً مستقل و تازه بنویس؛ متن منبع را ترجمه، خلاصه، پارافریز یا با همان ساختار بازتولید نکن.
 از عبارت‌ها، تیترها، ترتیب بخش‌ها، ادعاهای اختصاصی و لحن منبع فاصله بگیر. فقط از موضوع کلی برای ایده‌گرفتن استفاده کن.
 نام برند یا فروشگاه منبع، آدرس سایت، URL، عبارت‌های مربوط به منبع، قیمت ثابت، تخفیف و ادعای تأییدنشده را ننویس.
@@ -127,7 +127,7 @@ excerpt یک خلاصه مستقل حداکثر ۲۵۰ کاراکتری باشد
     user_prompt = json.dumps(
         {
             "موضوع_کلی": source_title,
-            "دسته_سابیکس": category,
+            "دسته_فلوکسو": category,
             "محصولات_مرتبط": product_names,
             "متن_مرجع_خصوصی_فقط_برای_تحقیق": source_text,
         },
@@ -174,7 +174,7 @@ excerpt یک خلاصه مستقل حداکثر ۲۵۰ کاراکتری باشد
         "imagePath": f"/selection-guides/choose-{digest}.svg",
         "readTime": max(3, min(12, len(str(generated["content"]).split()) // 180)),
         "publishDate": "2026-10-11",
-        "author": "تحریریه سابیکس",
+        "author": "تحریریه فلوکسو",
         "content": str(generated["content"]).strip(),
         "tags": [str(tag).strip() for tag in generated["tags"][:6]],
         "productSlugs": product_slugs,
@@ -211,7 +211,7 @@ def make_guide(title: str, product_slugs: list[str], index: int) -> dict[str, An
         "imagePath": f"/selection-guides/{slug}.svg",
         "readTime": 3,
         "publishDate": "2026-10-11",
-        "author": "تحریریه سابیکس",
+        "author": "تحریریه فلوکسو",
         "content": make_content(category, summary),
         "tags": tags,
         "productSlugs": product_slugs,
@@ -240,7 +240,7 @@ def make_editorial_guide(editorial: dict[str, Any], product_slugs: list[str], in
         "imagePath": f"/selection-guides/choose-{digest}.svg",
         "readTime": int(editorial.get("readTime", max(3, min(12, len(content.split()) // 180)))),
         "publishDate": str(editorial.get("publishDate", "2026-10-11")),
-        "author": str(editorial.get("author", "تحریریه سابیکس")),
+        "author": str(editorial.get("author", "تحریریه فلوکسو")),
         "content": content,
         "tags": [str(tag).strip() for tag in editorial["tags"][:6]],
         "productSlugs": product_slugs,
@@ -259,7 +259,7 @@ def load_manual(path: Path) -> list[dict[str, Any]]:
 def cover_svg(guide: dict[str, Any], index: int) -> str:
     palette = [("#00f5ff", "#45216f"), ("#ff4ecd", "#1b145c"), ("#c2ef75", "#11624f"), ("#ff795e", "#6b1d40")][index % 4]
     title = html.escape(str(guide["title"]))
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 465" role="img" aria-labelledby="title desc"><title id="title">{title}</title><desc id="desc">Original abstract Subix guide illustration</desc><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#070314"/><stop offset=".55" stop-color="{palette[1]}"/><stop offset="1" stop-color="{palette[0]}"/></linearGradient></defs><rect width="800" height="465" fill="url(#bg)"/><circle cx="650" cy="90" r="140" fill="{palette[0]}" opacity=".22"/><path d="M0 370 210 175l115 100 170-155 305 300H0Z" fill="#070314" opacity=".62"/><path d="M110 270h580M250 145v220M420 120v245M585 175v180" stroke="#fff" stroke-opacity=".28" stroke-width="2"/><text x="48" y="72" fill="{palette[0]}" font-family="monospace" font-size="18" letter-spacing="4">SUBIX / GUIDE {index + 1:02d}</text><text x="48" y="390" fill="#fff" font-family="Arial,sans-serif" font-size="30" font-weight="700">{title}</text></svg>'''
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 465" role="img" aria-labelledby="title desc"><title id="title">{title}</title><desc id="desc">Original abstract Fluxo guide illustration</desc><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#070314"/><stop offset=".55" stop-color="{palette[1]}"/><stop offset="1" stop-color="{palette[0]}"/></linearGradient></defs><rect width="800" height="465" fill="url(#bg)"/><circle cx="650" cy="90" r="140" fill="{palette[0]}" opacity=".22"/><path d="M0 370 210 175l115 100 170-155 305 300H0Z" fill="#070314" opacity=".62"/><path d="M110 270h580M250 145v220M420 120v245M585 175v180" stroke="#fff" stroke-opacity=".28" stroke-width="2"/><text x="48" y="72" fill="{palette[0]}" font-family="monospace" font-size="18" letter-spacing="4">FLUXO / GUIDE {index + 1:02d}</text><text x="48" y="390" fill="#fff" font-family="Arial,sans-serif" font-size="30" font-weight="700">{title}</text></svg>'''
 
 
 def publish(new_guides: list[dict[str, Any]], output_path: Path = GUIDES_JSON, single_file: bool = False) -> None:
@@ -336,7 +336,7 @@ def main() -> int:
                 raise ValueError("Set GUIDE_SOURCE_URL or pass --source-url")
             if args.ai and not ai_api_key:
                 raise ValueError("Set OPENAI_API_KEY in backend/.env.guide-sync before using --ai")
-            headers = {"User-Agent": "Mozilla/5.0 (compatible; Subix guide updater)", "Accept-Language": "fa,en;q=0.8"}
+            headers = {"User-Agent": "Mozilla/5.0 (compatible; Fluxo guide updater)", "Accept-Language": "fa,en;q=0.8"}
             candidates = []
             with httpx.Client(headers=headers, follow_redirects=True, timeout=30.0) as client:
                 for path in [part.strip() for part in args.paths.split(",") if part.strip()]:
@@ -355,7 +355,7 @@ def main() -> int:
         generated: list[dict[str, Any]] = []
         seen_products: set[tuple[str, ...]] = set()
         if args.ai and args.input:
-            with httpx.Client(headers={"User-Agent": "Mozilla/5.0 (compatible; Subix guide updater)"}, follow_redirects=True, timeout=45.0) as ai_client:
+            with httpx.Client(headers={"User-Agent": "Mozilla/5.0 (compatible; Fluxo guide updater)"}, follow_redirects=True, timeout=45.0) as ai_client:
                 for candidate in candidates:
                     source_title = str(candidate.get("sourceTitle") or candidate.get("title", ""))
                     editorial = candidate.get("editorial") if isinstance(candidate.get("editorial"), dict) else None
@@ -379,7 +379,7 @@ def main() -> int:
                     category, _, _, _ = classify(source_title)
                     generated.append(generate_with_ai(ai_client, ai_api_url, ai_api_key, ai_model, source_title, source_text, category, product_slugs, catalog))
         elif args.ai:
-            with httpx.Client(headers={"User-Agent": "Mozilla/5.0 (compatible; Subix guide updater)"}, follow_redirects=True, timeout=45.0) as ai_client:
+            with httpx.Client(headers={"User-Agent": "Mozilla/5.0 (compatible; Fluxo guide updater)"}, follow_redirects=True, timeout=45.0) as ai_client:
                 for candidate in candidates:
                     product_key = tuple(sorted(str(slug) for slug in candidate["productSlugs"]))
                     if product_key in seen_products:

@@ -37,7 +37,7 @@ class DataTransformer:
         return 30
     
     def map_category(self, category: str) -> str:
-        """Normalize category names to match Subix conventions"""
+        """Normalize category names to match Fluxo conventions"""
         category_map = {
             'chatgpt': 'ChatGPT',
             'gpt': 'ChatGPT',
@@ -60,7 +60,7 @@ class DataTransformer:
         return category_map.get(category_lower, category)
     
     def add_defaults(self) -> Dict:
-        """Return default values for Subix schema fields"""
+        """Return default values for Fluxo schema fields"""
         return {
             'activation_minutes': 30,
             'activation_type': 'ready_email',
@@ -68,14 +68,14 @@ class DataTransformer:
         }
     
     def transform_product(self, raw_product: Dict, sort_order: int) -> Dict:
-        """Transform raw scraped product to Subix database schema
+        """Transform raw scraped product to Fluxo database schema
         
         Args:
             raw_product: Dict with keys: name, description, price, category
             sort_order: Integer for ordering products
             
         Returns:
-            Dict matching Subix products table schema
+            Dict matching Fluxo products table schema
         """
         defaults = self.add_defaults()
         

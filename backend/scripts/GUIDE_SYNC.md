@@ -1,7 +1,7 @@
 # Guide synchronization
 
 The homepage `۰۴ / راهنمای انتخاب` section is the published guide feed in
-`frontend/data/guides.json`. It uses original Subix editorial copy and local
+`frontend/data/guides.json`. It uses original Fluxo editorial copy and local
 SVG covers. The updater reads only link titles and product identity hints from
 the private reference feed; it does not copy article prose, remote images,
 source URLs, hostnames, or source branding.
@@ -134,7 +134,7 @@ Create a JSON array with original fields:
     "imagePath": "/selection-guides/choose-audio-for-creators.svg",
     "readTime": 3,
     "publishDate": "2026-10-11",
-    "author": "تحریریه سابیکس",
+    "author": "تحریریه فلوکسو",
     "tags": ["صدا", "تولید"],
     "productSlugs": ["suno-ai-pro", "epidemic-sound"],
     "content": "متن کاملاً مستقل راهنما با پاراگراف‌های جدا."

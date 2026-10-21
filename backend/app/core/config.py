@@ -14,7 +14,8 @@ class Settings(BaseSettings):
     )
 
     # Telegram
-    bot_token: str
+    # Telegram is optional until bot/webhook features are enabled.
+    bot_token: str = ""
     telegram_bot_username: str = ""
     webhook_url: str = ""
     enable_webhook: bool = False  # True = bot /start replies; Mini App works without it
@@ -29,7 +30,7 @@ class Settings(BaseSettings):
     turso_auth_token: str
 
     # App
-    app_name: str = "Subix"
+    app_name: str = "Fluxo"
     frontend_url: str
     debug: bool = False
     admin_secret: str = ""
