@@ -43,6 +43,10 @@ SMS_IR_PARAMETER_NAME=Code
 put it in `frontend/.env.local` or a client bundle. The phone login page is
 available at `https://fluxo.ir/login-phone/`.
 
+Define each `SMS_IR_*` variable only once in the backend `.env`. If a variable
+is repeated, the last value wins; a later `SMS_IR_TEMPLATE_ID=0` disables OTP
+delivery and produces the generic “ارسال پیامک موقتاً در دسترس نیست” error.
+
 **WSGI** file `/var/www/subix_pythonanywhere_com_wsgi.py` — copy from `backend/deploy/pythonanywhere_wsgi.py`
 
 Click **Reload** → test: `https://fluxo.ir/health`

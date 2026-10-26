@@ -21,6 +21,16 @@ class SmsServiceTests(TestCase):
         self.assertEqual(raised.exception.status_code, 400)
 
     @patch.object(settings, "sms_ir_parameter_name", "Code")
+    @patch.object(settings, "sms_ir_template_id", 0)
+    @patch.object(settings, "sms_ir_api_key", "test-key")
+    @patch.object(settings, "secret_key", "test-secret")
+    def test_rejects_disabled_sms_template_configuration(self):
+        with self.assertRaises(HTTPException) as raised:
+            SMSService._validate_configuration()
+
+        self.assertEqual(raised.exception.status_code, 503)
+
+    @patch.object(settings, "sms_ir_parameter_name", "Code")
     @patch.object(settings, "sms_ir_template_id", 123456)
     @patch.object(settings, "sms_ir_api_key", "test-key")
     @patch.object(settings, "secret_key", "test-secret")

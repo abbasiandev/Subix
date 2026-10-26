@@ -17,7 +17,7 @@ export default function Catalog({ products }: { products: Product[] }) {
 
   return <>
     <div className="catalog-toolbar">
-      <div className="catalog-search"><label className="sr-only" htmlFor="catalog-search">جستجوی اکانت و لایسنس</label><input id="catalog-search" type="search" placeholder="ابزار موردنظرتان را پیدا کنید…" value={query} onChange={(event) => setQuery(event.target.value)} /><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg></div>
+      <div className="catalog-search"><label className="sr-only" htmlFor="catalog-search">جستجوی ابزارهای هوش مصنوعی</label><input id="catalog-search" type="search" placeholder="ابزار موردنظرتان را پیدا کنید…" value={query} onChange={(event) => setQuery(event.target.value)} /><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg></div>
      <span className="catalog-count" role="status">{matches.length.toLocaleString('fa-IR')} اکانت برای بررسی</span>
     </div>
     <div className="catalog-scope" role="group" aria-label="نوع سرویس">

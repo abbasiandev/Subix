@@ -6,6 +6,12 @@ Canonical positioning:
 
 > Fluxo helps visitors compare and choose AI accounts faster.
 
+The Fluxo name means flow and is used as the product metaphor for a clear path
+from a visitor's need, through comparison, to a suitable account. Public copy
+should make this meaning understandable through the actual journey:
+`نیاز → مقایسه → انتخاب`. Avoid presenting Fluxo as an unrelated generic
+license catalogue or explaining the name only as an abstract slogan.
+
 The catalog supports all kinds of AI accounts: text/research, image, video, audio, coding, development, and related creative AI tools. Existing non-AI inventory may be exposed, but it is secondary and must appear under `سایر سرویس‌های دیجیتال`.
 
 The blog exists to improve purchase decisions, not to act as an unrelated news feed.

@@ -73,6 +73,8 @@ Requirements:
 
 - one H1 in the hero
 - primary CTA links to `#products` or `/products`
+- the homepage navigation uses these scroll sections for active location state:
+  `home`, `products`, `articles`, and `support`
 - all content remains readable when animations are unavailable
 - the story is a progressive enhancement, not the only way to access products
 

@@ -253,20 +253,20 @@ export default function WebGLHero() {
   const handleStateChange = React.useCallback((state: SceneState) => setSceneState(state), []);
 
   return (
-    <section className={`flash-hero ${sceneState.supported && sceneState.ready ? 'webgl-ready' : 'webgl-fallback'}`} aria-labelledby="hero-title">
+      <section id="home" className={`flash-hero ${sceneState.supported && sceneState.ready ? 'webgl-ready' : 'webgl-fallback'}`} aria-labelledby="hero-title">
       <div className="flash-grid" aria-hidden="true" />
       <div className="flash-fallback" aria-hidden="true" />
       <OrbitalScene onStateChange={handleStateChange} />
       <div className="flash-hero-content">
-         <div className="flash-kicker">FLUXO / مرجع انتخاب اکانت و لایسنس</div>
-         <h1 id="hero-title">خرید انواع اکانت و لایسنس اورجینال</h1>
-         <p>قابلیت‌ها، مدت و قیمت اکانت‌های هوش مصنوعی، برنامه‌نویسی، طراحی و استریم را شفاف مقایسه کنید.</p>
-        <div className="flash-actions">
-          <a href="#products" className="flash-button primary">مشاهده اکانت‌ها و لایسنس‌ها <span aria-hidden="true">↙</span></a>
+         <div className="flash-kicker"><span dir="ltr">FLUXO</span> / جریان روشن انتخاب</div>
+         <h1 id="hero-title">از نیاز تا انتخاب،<br/><span>در یک جریان روشن.</span></h1>
+         <p>فلوکسو انتخاب اکانت هوش مصنوعی را به یک مسیر ساده تبدیل می‌کند: نیازتان را بشناسید، گزینه‌ها را مقایسه کنید و با اطمینان انتخاب کنید.</p>
+         <div className="flash-actions">
+           <a href="#products" className="flash-button primary">شروع مسیر انتخاب <span aria-hidden="true">↙</span></a>
         </div>
       </div>
        <div className="flash-corner top">FLUXO / ۰۱</div>
-       <div className="flash-corner bottom">برای دیدن انتخاب‌ها پایین بروید <span aria-hidden="true">↓</span></div>
+        <div className="flash-corner bottom">جریان انتخاب را دنبال کنید <span aria-hidden="true">↓</span></div>
       <span className="sr-only">{sceneState.supported && sceneState.ready ? 'نمایش سه‌بعدی فعال است' : 'نمایش سه‌بعدی در دسترس نیست؛ پس‌زمینه جایگزین فعال است'}</span>
     </section>
   );

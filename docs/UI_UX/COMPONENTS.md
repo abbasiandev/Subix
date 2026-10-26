@@ -22,6 +22,9 @@ Source: `frontend/components/Layout/NavigationBar.tsx`
   - unauthenticated → `/login-phone`, label `ورود / عضویت`
 - Theme toggle.
 - Responsive mobile menu.
+- On the homepage, marks `خانه`, `کاتالوگ اکانت‌ها`, `راهنمای انتخاب`, and
+  `پشتیبانی تلگرام` as the active location while the corresponding `home`,
+  `products`, `articles`, or `support` section crosses the scroll marker.
 
 #### Interaction contract
 
@@ -30,6 +33,8 @@ Source: `frontend/components/Layout/NavigationBar.tsx`
 - Route changes close the menu.
 - Closed menu is `hidden` and cannot receive focus.
 - Theme preference is saved as `fluxo-theme` in local storage.
+- On non-home routes, active state falls back to the canonical pathname,
+  including product and article detail routes.
 
 #### Visual contract
 
@@ -45,12 +50,14 @@ Source: `frontend/components/Layout/Footer.tsx`
 - About/positioning statement.
 - Canonical route links.
 - Telegram-only public support link from `SUPPORT_URL`.
+- Official e-namad trust-seal link in the centered area of the left support
+  column, using the owner-provided seal URL and image.
 - Legal links remain visibly unavailable until real pages exist.
 - Copyright and concise positioning line.
 
 #### Content rule
 
-Do not add email, Instagram, payment gateways, trust badges, 24/7 claims, legal claims, or fulfillment promises unless the product owner and operational source support them.
+Do not add email, Instagram, payment gateways, 24/7 claims, legal claims, or fulfillment promises unless the product owner and operational source support them. The e-namad seal is explicitly supported by the owner-provided official URL.
 
 ## 2. Homepage components
 
@@ -72,6 +79,10 @@ Source: `frontend/components/WebGLHero.tsx`
 The current implementation contains older hero copy in `WebGLHero.tsx`, while `index.tsx` and metadata use the approved AI decision-support positioning. New work must use the approved positioning and update the hero source before reusing it:
 
 > Help visitors compare and choose AI accounts for text, image, video, audio, and development.
+
+The hero should make the Fluxo meaning concrete: the visitor moves from need
+to comparison to choice. Prefer the concise Persian phrase `از نیاز تا انتخاب،
+در یک جریان روشن` and do not treat `Fluxo` as an acronym.
 
 Never describe a visual status label such as `LIVE / 02:37:11` as a real operational status.
 
