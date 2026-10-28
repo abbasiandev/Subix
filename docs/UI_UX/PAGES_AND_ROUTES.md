@@ -72,7 +72,8 @@ Order:
 Requirements:
 
 - one H1 in the hero
-- primary CTA links to `#products` or `/products`
+- the hero's `شروع مسیر انتخاب` CTA links to the beginning of the selection
+  story (`#selection-flow`), while catalog links use `#products` or `/products`
 - the homepage navigation uses these scroll sections for active location state:
   `home`, `products`, `articles`, and `support`
 - all content remains readable when animations are unavailable

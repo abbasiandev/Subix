@@ -21,15 +21,15 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         
-         <title>فلوکسو - جریان روشن انتخاب اکانت هوش مصنوعی</title>
-         <meta name="description" content="فلوکسو مسیر انتخاب اکانت هوش مصنوعی را از شناخت نیاز تا مقایسه و انتخاب روشن می‌کند." />
+         <title>فلوکسو - جریان انتخاب اکانت هوش مصنوعی</title>
+         <meta name="description" content="فلوکسو مسیر انتخاب اکانت هوش مصنوعی را از شناخت نیاز تا مقایسه و انتخاب ساده می‌کند." />
          <meta name="keywords" content="خرید اکانت هوش مصنوعی, مقایسه اکانت AI, ChatGPT, Claude, Gemini, Cursor, Leonardo AI" />
          <meta name="author" content="فلوکسو" />
          <link rel="canonical" href="https://fluxo.ir/" />
         
         {/* Open Graph tags */}
-         <meta property="og:title" content="فلوکسو - جریان روشن انتخاب اکانت هوش مصنوعی" />
-         <meta property="og:description" content="از نیاز تا مقایسه و انتخاب اکانت هوش مصنوعی، در یک جریان روشن." />
+         <meta property="og:title" content="فلوکسو - جریان انتخاب اکانت هوش مصنوعی" />
+         <meta property="og:description" content="از نیاز تا مقایسه و انتخاب اکانت هوش مصنوعی، در یک جریان." />
         <meta property="og:type" content="website" />
          <meta property="og:url" content="https://fluxo.ir/" />
         <meta property="og:locale" content="fa_IR" />
@@ -37,8 +37,8 @@ export default function App({ Component, pageProps }: AppProps) {
         
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-         <meta name="twitter:title" content="فلوکسو - جریان روشن انتخاب اکانت هوش مصنوعی" />
-         <meta name="twitter:description" content="از نیاز تا مقایسه و انتخاب اکانت هوش مصنوعی، در یک جریان روشن." />
+         <meta name="twitter:title" content="فلوکسو - جریان انتخاب اکانت هوش مصنوعی" />
+         <meta name="twitter:description" content="از نیاز تا مقایسه و انتخاب اکانت هوش مصنوعی، در یک جریان." />
         
         {/* Theme Color for mobile browsers */}
         <meta name="theme-color" content="#070a0d" />

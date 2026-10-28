@@ -1,5 +1,5 @@
 from unittest import TestCase
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from fastapi import HTTPException
 
@@ -70,6 +70,48 @@ class SmsServiceTests(TestCase):
         self.assertEqual(raised.exception.status_code, 503)
         reserve.assert_called_once()
         activate.assert_not_called()
+
+    @patch.object(settings, "sms_ir_parameter_name", "Code")
+    @patch.object(settings, "sms_ir_template_id", 123456)
+    @patch.object(settings, "sms_ir_api_key", "test-key")
+    @patch.object(settings, "secret_key", "test-secret")
+    @patch("app.services.sms.otp_store.activate")
+    @patch("app.services.sms.otp_store.reserve", return_value=True)
+    @patch.object(
+        SMSService,
+        "_send_provider_request",
+        side_effect=HTTPException(
+            status_code=503,
+            detail="SMS.ir قالب با این شناسه را برای کلید API فعلی پیدا نکرد؛ شناسه قالب و حساب API را بررسی کنید.",
+        ),
+    )
+    def test_provider_template_failure_does_not_activate_challenge(
+        self, provider, reserve, activate
+    ):
+        with self.assertRaises(HTTPException) as raised:
+            SMSService.send_otp_sync("09123456789")
+
+        self.assertIn("شناسه قالب", raised.exception.detail)
+        reserve.assert_called_once()
+        provider.assert_called_once()
+        activate.assert_not_called()
+
+    @patch.object(settings, "sms_ir_parameter_name", "Code")
+    @patch.object(settings, "sms_ir_template_id", 100000)
+    @patch.object(settings, "sms_ir_api_key", "test-key")
+    @patch("app.services.sms.httpx.Client")
+    def test_provider_template_failure_is_reported_for_non_200_response(self, client):
+        response = Mock(
+            status_code=400,
+            content=b'{"status":113,"message":"template not found"}',
+        )
+        response.json.return_value = {"status": 113, "message": "template not found"}
+        client.return_value.__enter__.return_value.post.return_value = response
+
+        with self.assertRaises(HTTPException) as raised:
+            SMSService._send_provider_request("09123456789", "12345")
+
+        self.assertIn("شناسه قالب", raised.exception.detail)
 
     @patch.object(settings, "secret_key", "test-secret")
     @patch("app.services.sms.otp_store.consume_if_matches", return_value=True)

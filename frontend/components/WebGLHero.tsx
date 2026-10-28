@@ -258,11 +258,11 @@ export default function WebGLHero() {
       <div className="flash-fallback" aria-hidden="true" />
       <OrbitalScene onStateChange={handleStateChange} />
       <div className="flash-hero-content">
-         <div className="flash-kicker"><span dir="ltr">FLUXO</span> / جریان روشن انتخاب</div>
-         <h1 id="hero-title">از نیاز تا انتخاب،<br/><span>در یک جریان روشن.</span></h1>
+         <div className="flash-kicker"><span dir="ltr">FLUXO</span> / جریان انتخاب</div>
+         <h1 id="hero-title">از نیاز تا انتخاب،<br/><span>در یک جریان.</span></h1>
          <p>فلوکسو انتخاب اکانت هوش مصنوعی را به یک مسیر ساده تبدیل می‌کند: نیازتان را بشناسید، گزینه‌ها را مقایسه کنید و با اطمینان انتخاب کنید.</p>
          <div className="flash-actions">
-           <a href="#products" className="flash-button primary">شروع مسیر انتخاب <span aria-hidden="true">↙</span></a>
+           <a href="#selection-flow" className="flash-button primary">شروع مسیر انتخاب <span aria-hidden="true">↙</span></a>
         </div>
       </div>
        <div className="flash-corner top">FLUXO / ۰۱</div>

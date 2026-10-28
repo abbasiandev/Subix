@@ -1,6 +1,7 @@
 import asyncio
 import hashlib
 import hmac
+import logging
 import re
 import secrets
 import time
@@ -11,6 +12,9 @@ from fastapi import HTTPException, status
 
 from app.core.config import settings
 from app.services import otp_store
+
+
+logger = logging.getLogger(__name__)
 
 
 _PERSIAN_DIGITS = "۰۱۲۳۴۵۶۷۸۹"
@@ -75,10 +79,10 @@ def _storage_unavailable() -> HTTPException:
     )
 
 
-def _provider_unavailable() -> HTTPException:
+def _provider_unavailable(detail: str = "ارسال پیامک موقتاً در دسترس نیست.") -> HTTPException:
     return HTTPException(
         status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-        detail="ارسال پیامک موقتاً در دسترس نیست.",
+        detail=detail,
     )
 
 
@@ -148,7 +152,7 @@ class SMSService:
     def _send_provider_request(cls, phone: str, code: str) -> None:
         headers = {
             "Content-Type": "application/json",
-            "Accept": "application/json",
+            "Accept": "text/plain",
             "x-api-key": settings.sms_ir_api_key,
         }
         payload = {
@@ -166,12 +170,50 @@ class SMSService:
                 response = client.post(
                     cls.SMS_IR_VERIFY_URL, json=payload, headers=headers
                 )
+                try:
+                    body = response.json() if response.content else {}
+                except ValueError:
+                    body = {}
+                provider_status = body.get("status") if isinstance(body, dict) else None
+                provider_message = body.get("message") if isinstance(body, dict) else None
+                if type(provider_status) is int and provider_status != 1:
+                    logger.error(
+                        "SMS.ir rejected OTP: http_status=%s provider_status=%s message=%r",
+                        response.status_code,
+                        provider_status,
+                        provider_message,
+                    )
+                    if provider_status == 113:
+                        raise _provider_unavailable(
+                            "SMS.ir قالب با این شناسه را برای کلید API فعلی پیدا نکرد؛ شناسه قالب و حساب API را بررسی کنید."
+                        )
+                    if provider_status == 124:
+                        raise _provider_unavailable(
+                            "قالب SMS.ir برای ارسال OTP شناسایی یا فعال نشده است؛ قالب Verify را بررسی کنید."
+                        )
+                    if provider_status in {10, 11, 12, 13, 14}:
+                        raise _provider_unavailable(
+                            "حساب یا کلید SMS.ir فعال نیست؛ تنظیمات سرویس پیامکی را بررسی کنید."
+                        )
+                    if provider_status == 102:
+                        raise _provider_unavailable("اعتبار حساب SMS.ir برای ارسال پیامک کافی نیست.")
+                    if provider_status == 116:
+                        raise _provider_unavailable(
+                            "نام پارامتر قالب SMS.ir صحیح نیست؛ مقدار SMS_IR_PARAMETER_NAME را بررسی کنید."
+                        )
+                    if provider_status == 20:
+                        raise _provider_unavailable("تعداد درخواست‌های SMS.ir بیش از حد مجاز است؛ کمی بعد دوباره تلاش کنید.")
+                    raise _provider_unavailable()
                 if response.status_code != 200:
+                    logger.error(
+                        "SMS.ir request failed: http_status=%s provider_status=%s message=%r",
+                        response.status_code,
+                        provider_status,
+                        provider_message,
+                    )
                     raise _provider_unavailable()
-                body = response.json()
-                if not isinstance(body, dict) or type(body.get("status")) is not int:
-                    raise _provider_unavailable()
-                if body["status"] != 1:
+                if not isinstance(body, dict) or type(provider_status) is not int:
+                    logger.error("SMS.ir returned an unexpected response shape")
                     raise _provider_unavailable()
         except HTTPException:
             raise

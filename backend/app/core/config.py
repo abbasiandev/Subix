@@ -51,11 +51,17 @@ class Settings(BaseSettings):
         """Browser Origin has no path — include scheme+host from frontend_url."""
         parsed = urlparse(self.frontend_url)
         site_origin = f"{parsed.scheme}://{parsed.netloc}"
-        return list({
+        origins = {
             site_origin,
             self.frontend_url.rstrip("/"),
             "https://web.telegram.org",
-        })
+        }
+        if self.debug:
+            origins.update({
+                "http://localhost:3000",
+                "http://127.0.0.1:3000",
+            })
+        return list(origins)
 
 
 settings = Settings()

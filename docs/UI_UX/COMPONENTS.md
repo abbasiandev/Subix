@@ -82,7 +82,7 @@ The current implementation contains older hero copy in `WebGLHero.tsx`, while `i
 
 The hero should make the Fluxo meaning concrete: the visitor moves from need
 to comparison to choice. Prefer the concise Persian phrase `از نیاز تا انتخاب،
-در یک جریان روشن` and do not treat `Fluxo` as an acronym.
+در یک جریان` and do not treat `Fluxo` as an acronym.
 
 Never describe a visual status label such as `LIVE / 02:37:11` as a real operational status.
 

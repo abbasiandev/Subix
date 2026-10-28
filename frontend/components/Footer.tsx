@@ -49,7 +49,7 @@ const Footer: React.FC = () => {
               </div>
             </Link>
             <p className="text-gray-400 text-sm mb-6 leading-relaxed">
-              مقایسه روشن اکانت‌های هوش مصنوعی و سرویس‌های دیجیتال پیش از انتخاب.
+              مقایسه اکانت‌های هوش مصنوعی و سرویس‌های دیجیتال پیش از انتخاب.
             </p>
             
             {/* Social Links */}

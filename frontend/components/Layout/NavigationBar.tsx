@@ -72,8 +72,12 @@ export function NavigationBar() {
   const isRouteActive = (href: string) =>
     router.pathname === href || (href !== '/' && router.pathname.startsWith(`${href}/`));
 
-  const linkHref = (link: (typeof links)[number]) =>
-    router.pathname === '/' ? `#${link.section}` : link.href;
+  const linkHref = (link: (typeof links)[number]) => {
+    // The homepage has a compact article preview, while /blog is the complete
+    // guide. Keep this navigation item on the complete page from every route.
+    if (link.section === 'articles') return link.href;
+    return router.pathname === '/' ? `#${link.section}` : link.href;
+  };
 
   const isLinkActive = (link: (typeof links)[number]) =>
     router.pathname === '/' ? activeSection === link.section : isRouteActive(link.href);
