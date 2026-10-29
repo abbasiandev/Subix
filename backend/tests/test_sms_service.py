@@ -82,7 +82,7 @@ class SmsServiceTests(TestCase):
         "_send_provider_request",
         side_effect=HTTPException(
             status_code=503,
-            detail="SMS.ir قالب با این شناسه را برای کلید API فعلی پیدا نکرد؛ شناسه قالب و حساب API را بررسی کنید.",
+            detail="ارسال پیامک موقتاً در دسترس نیست.",
         ),
     )
     def test_provider_template_failure_does_not_activate_challenge(
@@ -91,7 +91,7 @@ class SmsServiceTests(TestCase):
         with self.assertRaises(HTTPException) as raised:
             SMSService.send_otp_sync("09123456789")
 
-        self.assertIn("شناسه قالب", raised.exception.detail)
+        self.assertEqual(raised.exception.status_code, 503)
         reserve.assert_called_once()
         provider.assert_called_once()
         activate.assert_not_called()
@@ -111,7 +111,8 @@ class SmsServiceTests(TestCase):
         with self.assertRaises(HTTPException) as raised:
             SMSService._send_provider_request("09123456789", "12345")
 
-        self.assertIn("شناسه قالب", raised.exception.detail)
+        self.assertEqual(raised.exception.status_code, 503)
+        self.assertNotIn("SMS.ir", raised.exception.detail)
 
     @patch.object(settings, "secret_key", "test-secret")
     @patch("app.services.sms.otp_store.consume_if_matches", return_value=True)

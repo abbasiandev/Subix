@@ -230,8 +230,8 @@ export default function LoginPhone() {
           <div className="bg-white/5 backdrop-blur-2xl rounded-3xl p-8 md:p-10 border border-white/10 shadow-2xl">
             {/* Logo */}
             <div className="flex justify-center mb-8">
-              <Link href="/">
-                <Logo variant="full" size="lg" color="primary" animated />
+              <Link href="/" aria-label="فلوکسو، بازگشت به صفحه اصلی">
+                <Logo variant="full" size="lg" color="white" />
               </Link>
             </div>
 

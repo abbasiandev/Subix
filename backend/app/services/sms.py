@@ -183,26 +183,8 @@ class SMSService:
                         provider_status,
                         provider_message,
                     )
-                    if provider_status == 113:
-                        raise _provider_unavailable(
-                            "SMS.ir قالب با این شناسه را برای کلید API فعلی پیدا نکرد؛ شناسه قالب و حساب API را بررسی کنید."
-                        )
-                    if provider_status == 124:
-                        raise _provider_unavailable(
-                            "قالب SMS.ir برای ارسال OTP شناسایی یا فعال نشده است؛ قالب Verify را بررسی کنید."
-                        )
-                    if provider_status in {10, 11, 12, 13, 14}:
-                        raise _provider_unavailable(
-                            "حساب یا کلید SMS.ir فعال نیست؛ تنظیمات سرویس پیامکی را بررسی کنید."
-                        )
-                    if provider_status == 102:
-                        raise _provider_unavailable("اعتبار حساب SMS.ir برای ارسال پیامک کافی نیست.")
-                    if provider_status == 116:
-                        raise _provider_unavailable(
-                            "نام پارامتر قالب SMS.ir صحیح نیست؛ مقدار SMS_IR_PARAMETER_NAME را بررسی کنید."
-                        )
-                    if provider_status == 20:
-                        raise _provider_unavailable("تعداد درخواست‌های SMS.ir بیش از حد مجاز است؛ کمی بعد دوباره تلاش کنید.")
+                    # All provider-specific details are logged above.
+                    # User-facing messages must NOT mention the SMS provider name.
                     raise _provider_unavailable()
                 if response.status_code != 200:
                     logger.error(

@@ -12,7 +12,7 @@ type AuthStep = 'phone' | 'otp';
 
 /**
  * Phone Authentication Component
- * Two-step authentication: phone number + OTP verification via SMS.ir
+ * Two-step authentication: phone number + OTP verification
  */
 export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
   const [step, setStep] = useState<AuthStep>('phone');
@@ -226,7 +226,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
             <button
               type="submit"
               className="submit-button"
-               disabled={isLoading || !normalizeIranianPhone(phoneNumber)}
+              disabled={isLoading || !normalizeIranianPhone(phoneNumber)}
             >
               {isLoading ? (
                 <span className="loading-spinner"></span>
@@ -248,7 +248,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
 
             <p className="privacy-note">
               با ورود به سایت، شما{' '}
-               <a href="/terms">شرایط و قوانین</a> استفاده از سرویس‌های فلوکسو و{' '}
+              <a href="/terms">شرایط و قوانین</a> استفاده از سرویس‌های فلوکسو و{' '}
               <a href="/privacy">قوانین حریم خصوصی</a> آن را می‌پذیرید
             </p>
           </form>
@@ -256,7 +256,7 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ onSuccess }) => {
 
         {step === 'otp' && (
           <div className="otp-form">
-              <button className="back-link" type="button" onClick={handleEditPhone} disabled={isLoading}>
+            <button className="back-link" type="button" onClick={handleEditPhone} disabled={isLoading}>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path
                   d="M12 4L6 10L12 16"
